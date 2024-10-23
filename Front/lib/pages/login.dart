@@ -14,7 +14,12 @@ class _LoginState extends State<Login> {
       appBar: AppBar(
         title: Text("Andaime"),
         centerTitle: true,
-        backgroundColor: Colors.grey,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        titleTextStyle: TextStyle(
+          color: Theme.of(context).primaryColorLight,
+          fontSize: 24,
+        ),
+        elevation: 3,
       ),
     );
   }
