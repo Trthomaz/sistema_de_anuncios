@@ -7,10 +7,10 @@ void main() {
       title: "Andaime",
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primaryColorDark: Colors.black,
-        primaryColorLight: Colors.white,
-        scaffoldBackgroundColor: Colors.black,
-        cardColor: Colors.blueGrey,
-      ),
+          primaryColorDark: Colors.black,
+          primaryColorLight: Colors.white,
+          scaffoldBackgroundColor: const Color.fromARGB(255, 178, 197, 207),
+          cardColor: const Color.fromARGB(255, 178, 197, 207),
+          highlightColor: Colors.blueGrey),
       home: Feed()));
 }
