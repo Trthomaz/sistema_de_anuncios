@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'pages/login.dart';
-import 'pages/feed.dart';
+import 'package:sistema_de_anuncios/pages/navigation/navigation.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -12,5 +11,5 @@ void main() {
           scaffoldBackgroundColor: const Color.fromARGB(255, 178, 197, 207),
           cardColor: const Color.fromARGB(255, 178, 197, 207),
           highlightColor: Colors.blueGrey),
-      home: Feed()));
+      home: Navigation()));
 }
