@@ -38,7 +38,7 @@ class _NavigationState extends State<Navigation> {
           });
         },
         type: BottomNavigationBarType.fixed,
-        backgroundColor: Theme.of(context).highlightColor,
+        backgroundColor: Theme.of(context).primaryColor,
         selectedItemColor: Theme.of(context).primaryColorDark,
         unselectedItemColor: Theme.of(context).primaryColorLight,
         selectedIconTheme:

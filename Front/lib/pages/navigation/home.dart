@@ -21,33 +21,61 @@ class _HomeState extends State<Home> {
       "preço": 20,
       "imagem": 'assets/images/calca.jpeg'
     },
-    {"titulo": "Anúncio 2", "preço": 30, "imagem": 'assets/images/andaime.png'},
+    {
+      "titulo": "Nome muitooooooooooo oooooooooooo grandeeeeeeeeeee eeeeeee",
+      "preço": 30,
+      "imagem": 'assets/images/andaime.png'
+    },
+    {
+      "titulo": "Calça do Dário 2",
+      "preço": 20,
+      "imagem": 'assets/images/calca.jpeg'
+    },
+    {"titulo": "Anúncio 3", "preço": 30, "imagem": 'assets/images/andaime.png'},
   ];
+
+  String limitarTexto(String text) {
+    int maxLenght = 34;
+    if (text.length > maxLenght) {
+      return text.substring(0, maxLenght) + '...';
+    }
+    return text;
+  }
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width; // Largura da tela
+    double screenHeight = MediaQuery.of(context).size.height; // Altura da tela
+    // Largura do card baseados nas dimensões da tela
+    double cardWidth = screenWidth * 0.46;
+    double cardHeight = screenHeight * 0.35;
+    double cardSpacing = screenWidth * 0.02;
+    double imageSize = cardWidth;
     return Scaffold(
       appBar: PreferredSize(
         // Tamanho do AppBar
-        preferredSize: Size.fromHeight(50.0),
+        preferredSize: Size.fromHeight(60.0),
         child: AppBar(
-          backgroundColor: Theme.of(context).highlightColor,
+          backgroundColor: Theme.of(context).primaryColor,
           elevation: 3,
           leading: Padding(
             // Leading é o ícone à esquerda do AppBar
-            padding: const EdgeInsets.all(8.0),
+            padding:
+                const EdgeInsets.only(left: 10, top: 10, bottom: 10, right: 1),
             child: Image.asset(
               // Imagem do ícone do app
               'assets/images/andaime.png',
               fit: BoxFit.contain,
-              width: 20,
-              height: 20,
+              width: 0.5,
+              height: 0.5,
             ),
           ),
-          title: Container(
+          title: Padding(
+            padding: const EdgeInsets.all(1),
             child: TextField(
               onTap: () {
                 setState(() {
+                  // TODO: Mudar animação de transição
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => Pesquisa()),
@@ -58,7 +86,7 @@ class _HomeState extends State<Home> {
               autocorrect: false,
               style: TextStyle(
                 color: Theme.of(context).primaryColorLight,
-                fontSize: 14,
+                fontSize: 16,
               ),
               decoration: InputDecoration(
                 border: OutlineInputBorder(
@@ -69,14 +97,14 @@ class _HomeState extends State<Home> {
                 fillColor: Theme.of(context).cardColor.withOpacity(0.1),
                 prefixIcon: Icon(
                   Icons.search,
-                  size: 20,
+                  size: 22,
                   color: Theme.of(context).primaryColorLight,
                 ),
                 contentPadding: EdgeInsets.symmetric(vertical: 14),
                 hintText: "Pesquisar",
                 hintStyle: TextStyle(
                   color: Theme.of(context).primaryColorLight,
-                  fontSize: 14,
+                  fontSize: 16,
                 ),
               ),
             ),
@@ -84,12 +112,14 @@ class _HomeState extends State<Home> {
           actions: [
             // Actions é o ícone à direita do AppBar
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.only(
+                  left: 1, top: 10, bottom: 10, right: 10),
               child: IconButton(
                 padding: EdgeInsets.only(bottom: 1),
                 icon: Icon(
-                  Icons.message,
+                  Icons.message_rounded,
                   color: Theme.of(context).primaryColorLight,
+                  size: 30,
                 ),
                 onPressed: () {
                   // TODO: Implementar pra abrir a tela de mensagens
@@ -101,117 +131,70 @@ class _HomeState extends State<Home> {
         ),
       ),
       body: Center(
-        child: LayoutBuilder(builder: (context, constraints) {
-          // Largura do card baseados nas dimensões da tela
-          double cardWidth = constraints.maxWidth * 0.46;
-          double cardHeight = cardWidth + 100;
-          double cardSpacing = constraints.maxWidth * 0.02;
-          double imageSize = cardWidth;
-
-          return ListView.builder(
-              itemCount: (anuncios.length / 2).ceil(),
-              itemBuilder: (context, index) {
-                int id = index * 2;
-
-                int getId() {
-                  if (id > anuncios.length - 2) {
-                    id = -1;
-                  }
-                  return id;
-                }
-
-                return Column(children: [
-                  SizedBox(
-                    height: cardSpacing,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Theme.of(context).cardColor,
-                          elevation: 3,
-                          fixedSize: Size(cardWidth, cardHeight),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
+        child: Column(
+          children: [
+            LayoutBuilder(builder: (context, constraints) {
+              return SizedBox(
+                height: cardHeight + 10,
+                child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: anuncios.length,
+                    itemBuilder: (context, index) {
+                      return Row(
+                        children: [
+                          SizedBox(
+                            width: cardSpacing,
                           ),
-                        ),
-                        onPressed: () {
-                          // TODO: Implementar abrir anuncio
-                          print("Botão 1 clicado");
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Image.asset(
-                                anuncios[id]["imagem"],
-                                fit: BoxFit.contain,
-                                height: imageSize,
-                                width: imageSize,
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              padding: EdgeInsets.all(4),
+                              backgroundColor: Theme.of(context).cardColor,
+                              elevation: 3,
+                              fixedSize: Size(cardWidth, cardHeight),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
                               ),
-                              Text(
-                                anuncios[id]["titulo"] +
-                                    "\n" +
-                                    "R\$" +
-                                    anuncios[id]["preço"].toString(),
-                                style: TextStyle(
-                                  color: Theme.of(context).primaryColorLight,
-                                  fontSize: 24,
+                            ),
+                            onPressed: () {
+                              // TODO: Implementar abrir anuncio
+                              print(cardHeight);
+                            },
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Image.asset(
+                                  anuncios[index]["imagem"],
+                                  fit: BoxFit.contain,
+                                  height: imageSize,
+                                  width: imageSize,
                                 ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ), // Espaço entre os botões
-                      SizedBox(width: cardSpacing),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Theme.of(context).cardColor,
-                          elevation: 3,
-                          fixedSize: Size(cardWidth, cardHeight),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        onPressed: () {
-                          // TODO: Implementar abrir anuncio
-                          print("Botão 2 clicado");
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Image.asset(
-                                anuncios[getId() + 1]["imagem"],
-                                fit: BoxFit.contain,
-                                height: imageSize,
-                                width: imageSize,
-                              ),
-                              Text(
-                                anuncios[getId() + 1]["titulo"] +
-                                    "\n" +
-                                    "R\$" +
-                                    anuncios[getId() + 1]["preço"].toString(),
-                                style: TextStyle(
-                                  color: Theme.of(context).primaryColorLight,
-                                  fontSize: 24,
+                                Text(
+                                  limitarTexto(anuncios[index]["titulo"]),
+                                  style: TextStyle(
+                                    color: Theme.of(context).primaryColorLight,
+                                    fontSize: 16,
+                                  ),
                                 ),
-                              ),
-                            ],
+                                Text(
+                                  "R\$" + anuncios[index]["preço"].toString(),
+                                  style: TextStyle(
+                                    color: Theme.of(context).primaryColorLight,
+                                    fontSize: 22,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: cardSpacing,
-                  )
-                ]);
-              });
-        }),
+                          SizedBox(
+                            width: cardSpacing,
+                          ),
+                        ],
+                      );
+                    }),
+              );
+            }),
+          ],
+        ),
       ),
     );
   }

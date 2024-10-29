@@ -12,10 +12,14 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Padding(
+    return Scaffold(body: LayoutBuilder(builder: (context, constraints) {
+      // Largura do card baseados nas dimensões da tela
+      double buttonWidth = constraints.maxWidth * 0.9;
+      double buttonHeigh = 200;
+
+      return Padding(
         padding:
-            const EdgeInsets.only(top: 150.0, left: 45, right: 45, bottom: 20),
+            const EdgeInsets.only(top: 150.0, left: 30, right: 30, bottom: 20),
         child: Center(
           child: Column(
             children: [
@@ -34,34 +38,33 @@ class _LoginState extends State<Login> {
                 ),
               ), */
               Padding(
+                // Email
                 padding: const EdgeInsets.only(top: 150.0, bottom: 8.0),
                 child: Container(
                   child: SizedBox(
-                    width: 700,
+                    width: buttonWidth,
                     child: TextField(
-                      autofocus: true,
+                      autofocus: false,
                       autocorrect: false,
+                      cursorColor: Theme.of(context).primaryColorLight,
                       style: TextStyle(
                         color: Theme.of(context).primaryColorLight,
-                        fontSize: 25,
+                        fontSize: 16,
                       ),
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
+                          borderSide: BorderSide.none,
                           borderRadius: BorderRadius.circular(10),
                         ),
                         filled: true,
-                        fillColor: Theme.of(context).cardColor.withOpacity(0.1),
+                        fillColor:
+                            Theme.of(context).primaryColor.withOpacity(0.2),
                         contentPadding:
                             EdgeInsets.symmetric(vertical: 14, horizontal: 14),
                         hintText: "Email",
                         hintStyle: TextStyle(
                           color: Theme.of(context).primaryColorLight,
-                          fontSize: 25,
-                        ),
-                        icon: Icon(
-                          Icons.email,
-                          size: 20,
-                          color: Theme.of(context).primaryColorLight,
+                          fontSize: 16,
                         ),
                       ),
                     ),
@@ -69,35 +72,34 @@ class _LoginState extends State<Login> {
                 ),
               ),
               Padding(
+                // Senha
                 padding: const EdgeInsets.only(top: 8.0, bottom: 36.0),
                 child: Container(
                   child: SizedBox(
-                    width: 700,
+                    width: buttonWidth,
                     child: TextField(
-                      autofocus: true,
+                      autofocus: false,
                       autocorrect: false,
                       obscureText: true,
+                      cursorColor: Theme.of(context).primaryColorLight,
                       style: TextStyle(
-                        color: const Color.fromARGB(255, 128, 141, 148),
-                        fontSize: 25,
+                        color: Theme.of(context).primaryColorLight,
+                        fontSize: 16,
                       ),
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
+                          borderSide: BorderSide.none,
                           borderRadius: BorderRadius.circular(10),
                         ),
                         filled: true,
-                        fillColor: Theme.of(context).cardColor.withOpacity(0.1),
+                        fillColor:
+                            Theme.of(context).primaryColor.withOpacity(0.2),
                         contentPadding:
                             EdgeInsets.symmetric(vertical: 14, horizontal: 14),
                         hintText: "Senha",
                         hintStyle: TextStyle(
                           color: Theme.of(context).primaryColorLight,
-                          fontSize: 25,
-                        ),
-                        icon: Icon(
-                          Icons.key,
-                          size: 20,
-                          color: Theme.of(context).primaryColorLight,
+                          fontSize: 16,
                         ),
                       ),
                     ),
@@ -105,22 +107,29 @@ class _LoginState extends State<Login> {
                 ),
               ),
               Padding(
+                // Botão
                 padding: const EdgeInsets.all(20.0),
                 child: SizedBox(
                   width: 200,
                   height: 60,
                   child: ElevatedButton(
                     onPressed: () {
+                      // TODO: Implementar a autenticação
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => const Navigation()),
                       );
                     },
-                    style: ButtonStyle(),
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(
+                          Theme.of(context).primaryColor.withOpacity(1)),
+                    ),
                     child: Text(
                       "Entrar",
-                      style: TextStyle(fontSize: 20),
+                      style: TextStyle(
+                          fontSize: 20,
+                          color: Theme.of(context).primaryColorLight),
                     ),
                   ),
                 ),
@@ -135,9 +144,9 @@ class _LoginState extends State<Login> {
                       children: <Widget>[
                         Text(
                           "Em caso de dúvidas, entre em contato com o email:",
-                          style: TextStyle(fontSize: 15),
+                          style: TextStyle(fontSize: 12),
                         ),
-                        Text("sti@ic.uff.br", style: TextStyle(fontSize: 15)),
+                        Text("sti@ic.uff.br", style: TextStyle(fontSize: 12)),
                       ],
                     ), //Your widget here,
                   ),
@@ -146,7 +155,7 @@ class _LoginState extends State<Login> {
             ],
           ),
         ),
-      ),
-    );
+      );
+    }));
   }
 }
