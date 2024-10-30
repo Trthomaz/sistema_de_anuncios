@@ -29,15 +29,6 @@ class _HomeState extends State<Home> {
     {"titulo": "Anúncio 3", "preço": 30, "imagem": 'assets/images/andaime.png'},
   ];
 
-  String limitarTexto(String text) {
-    // 27 caracteres
-    int maxLenght = 26;
-    if (text.length > maxLenght + 1) {
-      return '${text.substring(0, maxLenght)}...';
-    }
-    return text;
-  }
-
   @override
   Widget build(BuildContext context) {
     double cardWidth = 150;
@@ -116,7 +107,6 @@ class _HomeState extends State<Home> {
                 ),
                 onPressed: () {
                   // TODO: Implementar pra abrir a tela de mensagens
-                  print("Mensagem");
                 },
               ),
             ),
@@ -168,7 +158,7 @@ class _HomeState extends State<Home> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Container(
+                                SizedBox(
                                   height: 20,
                                   width: 55,
                                   child: Card(
@@ -198,18 +188,31 @@ class _HomeState extends State<Home> {
                                   height:
                                       4, // Espaço vertical ao redor do divisor
                                 ),
-                                Text(
-                                  limitarTexto(anuncios[index]["titulo"]),
-                                  style: TextStyle(
-                                    color: Theme.of(context).primaryColorLight,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                                Text(
-                                  "R\$${anuncios[index]["preço"]}",
-                                  style: TextStyle(
-                                    color: Theme.of(context).primaryColorLight,
-                                    fontSize: 22,
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        anuncios[index]["titulo"],
+                                        softWrap: true,
+                                        maxLines: 3,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          color: Theme.of(context)
+                                              .primaryColorLight,
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                      Text(
+                                        "R\$${anuncios[index]["preço"]}",
+                                        style: TextStyle(
+                                          color: Theme.of(context)
+                                              .primaryColorLight,
+                                          fontSize: 22,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ],
@@ -268,7 +271,7 @@ class _HomeState extends State<Home> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Container(
+                                SizedBox(
                                   height: 20,
                                   width: 60,
                                   child: Card(
@@ -299,18 +302,31 @@ class _HomeState extends State<Home> {
                                   height:
                                       4, // Espaço vertical ao redor do divisor
                                 ),
-                                Text(
-                                  limitarTexto(anuncios[index]["titulo"]),
-                                  style: TextStyle(
-                                    color: Theme.of(context).primaryColorLight,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                                Text(
-                                  "R\$${anuncios[index]["preço"]}",
-                                  style: TextStyle(
-                                    color: Theme.of(context).primaryColorLight,
-                                    fontSize: 22,
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        anuncios[index]["titulo"],
+                                        softWrap: true,
+                                        maxLines: 3,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          color: Theme.of(context)
+                                              .primaryColorLight,
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                      Text(
+                                        "R\$${anuncios[index]["preço"]}",
+                                        style: TextStyle(
+                                          color: Theme.of(context)
+                                              .primaryColorLight,
+                                          fontSize: 22,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ],
