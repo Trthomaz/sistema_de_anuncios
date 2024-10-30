@@ -1,9 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:sistema_de_anuncios/pages/navigation/navigation.dart';
-import 'package:sistema_de_anuncios/pages/navigation/anunciar.dart';
-import 'package:sistema_de_anuncios/pages/navigation/meus_anuncios.dart';
-import 'package:sistema_de_anuncios/pages/navigation/perfil.dart';
-import 'package:sistema_de_anuncios/pages/navigation/configs.dart';
 import 'package:sistema_de_anuncios/pages/pesquisa.dart';
 
 class Home extends StatefulWidget {
@@ -22,7 +17,7 @@ class _HomeState extends State<Home> {
       "imagem": 'assets/images/calca.jpeg'
     },
     {
-      "titulo": "Nome muitooooooooooo oooooooooooo grandeeeeeeeeeee eeeeeee",
+      "titulo": "mmmmmmmmmmmmmmmmmmmmmmmmmmmm",
       "preço": 30,
       "imagem": 'assets/images/andaime.png'
     },
@@ -35,21 +30,19 @@ class _HomeState extends State<Home> {
   ];
 
   String limitarTexto(String text) {
-    int maxLenght = 34;
-    if (text.length > maxLenght) {
-      return text.substring(0, maxLenght) + '...';
+    // 27 caracteres
+    int maxLenght = 26;
+    if (text.length > maxLenght + 1) {
+      return '${text.substring(0, maxLenght)}...';
     }
     return text;
   }
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width; // Largura da tela
-    double screenHeight = MediaQuery.of(context).size.height; // Altura da tela
-    // Largura do card baseados nas dimensões da tela
-    double cardWidth = screenWidth * 0.46;
-    double cardHeight = screenHeight * 0.35;
-    double cardSpacing = screenWidth * 0.02;
+    double cardWidth = 150;
+    double cardHeight = 297;
+    double cardSpacing = 5;
     double imageSize = cardWidth;
     return Scaffold(
       appBar: PreferredSize(
@@ -130,12 +123,26 @@ class _HomeState extends State<Home> {
           ],
         ),
       ),
-      body: Center(
+      body: SingleChildScrollView(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            SizedBox(
+              height: 4,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 10),
+              child: Text(
+                "Ofertados",
+                style: TextStyle(
+                  color: Theme.of(context).primaryColorLight,
+                  fontSize: 24,
+                ),
+              ),
+            ),
             LayoutBuilder(builder: (context, constraints) {
               return SizedBox(
-                height: cardHeight + 10,
+                height: cardHeight + 6,
                 child: ListView.builder(
                     scrollDirection: Axis.horizontal,
                     itemCount: anuncios.length,
@@ -157,16 +164,39 @@ class _HomeState extends State<Home> {
                             ),
                             onPressed: () {
                               // TODO: Implementar abrir anuncio
-                              print(cardHeight);
                             },
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                Container(
+                                  height: 20,
+                                  width: 55,
+                                  child: Card(
+                                    color: Colors.blue,
+                                    child: Center(
+                                      child: Text(
+                                        "Ofertado",
+                                        style: TextStyle(
+                                            fontSize: 8,
+                                            color: Theme.of(context)
+                                                .primaryColorLight),
+                                      ),
+                                    ),
+                                  ),
+                                ),
                                 Image.asset(
                                   anuncios[index]["imagem"],
                                   fit: BoxFit.contain,
                                   height: imageSize,
                                   width: imageSize,
+                                ),
+                                Divider(
+                                  color: Theme.of(context)
+                                      .primaryColorLight
+                                      .withOpacity(0.4), // Cor do divisor
+                                  thickness: 1, // Espessura da linha
+                                  height:
+                                      4, // Espaço vertical ao redor do divisor
                                 ),
                                 Text(
                                   limitarTexto(anuncios[index]["titulo"]),
@@ -176,7 +206,108 @@ class _HomeState extends State<Home> {
                                   ),
                                 ),
                                 Text(
-                                  "R\$" + anuncios[index]["preço"].toString(),
+                                  "R\$${anuncios[index]["preço"]}",
+                                  style: TextStyle(
+                                    color: Theme.of(context).primaryColorLight,
+                                    fontSize: 22,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            width: cardSpacing,
+                          ),
+                        ],
+                      );
+                    }),
+              );
+            }),
+            Divider(
+              color: Theme.of(context)
+                  .primaryColor
+                  .withOpacity(0.2), // Cor do divisor
+              thickness: 4, // Espessura da linha
+              height: 10, // Espaço vertical ao redor do divisor
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 10),
+              child: Text(
+                "Procurados",
+                style: TextStyle(
+                  color: Theme.of(context).primaryColorLight,
+                  fontSize: 24,
+                ),
+              ),
+            ),
+            LayoutBuilder(builder: (context, constraints) {
+              return SizedBox(
+                height: cardHeight + 6,
+                child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: anuncios.length,
+                    itemBuilder: (context, index) {
+                      return Row(
+                        children: [
+                          SizedBox(
+                            width: cardSpacing,
+                          ),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              padding: EdgeInsets.all(4),
+                              backgroundColor: Theme.of(context).cardColor,
+                              elevation: 3,
+                              fixedSize: Size(cardWidth, cardHeight),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            onPressed: () {
+                              // TODO: Implementar abrir anuncio
+                            },
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  height: 20,
+                                  width: 60,
+                                  child: Card(
+                                    color:
+                                        const Color.fromARGB(255, 169, 43, 33),
+                                    child: Center(
+                                      child: Text(
+                                        "Procurado",
+                                        style: TextStyle(
+                                            fontSize: 8,
+                                            color: Theme.of(context)
+                                                .primaryColorLight),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Image.asset(
+                                  anuncios[index]["imagem"],
+                                  fit: BoxFit.contain,
+                                  height: imageSize,
+                                  width: imageSize,
+                                ),
+                                Divider(
+                                  color: Theme.of(context)
+                                      .primaryColorLight
+                                      .withOpacity(0.2), // Cor do divisor
+                                  thickness: 1, // Espessura da linha
+                                  height:
+                                      4, // Espaço vertical ao redor do divisor
+                                ),
+                                Text(
+                                  limitarTexto(anuncios[index]["titulo"]),
+                                  style: TextStyle(
+                                    color: Theme.of(context).primaryColorLight,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                Text(
+                                  "R\$${anuncios[index]["preço"]}",
                                   style: TextStyle(
                                     color: Theme.of(context).primaryColorLight,
                                     fontSize: 22,

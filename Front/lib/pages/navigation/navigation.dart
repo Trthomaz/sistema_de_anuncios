@@ -16,7 +16,7 @@ class _NavigationState extends State<Navigation> {
   // Index da página selecionada
   int _selectedIndex = 0;
 
-  List<Widget> _pages = <Widget>[
+  final List<Widget> _pages = <Widget>[
     Home(),
     Perfil(),
     Anunciar(),
@@ -43,6 +43,8 @@ class _NavigationState extends State<Navigation> {
         unselectedItemColor: Theme.of(context).primaryColorLight,
         selectedIconTheme:
             IconThemeData(color: Theme.of(context).primaryColorDark),
+        selectedLabelStyle: TextStyle(fontSize: 11),
+        unselectedLabelStyle: TextStyle(fontSize: 10),
         items: [
           BottomNavigationBarItem(
             icon: Icon(
