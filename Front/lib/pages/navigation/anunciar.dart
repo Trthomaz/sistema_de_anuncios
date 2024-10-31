@@ -10,6 +10,10 @@ class Anunciar extends StatefulWidget {
 class _AnunciarState extends State<Anunciar> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return PopScope(
+      // Impede o uso do botão de voltar do celular para voltar para a tela de login
+      canPop: false,
+      child: Scaffold(),
+    );
   }
 }
