@@ -13,19 +13,42 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   TextEditingController _cpfController = TextEditingController();
   TextEditingController _senhaController = TextEditingController();
+  TextEditingController _ipController = TextEditingController();
 
   // IP do servidor
-  String ip = "192.168.110.104";
+  late String ip = _ipController.text;
 
   // Requisição de login
   Future<bool> _login() async {
-    final url = Uri.parse('http://${ip}:5000/login');
+    final url = Uri.parse('http://${_ipController.text}:5000/login');
 
     // Dados enviados
     final dados = {
       'cpf': _cpfController.text,
       'senha': _senhaController.text,
     };
+
+    // Mensagem de erro
+    dynamic loginErrorMessage(String errorText) {
+      return showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("Erro ao fazer login"),
+              content: Text(errorText),
+              actions: [
+                ElevatedButton(
+                    child: Text("Ok"),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            const Color.fromARGB(255, 241, 232, 232)))
+              ],
+            );
+          });
+    }
 
     // Enviar requisição
     try {
@@ -37,18 +60,21 @@ class _LoginState extends State<Login> {
         },
         body: json.encode(dados),
       );
-
       if (response.statusCode == 200) {
         // Resposta da requisição
         Map<String, dynamic> resposta = json.decode(response.body);
+        print(response.statusCode);
+        print(url);
         if (resposta['login'] == "true") {
           return true;
+        } else {
+          loginErrorMessage("Login ou senha inválidos");
         }
       } else {
-        print("Erro ao fazer login: ${response.statusCode}");
+        loginErrorMessage("Erro na comunicação, tente novamente mais tarde");
       }
     } catch (e) {
-      print("Erro ao fazer login: ${e}");
+      loginErrorMessage("IP inválido, tente novamente");
     }
     return false;
   }
@@ -57,6 +83,7 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     // Verifica se o teclado esta visivel
     bool isKeyboardVisible = MediaQuery.of(context).viewInsets.bottom > 0;
+    bool invalidLogin = false;
 
     return PopScope(
       // Impede o uso do botão de voltar do celular para voltar para a tela de login
@@ -177,6 +204,8 @@ class _LoginState extends State<Login> {
                             MaterialPageRoute(
                                 builder: (context) => const Navigation()),
                           );
+                        } else {
+                          invalidLogin = true;
                         }
                       },
                       style: ButtonStyle(
@@ -192,6 +221,7 @@ class _LoginState extends State<Login> {
                     ),
                   ),
                 ),
+                //Texto inferior
                 Align(
                   alignment: FractionalOffset.bottomCenter,
                   child: Padding(
@@ -207,7 +237,41 @@ class _LoginState extends State<Login> {
                       ],
                     ), //Your widget here,
                   ),
-                )
+                ),
+                Padding(
+                  // CPF
+                  padding: EdgeInsets.only(
+                      top: 190.0, bottom: 8.0, left: 80.0, right: 80.0),
+                  child: SizedBox(
+                    width: textFieldWidth,
+                    child: TextField(
+                      controller: _ipController,
+                      autofocus: false,
+                      autocorrect: false,
+                      cursorColor: Theme.of(context).primaryColorLight,
+                      style: TextStyle(
+                        color: Theme.of(context).primaryColorLight,
+                        fontSize: 16,
+                      ),
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        filled: true,
+                        fillColor:
+                            Theme.of(context).primaryColor.withOpacity(0.2),
+                        contentPadding:
+                            EdgeInsets.symmetric(vertical: 14, horizontal: 14),
+                        hintText: "IP",
+                        hintStyle: TextStyle(
+                          color: Theme.of(context).primaryColorLight,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
