@@ -11,12 +11,8 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   // Lista dos anuncios
   List<Map<String, dynamic>> anuncios = [
-    {
-      "titulo": "Calça do Dário",
-      "preço": 20,
-      "imagem": 'assets/images/calca.jpeg'
-    },
-    {"titulo": "mmmmmmmmmmmmmmmmmmmmmmmmmmmm", "preço": 30, "imagem": null},
+    {"titulo": "Calça", "preço": 20, "imagem": 'assets/images/calca.jpeg'},
+    {"titulo": "", "preço": 30, "imagem": null},
     {
       "titulo": "Calça do Dário 2",
       "preço": 20,
@@ -56,16 +52,6 @@ class _HomeState extends State<Home> {
             title: Padding(
               padding: const EdgeInsets.all(1),
               child: TextField(
-                onTap: () {
-                  setState(() {
-                    // TODO: Mudar animação de transição
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => Pesquisa()),
-                    );
-                  });
-                },
-                readOnly: true,
                 autocorrect: false,
                 style: TextStyle(
                   color: Theme.of(context).primaryColorLight,
@@ -88,6 +74,14 @@ class _HomeState extends State<Home> {
                   hintStyle: TextStyle(
                     color: Theme.of(context).primaryColorLight,
                     fontSize: 16,
+                  ),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      Icons.tune, // filter_list ou filter_alt ou tune
+                      size: 22,
+                      color: Theme.of(context).primaryColorLight,
+                    ),
+                    onPressed: () {},
                   ),
                 ),
               ),
@@ -119,13 +113,19 @@ class _HomeState extends State<Home> {
               SizedBox(
                 height: 4,
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 10),
-                child: Text(
-                  "Ofertados",
-                  style: TextStyle(
-                    color: Theme.of(context).primaryColorLight,
-                    fontSize: 24,
+              SizedBox(
+                height: 40,
+                width: 600,
+                child: Card(
+                  color: Colors.blue,
+                  child: Center(
+                    child: Text(
+                      "Ofertados",
+                      style: TextStyle(
+                        color: Theme.of(context).primaryColorLight,
+                        fontSize: 24,
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -235,20 +235,22 @@ class _HomeState extends State<Home> {
                       }),
                 );
               }),
-              Divider(
-                color: Theme.of(context)
-                    .primaryColor
-                    .withOpacity(0.2), // Cor do divisor
-                thickness: 4, // Espessura da linha
-                height: 10, // Espaço vertical ao redor do divisor
+              SizedBox(
+                height: 10,
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 10),
-                child: Text(
-                  "Procurados",
-                  style: TextStyle(
-                    color: Theme.of(context).primaryColorLight,
-                    fontSize: 24,
+              SizedBox(
+                height: 40,
+                width: 600,
+                child: Card(
+                  color: const Color.fromARGB(255, 169, 43, 33),
+                  child: Center(
+                    child: Text(
+                      "Procurados",
+                      style: TextStyle(
+                        color: Theme.of(context).primaryColorLight,
+                        fontSize: 24,
+                      ),
+                    ),
                   ),
                 ),
               ),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:sistema_de_anuncios/pages/login.dart';
-import 'package:sistema_de_anuncios/pages/pesquisa.dart';
 
 class Configs extends StatefulWidget {
   const Configs({super.key});
@@ -22,80 +21,24 @@ class _ConfigsState extends State<Configs> {
             child: AppBar(
               backgroundColor: Theme.of(context).primaryColor,
               elevation: 3,
-              leading: Padding(
-                // Leading é o ícone à esquerda do AppBar
-                padding: const EdgeInsets.only(
-                    left: 10, top: 10, bottom: 10, right: 1),
-                child: Image.asset(
-                  // Imagem do ícone do app
-                  'assets/images/andaime.png',
-                  fit: BoxFit.contain,
-                  width: 0.5,
-                  height: 0.5,
-                ),
+              leading: Icon(
+                Icons.settings,
+                color: Theme.of(context).primaryColorLight,
+                size: 30,
               ),
               title: Padding(
-                padding: const EdgeInsets.all(1),
-                child: TextField(
-                  onTap: () {
-                    setState(() {
-                      // TODO: Mudar animação de transição
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => Pesquisa()),
-                      );
-                    });
-                  },
-                  readOnly: true,
-                  autocorrect: false,
-                  style: TextStyle(
-                    color: Theme.of(context).primaryColorLight,
-                    fontSize: 16,
-                  ),
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide.none,
-                    ),
-                    filled: true,
-                    fillColor: Theme.of(context).cardColor.withOpacity(0.1),
-                    prefixIcon: Icon(
-                      Icons.search,
-                      size: 22,
-                      color: Theme.of(context).primaryColorLight,
-                    ),
-                    contentPadding: EdgeInsets.symmetric(vertical: 14),
-                    hintText: "Pesquisar",
-                    hintStyle: TextStyle(
-                      color: Theme.of(context).primaryColorLight,
-                      fontSize: 16,
-                    ),
-                  ),
-                ),
-              ),
-              actions: [
-                // Actions é o ícone à direita do AppBar
-                Padding(
-                  padding: const EdgeInsets.only(
-                      left: 1, top: 10, bottom: 10, right: 10),
-                  child: IconButton(
-                    padding: EdgeInsets.only(bottom: 1),
-                    icon: Icon(
-                      Icons.message_rounded,
-                      color: Theme.of(context).primaryColorLight,
-                      size: 30,
-                    ),
-                    onPressed: () {
-                      // TODO: Implementar pra abrir a tela de mensagens
-                    },
-                  ),
-                ),
-              ],
+                  padding: const EdgeInsets.all(1),
+                  child: Text(
+                    "Configurações",
+                    style: TextStyle(
+                        color: Theme.of(context).primaryColorLight,
+                        fontSize: 26),
+                  )),
             ),
           ),
           body: LayoutBuilder(builder: (context, constraints) {
             double buttonWidth = constraints.maxWidth;
-            double buttonHeight = 30;
+            double buttonHeight = 40;
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -116,7 +59,7 @@ class _ConfigsState extends State<Configs> {
                         children: [
                           Icon(
                             Icons.info_outline,
-                            color: Theme.of(context).primaryColorLight,
+                            color: Theme.of(context).primaryColorDark,
                           ),
                           SizedBox(
                             width: 6,
@@ -124,13 +67,16 @@ class _ConfigsState extends State<Configs> {
                           Text(
                             "Termos de uso",
                             style: TextStyle(
-                              color: Theme.of(context).primaryColorLight,
-                              fontSize: 18,
+                              color: Theme.of(context).primaryColorDark,
+                              fontSize: 22,
                             ),
                           ),
                         ],
                       ),
                     )),
+                SizedBox(
+                  height: 5,
+                ),
                 FilledButton(
                     onPressed: () {
                       Navigator.push(
@@ -148,7 +94,7 @@ class _ConfigsState extends State<Configs> {
                         children: [
                           Icon(
                             Icons.logout,
-                            color: Theme.of(context).primaryColorLight,
+                            color: Theme.of(context).primaryColorDark,
                           ),
                           SizedBox(
                             width: 6,
@@ -156,8 +102,8 @@ class _ConfigsState extends State<Configs> {
                           Text(
                             "Sair",
                             style: TextStyle(
-                              color: Theme.of(context).primaryColorLight,
-                              fontSize: 18,
+                              color: Theme.of(context).primaryColorDark,
+                              fontSize: 22,
                             ),
                           ),
                         ],

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sistema_de_anuncios/pages/navigation/navigation.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -9,6 +11,48 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  TextEditingController _cpfController = TextEditingController();
+  TextEditingController _senhaController = TextEditingController();
+
+  // IP do servidor
+  String ip = "192.168.110.104";
+
+  // Requisição de login
+  Future<bool> _login() async {
+    final url = Uri.parse('http://${ip}:5000/login');
+
+    // Dados enviados
+    final dados = {
+      'cpf': _cpfController.text,
+      'senha': _senhaController.text,
+    };
+
+    // Enviar requisição
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          // Define o tipo de conteúdo como json
+          'Content-Type': 'application/json'
+        },
+        body: json.encode(dados),
+      );
+
+      if (response.statusCode == 200) {
+        // Resposta da requisição
+        Map<String, dynamic> resposta = json.decode(response.body);
+        if (resposta['login'] == "true") {
+          return true;
+        }
+      } else {
+        print("Erro ao fazer login: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("Erro ao fazer login: ${e}");
+    }
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
     // Verifica se o teclado esta visivel
@@ -51,11 +95,12 @@ class _LoginState extends State<Login> {
                         height: 100,
                       ),
                 Padding(
-                  // Email
+                  // CPF
                   padding: EdgeInsets.only(top: 50, bottom: 8.0),
                   child: SizedBox(
                     width: textFieldWidth,
                     child: TextField(
+                      controller: _cpfController,
                       autofocus: false,
                       autocorrect: false,
                       cursorColor: Theme.of(context).primaryColorLight,
@@ -73,7 +118,7 @@ class _LoginState extends State<Login> {
                             Theme.of(context).primaryColor.withOpacity(0.2),
                         contentPadding:
                             EdgeInsets.symmetric(vertical: 14, horizontal: 14),
-                        hintText: "Email",
+                        hintText: "CPF",
                         hintStyle: TextStyle(
                           color: Theme.of(context).primaryColorLight,
                           fontSize: 16,
@@ -88,6 +133,7 @@ class _LoginState extends State<Login> {
                   child: SizedBox(
                     width: textFieldWidth,
                     child: TextField(
+                      controller: _senhaController,
                       autofocus: false,
                       autocorrect: false,
                       obscureText: true,
@@ -122,13 +168,16 @@ class _LoginState extends State<Login> {
                     width: 200,
                     height: 60,
                     child: ElevatedButton(
-                      onPressed: () {
-                        // TODO: Implementar a autenticação
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const Navigation()),
-                        );
+                      onPressed: () async {
+                        print("CPF: ${_cpfController.text}");
+                        bool entrar = await _login();
+                        if (entrar) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const Navigation()),
+                          );
+                        }
                       },
                       style: ButtonStyle(
                         backgroundColor: WidgetStateProperty.all<Color>(

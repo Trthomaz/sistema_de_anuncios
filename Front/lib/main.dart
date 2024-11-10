@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sistema_de_anuncios/pages/login.dart';
 
-void main() {
+void main() async {
   runApp(MaterialApp(
       title: "Andaime",
       debugShowCheckedModeBanner: false,
