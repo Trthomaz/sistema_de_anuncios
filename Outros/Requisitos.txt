@@ -1,0 +1,54 @@
+Requisitos funcionais:
+
+O sistema deverá permitir que:
+
+1 - O usuário se autentique com sua conta uff;
+() - O sistema deve apresentar, na tela inicial, um quadro com anúncios recomendados (fora do diagrama de casos de uso)
+2 - O usuário crie anúncios (crud);
+3 - O usuário preencha um formulário com informações sobre o anúncio em sua criação;
+4 - O usuário busque anúncios;
+5 - O usuário aplique filtros na pesquisa;
+6 - O usuário se comunique com outros usuários;
+7 - O usuário acesse seu perfil;
+8 - O usuário acesse seus anúncios;
+9 - O usuário selecione anúncios;
+10 - O sistema deve mostrar, ao selecionar um anúncio, as informações completas do anúncio e do anunciante
+11 - O usuário entre em contato com o anunciante através de um chat
+12 - O usuário veja todas as suas conversas, os dados do outro participante da conversa e o anúncio referente a conversa
+() - O usuário encerre uma transação
+13 - O usuário avalie o outro após a conclusão de uma transação
+14 - O sistema deve manter um sistema de reputação para os usuários
+15 - O usuário veja suas informações pessoais
+16 - O usuário visualize os dados de todos os anúncios feitos por si e os anúncios finalizados em que participou
+17 - O usuário avalie os anúncios passados
+18 - O usuário acesse os chats dos anúncios atuais
+
+Requisitos não funcionais:
+
+Segurança:
+
+Autenticação segura: Garantir que a autenticação seja feita exclusivamente com a conta da UFF e que informações sensíveis estejam protegidas contra acesso não autorizado.
+
+Usabilidade:
+
+Interface Intuitiva: A interface deve ser simples, fácil de navegar e intuitiva para todos os tipos de usuários.
+
+Design multi-plataforma: O sistema deve ser compatível com dispositivos móveis e desktops, ajustando-se automaticamente ao tamanho da tela.
+
+Feedback do Usuário: Fornecer feedback imediato para ações importantes, como criação de anúncios e envio de mensagens.
+
+Desempenho:
+
+Tempo de Resposta: As páginas e as operações críticas devem carregar em menos de 5 segundos sob carga normal.
+
+Manutenção:
+
+Modularidade: O sistema deve ser modular para facilitar a manutenção e a adição de novas funcionalidades.
+
+Testes Automatizados: Implementação de testes para garantir a estabilidade e facilitar atualizações.
+
+Documentação Completa: Manter documentação detalhada do sistema, incluindo código-fonte, arquitetura e configurações.
+
+Portabilidade:
+
+Compatibilidade com Navegadores: O sistema deve ser compatível com os navegadores mais usados, como Chrome, Firefox e Safari.

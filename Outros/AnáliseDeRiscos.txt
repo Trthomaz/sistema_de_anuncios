@@ -1,0 +1,82 @@
+﻿Cenário: Desenvolvimento de Sistema de Anúncios
+
+
+Tabela de Exposição
+  
+<jpeg na pasta>
+
+
+Risco 1 - Pelo menos um dos integrantes adoecer
+* Probabilidade: 80%
+* Impacto: 0,2
+* Exposição: 0,16
+* Prioridade Média
+* Contenção: Boa alimentação, exercícios físicos
+* Contingência: Tomar remédio, ir ao médico
+
+
+Risco 2 - Um dos integrantes do grupo abandonar a matéria
+* Probabilidade: 20%
+* Impacto: 0,4
+* Exposição: 0,08
+* Prioridade Baixa
+* Contenção: Ajudar uns aos outros na disciplina
+* Contingência: Conversas semanais para checagem de abandono
+
+
+Risco 3 - Mal entendimento da proposta
+* Probabilidade: 20%
+* Impacto: 0,8
+* Exposição: 0,16
+* Prioridade Média
+* Contenção: Falar com o professor antes da implementação, encarregar um membro do grupo como PO (Product Owner)
+* Contingência: Fazer códigos fáceis de modificar, fazer reuniões periódicas para identificar erros nos estágios iniciais do projeto
+
+
+Risco 4 - Falta de conhecimento técnico
+* Probabilidade: 60%
+* Impacto: 0,6
+* Exposição: 0,36
+* Prioridade Alta
+* Contenção: Estudo das tecnologias utilizadas no projeto
+* Contingência: Conversa com especialistas
+
+
+*Risco 5 - Entregar o projeto incompleto
+* Probabilidade: 40%
+* Impacto: 0,6
+* Exposição: 0,24
+* Prioridade Média
+
+
+
+
+*Risco 6 - Desorganização do grupo e de suas ocupações
+* Probabilidade: 60%
+* Impacto: 0,4
+* Exposição: 0,24
+* Prioridade Média
+
+
+*Risco 7 - Mal gerenciamento dos processos
+* Probabilidade: 40%
+* Impacto: 0,8
+* Exposição: 0,32
+* Prioridade Alta
+
+
+*Risco 8 - Atraso no cronograma
+* Probabilidade: 60%
+* Impacto: 0,4
+* Exposição: 0,24
+* Prioridade Média
+
+
+*Risco 9 - Falta de capital
+* Probabilidade: 20%
+* Impacto: 1,0
+* Exposição: 0,20
+* Prioridade Média
+
+
+Devemos considerar os riscos com probabilidade 0 ou impacto 0?

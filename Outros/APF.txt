@@ -1,0 +1,109 @@
+Realizacao da Tarefa - 09:30 - 12:00
+
+
+1- Definindo elementos do software:
+
+-> EE: Criar conta; Cadastro de produto; Mensagem Entrada
+-> SE: Mensagem Saída; Histórico de Venda; Histórico de Anúncios; Informacao do Anuncio; Informacao do Anunciante
+-> CE: Busca de Anuncio; Busca de Historico de Anuncio; Busca de Mensagem
+-> ALI: Perfil; Conta; Transação; Anuncio; Conversa; Mensagem
+-> AIE: Nenuhum, pois temos so um sistema que gerencia as classes/informaçoes, tudo manipulado pelo Flask!
+
+
+2- Determinar o nivel de complexidade
+
+-> EE:
+	Criar Conta		- Media (2 / 5 a 15)
+	Cadastro de Produto	- Media (2 / 5 a 15)
+	Mensagem Entrada	- Baixa (2 / 1 a 4)
+
+-> SE e CE:
+	Mensagem Saida		- Baixa (2 a 3 / 1 a 5)
+	Historico de Venda	- Media (2 a 3 / 6 a 19)
+	Historico de Anuncio	- Media (2 a 3 / 6 a 19)
+	Informacao de Anuncio	- Baixa (0 a 1 / 6 a 19)
+	Informacao do Anunciante- Baixa (0 a 1 / 1 a 5)
+	
+	Busca de Anuncio	- Baixa (0 a 1 / 6 a 19)
+	Busca de H Anuncio	- Baixa (2 a 3 / 1 a 5)
+	Busca de Mensagem	- Baixa (2 a 3 / 1 a 5)
+	
+-> ALI e AIE:
+	Perfil			- Baixa (2 a 5 / 1 a 19)
+	Conta			- Baixa (1 / 1 a 19)
+	Transacao		- Baixa (2 a 5 / 1 a 19)
+	Anuncio			- Baixa (2 a 5 / 1 a 19)
+	Conversa		- Baixa (2 a 5 / 1 a 19)
+	Mensagem		- Baixa (1 / 1 a 19)
+
+
+3- Atribuir peso a cada elemento
+
+EE:  media * 2 + baixa * 1 =	  4*2 + 3*1 = 11
+SE:  media * 2 + baixa * 3 =	  5*2 + 4*3 = 22
+CE:  baixa * 3 = 			3*3 = 9
+ALI: baixa * 6 =			7*6 = 42
+
+
+4- Calcular PFNA
+PFNA					    = 84
+
+
+5- Ajustar os pontos de funcao
+1  - 5
+2  - 3
+3  - 0
+4  - 2
+5  - 3
+6  - 5
+7  - 4
+8  - 5
+9  - 2
+10 - 1
+11 - 3
+12 - 0
+13 - 2
+14 - 4
+T  - 39
+
+6- Calcular o PF
+PF = 84 * (0,65 + 0,01*39) = 87,36
+
+7- Converter PFNA em LOC
+
+PFNA = 84
+PF = 87,36
+
+Tabela de conversão não tem linha contendo Python
+Chat fala: 100
+
+Levando em consideração uma estimativa de 100 LOCs por ponto de função, teremos:
+
+Não Ajustado:   PFNA * 100 = 8400 LOCs = 8.4 KLOCs
+Ajustado: 	PF * 100 = 8736 LOCs = 8.736 KLOCs
+
+
+Utilizando o COCOMO, teremos:
+
+Não Ajustado:
+	     Esforço = 2.4 * 8.4 ^ 1.05 = 22.42 homem-mês
+	     Duração = 2.5 * 22.42 ^ 0.38 = 8.15 meses
+	     
+	   
+Ajustado: 
+	     Esforço = 2.4 * 8.736 ^ 1.05 = 23.37 homem-mês
+	     Duração = 2.5 * 23.37 ^ 0.38 = 8.28 meses
+
+	    
+Considerando o salário de R$ 3.000,00 por pessoa, teremos, de custo:
+
+Não Ajustado: R$ 67.260,00 
+Ajustado: R$ 70.110,00
+
+
+Com uma margem de lucro de 65%, teremos um orçamento de:
+
+Não Ajustado: R$ 110.979,00
+Ajustado: R$ 115.681,50
+
+
