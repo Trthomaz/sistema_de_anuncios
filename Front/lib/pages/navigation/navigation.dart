@@ -30,6 +30,7 @@ class _NavigationState extends State<Navigation> {
       body: _pages[
           _selectedIndex], // Abre a página selecionada no BottomNavigationBar
       bottomNavigationBar: BottomNavigationBar(
+        elevation: 0,
         currentIndex: _selectedIndex,
         onTap: (int index) {
           // Muda o index da página selecionada
