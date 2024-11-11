@@ -11,7 +11,7 @@ Planejamento: (48.5)
         Planning Poker: 12
     Definição do custo: 0.5
     Definição do orçamento: 0.5
-    Cronograma de desenvolvimento: 3
+    Cronograma de desenvolvimento: 6
 Gerenciamento: (124)
     Reuniões: (48)
         Reunião 1: 6
@@ -88,4 +88,4 @@ Testes: (32)
         Testes de aceitação alfa: 6
         Testes de aceitação beta: 8
 
-Total: 335 homem-hora.
+Total: 338 homem-hora.
