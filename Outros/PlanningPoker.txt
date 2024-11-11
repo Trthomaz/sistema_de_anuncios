@@ -1,0 +1,91 @@
+Planejamento: (48.5)
+    Escopo dos requisitos: (10)
+        Listagem de Requisitos: 3
+        Diagrama de Casos de Uso: 1
+        Modelo Conceitual: 1
+        Diagrama de fluxo de telas: 5
+    Análise de tecnologias: 6.5
+    EAP: 12
+    Estimativas de esforço: (16)
+        APF: 4
+        Planning Poker: 12
+    Definição do custo: 0.5
+    Definição do orçamento: 0.5
+    Cronograma de desenvolvimento: 3
+Gerenciamento: (124)
+    Reuniões: (48)
+        Reunião 1: 6
+        Reunião 2: 6
+        Reunião 3: 6
+        Reunião 4: 6
+        Reunião 5: 6
+        Reunião 6: 6
+        Reunião 7: 6
+        Reunião 8: 6
+    Análise de Riscos: 5
+    Monitoramento e Controle do Projeto: (5)
+        Burndown: (3)
+            Burndown 1: 0.6
+            Burndown 2: 0.6
+            Burndown 3: 0.6
+            Burndown 4: 0.6
+            Burndown 5: 0.6
+        Análise de valor agregado: (2)
+            AVA 1: 0.4
+            AVA 2: 0.4
+            AVA 3: 0.4
+            AVA 4: 0.4
+            AVA 5: 0.4
+    Capacitação de pessoal: 50
+    Controle de versões: 6
+    Controle de modificações: 8
+    Definir estratégia de ramificação: 2
+Apresentações: (13.5)
+    Apresentações: (4.5)
+        Apresentação 1: 1.5
+        Apresentação 2: 1.5
+        Apresentação 3: 1.5
+    Slides: (9)
+        Slides 1: 3
+        Slides 2: 3
+        Slides 3: 3
+Backend: (48)
+    Tradução do modelo conceitual: 9
+    Atendimento a requisições: (24)
+        Atendimento a requisições referentes ao feed: 3
+        Atendimento a requisições referentes à busca: 4
+        Atendimento a requisições referentes ao login: 3
+        Atendimento a requisições referentes aos Meus Anúncios: 2
+        Atendimento a requisições referentes aos Anúncios: 3
+        Atendimento a requisições referentes ao perfil: 3
+        Atendimento a requisições referentes à criação de anúncios: 3
+        Atendimento a requisições referentes às mensagens: 3
+    Construção do Banco de Dados: (15)
+        Projeto do Banco de Dados: 1
+        Implementação do Banco de Dados: 14
+Frontend: (69)
+    Telas: (44)
+        Tela de início: 10
+        Tela de login: 3
+        Tela de Meus Anúncios: 5
+        Tela de exibição de anúncios: 8
+        Tela de perfil: 3
+        Telas de mensagens: 15
+    Barra de navegação: 2
+    Requisições: (23)
+        Requisições referentes ao feed: 3
+        Requisições referentes à busca: 4
+        Requisições referentes ao login: 2
+        Requisições referentes aos Meus Anúncios: 1
+        Requisições referentes aos Anúncios: 3
+        Requisições referentes ao perfil: 2
+        Requisições referentes à criação de anúncios: 4
+        Requisições referentes às mensagens: 4
+Testes: (32)
+    Testes de integração: 10
+    Testes de sistema: 8
+    Testes de aceitação: (14)
+        Testes de aceitação alfa: 6
+        Testes de aceitação beta: 8
+
+Total: 335 homem-hora.
