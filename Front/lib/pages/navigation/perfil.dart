@@ -10,11 +10,15 @@ class Perfil extends StatefulWidget {
 }
 
 class _PerfilState extends State<Perfil> {
-  List<Map<String, dynamic>> anuncios = [
-    {"titulo": "Calça", "preço": 20, "imagem": 'assets/images/calca.jpeg'},
-    {"titulo": "Mesa", "preço": 70, "imagem": null},
-    {"titulo": "Mouse", "preço": 15, "imagem": null},
-    {"titulo": "Teclado", "preço": 30, "imagem": null},
+  List<Map<String, dynamic>> venda = [
+    {"titulo": "Calça", "preço": 60, "imagem": 'assets/images/calca.jpeg'},
+    {
+      "titulo": "Garrafa Térmica",
+      "preço": 30,
+      "imagem": 'assets/images/garrafa.jpeg'
+    },
+    {"titulo": "Mouse", "preço": 15, "imagem": 'assets/images/mouse.jpeg'},
+    {"titulo": "Aula de história", "preço": 50, "imagem": null},
   ];
 
   @override
@@ -109,7 +113,8 @@ class _PerfilState extends State<Perfil> {
             return Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.all(20),
+                  padding: const EdgeInsets.only(
+                      top: 20, bottom: 4, left: 20, right: 20),
                   child: Align(
                     alignment: Alignment.topLeft,
                     child: Row(
@@ -169,18 +174,30 @@ class _PerfilState extends State<Perfil> {
                     ),
                   ),
                 ),
-                Text("Histórico",
-                    style: TextStyle(
-                      fontSize: 24,
-                      color: Theme.of(context).primaryColorLight,
-                    )),
+                SizedBox(
+                  height: 50,
+                  width: 150,
+                  child: Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    color: Theme.of(context).primaryColor,
+                    child: Center(
+                      child: Text("Histórico",
+                          style: TextStyle(
+                            fontSize: 24,
+                            color: Theme.of(context).primaryColorLight,
+                          )),
+                    ),
+                  ),
+                ),
                 SizedBox(height: 10),
                 LayoutBuilder(builder: (context, constraints) {
                   return SizedBox(
                     width: containerWidth,
                     height: containerHeight,
                     child: ListView.builder(
-                      itemCount: anuncios.length,
+                      itemCount: venda.length,
                       itemBuilder: (context, index) {
                         return Padding(
                           padding: const EdgeInsets.all(5),
@@ -202,9 +219,9 @@ class _PerfilState extends State<Perfil> {
                               children: [
                                 ClipRRect(
                                   borderRadius: BorderRadius.circular(10),
-                                  child: anuncios[index]["imagem"] != null
+                                  child: venda[index]["imagem"] != null
                                       ? Image.asset(
-                                          anuncios[index]["imagem"],
+                                          venda[index]["imagem"],
                                           fit: BoxFit.contain,
                                           height: imageSize,
                                           width: imageSize,
@@ -232,7 +249,7 @@ class _PerfilState extends State<Perfil> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        anuncios[index]["titulo"],
+                                        venda[index]["titulo"],
                                         softWrap: true,
                                         maxLines: 2,
                                         overflow: TextOverflow.ellipsis,
@@ -243,7 +260,9 @@ class _PerfilState extends State<Perfil> {
                                         ),
                                       ),
                                       Text(
-                                        "R\$${anuncios[index]["preço"]}",
+                                        "R\$${venda[index]["preço"]}",
+                                        softWrap: true,
+                                        maxLines: 1,
                                         style: TextStyle(
                                           color: Theme.of(context)
                                               .primaryColorLight,
@@ -251,13 +270,14 @@ class _PerfilState extends State<Perfil> {
                                         ),
                                       ),
                                       SizedBox(
-                                        height: 20,
-                                        width: 55,
+                                        height: 15,
+                                        width: 40,
                                         child: Card(
-                                          color: Colors.blue,
+                                          margin: EdgeInsets.all(0),
+                                          color: Color(0xFF134E6C),
                                           child: Center(
                                             child: Text(
-                                              "Ofertado",
+                                              "Venda",
                                               style: TextStyle(
                                                   fontSize: 8,
                                                   color: Theme.of(context)

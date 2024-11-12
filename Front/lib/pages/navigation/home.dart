@@ -12,26 +12,30 @@ class _HomeState extends State<Home> {
   // Lista dos anuncios
   List<Map<String, dynamic>> venda = [
     {"titulo": "Calça", "preço": 60, "imagem": 'assets/images/calca.jpeg'},
-    {"titulo": "Garrafa", "preço": 30, "imagem": null},
+    {
+      "titulo": "Garrafa Térmica",
+      "preço": 30,
+      "imagem": 'assets/images/garrafa.jpeg'
+    },
+    {"titulo": "Mouse", "preço": 15, "imagem": 'assets/images/mouse.jpeg'},
     {"titulo": "Aula de história", "preço": 50, "imagem": null},
-    {"titulo": "Mouse", "preço": 15, "imagem": null},
   ];
 
   List<Map<String, dynamic>> busca = [
-    {"titulo": "Cadeira", "preço": 40, "imagem": null},
+    {"titulo": "Teclado", "preço": 30, "imagem": 'assets/images/teclado.jpeg'},
     {
-      "titulo": "Mesafaosfbasiufbauisbafasfasfsaffubafisu",
+      "titulo": "Mesa",
       "preço": 70,
-      "imagem": null
+      "imagem": 'assets/images/mesa.jpeg',
     },
     {"titulo": "Calculadora", "preço": 20, "imagem": null},
-    {"titulo": "Teclado", "preço": 30, "imagem": null},
+    {"titulo": "Cadeira", "preço": 40, "imagem": null},
   ];
 
   @override
   Widget build(BuildContext context) {
     double cardWidth = 150;
-    double cardHeight = 257;
+    double cardHeight = 251;
     double cardSpacing = 5;
     double imageSize = cardWidth;
     return PopScope(
@@ -210,6 +214,8 @@ class _HomeState extends State<Home> {
                                         ),
                                         Text(
                                           "R\$${venda[index]["preço"]}",
+                                          softWrap: true,
+                                          maxLines: 1,
                                           style: TextStyle(
                                             color: Theme.of(context)
                                                 .primaryColorLight,
@@ -220,9 +226,10 @@ class _HomeState extends State<Home> {
                                     ),
                                   ),
                                   SizedBox(
-                                    height: 26,
-                                    width: 45,
+                                    height: 20,
+                                    width: 40,
                                     child: Card(
+                                      margin: EdgeInsets.only(bottom: 5),
                                       color: Color(0xFF134E6C),
                                       child: Center(
                                         child: Text(
@@ -334,6 +341,8 @@ class _HomeState extends State<Home> {
                                         ),
                                         Text(
                                           "R\$${busca[index]["preço"]}",
+                                          softWrap: true,
+                                          maxLines: 1,
                                           style: TextStyle(
                                             color: Theme.of(context)
                                                 .primaryColorLight,
@@ -344,9 +353,10 @@ class _HomeState extends State<Home> {
                                     ),
                                   ),
                                   SizedBox(
-                                    height: 26,
-                                    width: 45,
+                                    height: 20,
+                                    width: 40,
                                     child: Card(
+                                      margin: EdgeInsets.only(bottom: 5),
                                       color: Color(0xFF38524A),
                                       child: Center(
                                         child: Text(
