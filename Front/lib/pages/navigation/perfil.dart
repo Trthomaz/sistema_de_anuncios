@@ -11,18 +11,10 @@ class Perfil extends StatefulWidget {
 
 class _PerfilState extends State<Perfil> {
   List<Map<String, dynamic>> anuncios = [
-    {
-      "titulo": "Calça do Dário",
-      "preço": 20,
-      "imagem": 'assets/images/calca.jpeg'
-    },
-    {"titulo": "mmmmmmmmmmmmmmmmmmmmmmmmmmmm", "preço": 30, "imagem": null},
-    {
-      "titulo": "Calça do Dário 2",
-      "preço": 20,
-      "imagem": 'assets/images/calca.jpeg'
-    },
-    {"titulo": "Anúncio 3", "preço": 30, "imagem": null},
+    {"titulo": "Calça", "preço": 20, "imagem": 'assets/images/calca.jpeg'},
+    {"titulo": "Mesa", "preço": 70, "imagem": null},
+    {"titulo": "Mouse", "preço": 15, "imagem": null},
+    {"titulo": "Teclado", "preço": 30, "imagem": null},
   ];
 
   @override
@@ -40,7 +32,6 @@ class _PerfilState extends State<Perfil> {
             preferredSize: Size.fromHeight(60.0),
             child: AppBar(
               backgroundColor: Theme.of(context).primaryColor,
-              elevation: 3,
               leading: Padding(
                 // Leading é o ícone à esquerda do AppBar
                 padding: const EdgeInsets.only(
@@ -114,7 +105,7 @@ class _PerfilState extends State<Perfil> {
           ),
           body: LayoutBuilder(builder: (context, constraints) {
             double containerWidth = constraints.maxWidth * 0.9;
-            double containerHeight = constraints.maxHeight - 214;
+            double containerHeight = constraints.maxHeight - 184;
             return Column(
               children: [
                 Padding(
@@ -140,7 +131,7 @@ class _PerfilState extends State<Perfil> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text("João do Poço",
+                            Text("João Silva",
                                 style: TextStyle(
                                   fontSize: 24,
                                   color: Theme.of(context).primaryColorLight,
@@ -193,11 +184,10 @@ class _PerfilState extends State<Perfil> {
                       itemBuilder: (context, index) {
                         return Padding(
                           padding: const EdgeInsets.all(5),
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
+                          child: FilledButton(
+                            style: FilledButton.styleFrom(
                               padding: EdgeInsets.all(6),
                               backgroundColor: Theme.of(context).cardColor,
-                              elevation: 3,
                               fixedSize: Size(cardWidth, cardHeight),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10),

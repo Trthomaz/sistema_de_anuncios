@@ -10,21 +10,28 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   // Lista dos anuncios
-  List<Map<String, dynamic>> anuncios = [
-    {"titulo": "Calça", "preço": 20, "imagem": 'assets/images/calca.jpeg'},
-    {"titulo": "", "preço": 30, "imagem": null},
+  List<Map<String, dynamic>> venda = [
+    {"titulo": "Calça", "preço": 60, "imagem": 'assets/images/calca.jpeg'},
+    {"titulo": "Garrafa", "preço": 30, "imagem": null},
+    {"titulo": "Aula de história", "preço": 50, "imagem": null},
+    {"titulo": "Mouse", "preço": 15, "imagem": null},
+  ];
+
+  List<Map<String, dynamic>> busca = [
+    {"titulo": "Cadeira", "preço": 40, "imagem": null},
     {
-      "titulo": "Calça do Dário 2",
-      "preço": 20,
-      "imagem": 'assets/images/calca.jpeg'
+      "titulo": "Mesafaosfbasiufbauisbafasfasfsaffubafisu",
+      "preço": 70,
+      "imagem": null
     },
-    {"titulo": "Anúncio 3", "preço": 30, "imagem": null},
+    {"titulo": "Calculadora", "preço": 20, "imagem": null},
+    {"titulo": "Teclado", "preço": 30, "imagem": null},
   ];
 
   @override
   Widget build(BuildContext context) {
     double cardWidth = 150;
-    double cardHeight = 297;
+    double cardHeight = 257;
     double cardSpacing = 5;
     double imageSize = cardWidth;
     return PopScope(
@@ -36,7 +43,6 @@ class _HomeState extends State<Home> {
           preferredSize: Size.fromHeight(60.0),
           child: AppBar(
             backgroundColor: Theme.of(context).primaryColor,
-            elevation: 3,
             leading: Padding(
               // Leading é o ícone à esquerda do AppBar
               padding: const EdgeInsets.only(
@@ -90,9 +96,12 @@ class _HomeState extends State<Home> {
               // Actions é o ícone à direita do AppBar
               Padding(
                 padding: const EdgeInsets.only(
-                    left: 1, top: 10, bottom: 10, right: 10),
+                    left: 1, top: 2, bottom: 1, right: 10),
                 child: IconButton(
                   padding: EdgeInsets.only(bottom: 1),
+                  style: ButtonStyle(
+                    fixedSize: WidgetStateProperty.all<Size>(Size(50, 50)),
+                  ),
                   icon: Icon(
                     Icons.message_rounded,
                     color: Theme.of(context).primaryColorLight,
@@ -114,13 +123,13 @@ class _HomeState extends State<Home> {
                 height: 4,
               ),
               SizedBox(
-                height: 40,
-                width: 600,
+                height: 46,
+                width: double.infinity,
                 child: Card(
-                  color: Colors.blue,
+                  color: Color(0xFF134E6C),
                   child: Center(
                     child: Text(
-                      "Ofertados",
+                      "Venda",
                       style: TextStyle(
                         color: Theme.of(context).primaryColorLight,
                         fontSize: 24,
@@ -134,18 +143,17 @@ class _HomeState extends State<Home> {
                   height: cardHeight + 6,
                   child: ListView.builder(
                       scrollDirection: Axis.horizontal,
-                      itemCount: anuncios.length,
+                      itemCount: venda.length,
                       itemBuilder: (context, index) {
                         return Row(
                           children: [
                             SizedBox(
                               width: cardSpacing,
                             ),
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
+                            FilledButton(
+                              style: FilledButton.styleFrom(
                                 padding: EdgeInsets.all(4),
                                 backgroundColor: Theme.of(context).cardColor,
-                                elevation: 3,
                                 fixedSize: Size(cardWidth, cardHeight),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10),
@@ -157,22 +165,25 @@ class _HomeState extends State<Home> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(10),
-                                    child: anuncios[index]["imagem"] != null
-                                        ? Image.asset(
-                                            anuncios[index]["imagem"],
+                                  venda[index]["imagem"] != null
+                                      ? ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          child: Image.asset(
+                                            venda[index]["imagem"],
                                             fit: BoxFit.contain,
                                             height: imageSize,
                                             width: imageSize,
-                                          )
-                                        : Icon(
-                                            Icons.image_rounded,
-                                            size: imageSize,
-                                            color: Theme.of(context)
-                                                .primaryColorLight,
+                                          ))
+                                      : Padding(
+                                          padding: const EdgeInsets.all(10),
+                                          child: Image.asset(
+                                            'assets/images/image.png',
+                                            fit: BoxFit.contain,
+                                            height: imageSize - 20,
+                                            width: imageSize - 20,
                                           ),
-                                  ),
+                                        ),
                                   Divider(
                                     color: Theme.of(context)
                                         .primaryColorLight
@@ -187,9 +198,9 @@ class _HomeState extends State<Home> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          anuncios[index]["titulo"],
+                                          venda[index]["titulo"],
                                           softWrap: true,
-                                          maxLines: 3,
+                                          maxLines: 2,
                                           overflow: TextOverflow.ellipsis,
                                           style: TextStyle(
                                             color: Theme.of(context)
@@ -198,7 +209,7 @@ class _HomeState extends State<Home> {
                                           ),
                                         ),
                                         Text(
-                                          "R\$${anuncios[index]["preço"]}",
+                                          "R\$${venda[index]["preço"]}",
                                           style: TextStyle(
                                             color: Theme.of(context)
                                                 .primaryColorLight,
@@ -209,13 +220,13 @@ class _HomeState extends State<Home> {
                                     ),
                                   ),
                                   SizedBox(
-                                    height: 20,
-                                    width: 55,
+                                    height: 26,
+                                    width: 45,
                                     child: Card(
-                                      color: Colors.blue,
+                                      color: Color(0xFF134E6C),
                                       child: Center(
                                         child: Text(
-                                          "Ofertado",
+                                          "Venda",
                                           style: TextStyle(
                                               fontSize: 8,
                                               color: Theme.of(context)
@@ -236,16 +247,13 @@ class _HomeState extends State<Home> {
                 );
               }),
               SizedBox(
-                height: 10,
-              ),
-              SizedBox(
-                height: 40,
-                width: 600,
+                height: 46,
+                width: double.infinity,
                 child: Card(
-                  color: const Color.fromARGB(255, 169, 43, 33),
+                  color: Color(0xFF38524A),
                   child: Center(
                     child: Text(
-                      "Procurados",
+                      "Busca",
                       style: TextStyle(
                         color: Theme.of(context).primaryColorLight,
                         fontSize: 24,
@@ -259,18 +267,17 @@ class _HomeState extends State<Home> {
                   height: cardHeight + 6,
                   child: ListView.builder(
                       scrollDirection: Axis.horizontal,
-                      itemCount: anuncios.length,
+                      itemCount: busca.length,
                       itemBuilder: (context, index) {
                         return Row(
                           children: [
                             SizedBox(
                               width: cardSpacing,
                             ),
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
+                            FilledButton(
+                              style: FilledButton.styleFrom(
                                 padding: EdgeInsets.all(4),
                                 backgroundColor: Theme.of(context).cardColor,
-                                elevation: 3,
                                 fixedSize: Size(cardWidth, cardHeight),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10),
@@ -282,22 +289,25 @@ class _HomeState extends State<Home> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(10),
-                                    child: anuncios[index]["imagem"] != null
-                                        ? Image.asset(
-                                            anuncios[index]["imagem"],
+                                  busca[index]["imagem"] != null
+                                      ? ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          child: Image.asset(
+                                            busca[index]["imagem"],
                                             fit: BoxFit.contain,
                                             height: imageSize,
                                             width: imageSize,
-                                          )
-                                        : Icon(
-                                            Icons.image_rounded,
-                                            size: imageSize,
-                                            color: Theme.of(context)
-                                                .primaryColorLight,
+                                          ))
+                                      : Padding(
+                                          padding: const EdgeInsets.all(10),
+                                          child: Image.asset(
+                                            'assets/images/image.png',
+                                            fit: BoxFit.contain,
+                                            height: imageSize - 20,
+                                            width: imageSize - 20,
                                           ),
-                                  ),
+                                        ),
                                   Divider(
                                     color: Theme.of(context)
                                         .primaryColorLight
@@ -312,9 +322,9 @@ class _HomeState extends State<Home> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          anuncios[index]["titulo"],
+                                          busca[index]["titulo"],
                                           softWrap: true,
-                                          maxLines: 3,
+                                          maxLines: 2,
                                           overflow: TextOverflow.ellipsis,
                                           style: TextStyle(
                                             color: Theme.of(context)
@@ -323,7 +333,7 @@ class _HomeState extends State<Home> {
                                           ),
                                         ),
                                         Text(
-                                          "R\$${anuncios[index]["preço"]}",
+                                          "R\$${busca[index]["preço"]}",
                                           style: TextStyle(
                                             color: Theme.of(context)
                                                 .primaryColorLight,
@@ -334,14 +344,13 @@ class _HomeState extends State<Home> {
                                     ),
                                   ),
                                   SizedBox(
-                                    height: 20,
-                                    width: 60,
+                                    height: 26,
+                                    width: 45,
                                     child: Card(
-                                      color: const Color.fromARGB(
-                                          255, 169, 43, 33),
+                                      color: Color(0xFF38524A),
                                       child: Center(
                                         child: Text(
-                                          "Procurado",
+                                          "Busca",
                                           style: TextStyle(
                                               fontSize: 8,
                                               color: Theme.of(context)

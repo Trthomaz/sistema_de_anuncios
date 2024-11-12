@@ -43,23 +43,28 @@ class _ConfigsState extends State<Configs> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(
-                  height: 10,
+                  height: 2,
                 ),
                 FilledButton(
                     onPressed: () {
                       // Todo: Implementar a tela de termos de uso
                     },
                     style: FilledButton.styleFrom(
-                        backgroundColor:
-                            Theme.of(context).scaffoldBackgroundColor,
-                        fixedSize: Size(buttonWidth, buttonHeight)),
+                      backgroundColor:
+                          Theme.of(context).primaryColor.withOpacity(0.3),
+                      fixedSize: Size(buttonWidth, buttonHeight),
+                      shape: RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.zero, // Borda reta (90 graus)
+                      ),
+                    ),
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Row(
                         children: [
                           Icon(
                             Icons.info_outline,
-                            color: Theme.of(context).primaryColorDark,
+                            color: Theme.of(context).primaryColorLight,
                           ),
                           SizedBox(
                             width: 6,
@@ -67,7 +72,7 @@ class _ConfigsState extends State<Configs> {
                           Text(
                             "Termos de uso",
                             style: TextStyle(
-                              color: Theme.of(context).primaryColorDark,
+                              color: Theme.of(context).primaryColorLight,
                               fontSize: 22,
                             ),
                           ),
@@ -75,7 +80,7 @@ class _ConfigsState extends State<Configs> {
                       ),
                     )),
                 SizedBox(
-                  height: 5,
+                  height: 2,
                 ),
                 FilledButton(
                     onPressed: () {
@@ -85,16 +90,23 @@ class _ConfigsState extends State<Configs> {
                       );
                     },
                     style: FilledButton.styleFrom(
-                        backgroundColor:
-                            Theme.of(context).scaffoldBackgroundColor,
-                        fixedSize: Size(buttonWidth, buttonHeight)),
+                      backgroundColor:
+                          Theme.of(context).primaryColor.withOpacity(0.3),
+                      fixedSize: Size(buttonWidth, buttonHeight),
+                      shape: RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.zero, // Borda reta (90 graus)
+                      ),
+                      overlayColor:
+                          Theme.of(context).primaryColor.withOpacity(0.3),
+                    ),
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Row(
                         children: [
                           Icon(
                             Icons.logout,
-                            color: Theme.of(context).primaryColorDark,
+                            color: Theme.of(context).primaryColorLight,
                           ),
                           SizedBox(
                             width: 6,
@@ -102,7 +114,7 @@ class _ConfigsState extends State<Configs> {
                           Text(
                             "Sair",
                             style: TextStyle(
-                              color: Theme.of(context).primaryColorDark,
+                              color: Theme.of(context).primaryColorLight,
                               fontSize: 22,
                             ),
                           ),
