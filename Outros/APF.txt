@@ -49,7 +49,7 @@ ALI: baixa * 6 =			7*6 = 42
 PFNA					    = 84
 
 
-5- Ajustar os pontos de funcao
+5- Ajustar os pontos de função
 1  - 5
 2  - 3
 3  - 0
@@ -64,7 +64,7 @@ PFNA					    = 84
 12 - 0
 13 - 2
 14 - 4
-T  - 39
+Total  - 39
 
 6- Calcular o PF
 PF = 84 * (0,65 + 0,01*39) = 87,36
@@ -72,38 +72,26 @@ PF = 84 * (0,65 + 0,01*39) = 87,36
 7- Converter PFNA em LOC
 
 PFNA = 84
-PF = 87,36
-
-Tabela de conversão não tem linha contendo Python
-Chat fala: 100
 
 Levando em consideração uma estimativa de 100 LOCs por ponto de função, teremos:
 
-Não Ajustado:   PFNA * 100 = 8400 LOCs = 8.4 KLOCs
-Ajustado: 	PF * 100 = 8736 LOCs = 8.736 KLOCs
+	     PFNA * 55 = 4620 LOCs = 4.62 KLOCs
 
 
 Utilizando o COCOMO, teremos:
 
-Não Ajustado:
-	     Esforço = 2.4 * 8.4 ^ 1.05 = 22.42 homem-mês
-	     Duração = 2.5 * 22.42 ^ 0.38 = 8.15 meses
-	     
-	   
-Ajustado: 
-	     Esforço = 2.4 * 8.736 ^ 1.05 = 23.37 homem-mês
-	     Duração = 2.5 * 23.37 ^ 0.38 = 8.28 meses
+	     Esforço = 2.4 * 4.62 ^ 1.05 = 11.97 homem-mês
+
+	     Duração = 2.5 * 11.97 ^ 0.38 = 6,42 meses
 
 	    
 Considerando o salário de R$ 3.000,00 por pessoa, teremos, de custo:
 
-Não Ajustado: R$ 67.260,00 
-Ajustado: R$ 70.110,00
+		Custo: R$ 35.910,00
 
 
 Com uma margem de lucro de 65%, teremos um orçamento de:
 
-Não Ajustado: R$ 110.979,00
-Ajustado: R$ 115.681,50
+		Orçamento: R$ 59.251,50
 
 
