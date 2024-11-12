@@ -12,7 +12,7 @@ Risco 1 - Pelo menos um dos integrantes adoecer
 * Exposição: 0,16
 * Prioridade Média
 * Contenção: Boa alimentação, exercícios físicos
-* Contingência: Tomar remédio, ir ao médico
+* Contingência: Tomar remédio, ir ao médico e Alocar diferentes pessoas para o mesmo tema
 
 
 Risco 2 - Um dos integrantes do grupo abandonar a matéria
@@ -21,7 +21,7 @@ Risco 2 - Um dos integrantes do grupo abandonar a matéria
 * Exposição: 0,08
 * Prioridade Baixa
 * Contenção: Ajudar uns aos outros na disciplina
-* Contingência: Conversas semanais para checagem de abandono
+* Contingência: Conversas semanais para checagem de abandono e Alocar diferentes pessoas para o mesmo tema
 
 
 Risco 3 - Mal entendimento da proposta
@@ -29,8 +29,8 @@ Risco 3 - Mal entendimento da proposta
 * Impacto: 0,8
 * Exposição: 0,16
 * Prioridade Média
-* Contenção: Falar com o professor antes da implementação, encarregar um membro do grupo como PO (Product Owner)
-* Contingência: Fazer códigos fáceis de modificar, fazer reuniões periódicas para identificar erros nos estágios iniciais do projeto
+* Contenção: Encarregar um membro do grupo como PO (Product Owner)
+* Contingência: Fazer reuniões periódicas para identificar erros nos estágios iniciais do projeto
 
 
 Risco 4 - Falta de conhecimento técnico
@@ -42,41 +42,30 @@ Risco 4 - Falta de conhecimento técnico
 * Contingência: Conversa com especialistas
 
 
-*Risco 5 - Entregar o projeto incompleto
+Risco 5 - Entregar o projeto incompleto
 * Probabilidade: 40%
 * Impacto: 0,6
 * Exposição: 0,24
 * Prioridade Média
+* Contenção: Checar e monitorar as atividades a cada Sprint, fazendo alterações quando necessário
+* Contingência: Deixar os requisitos menos importantes para o final do projeto
 
 
-
-
-*Risco 6 - Desorganização do grupo e de suas ocupações
-* Probabilidade: 60%
-* Impacto: 0,4
-* Exposição: 0,24
-* Prioridade Média
-
-
-*Risco 7 - Mal gerenciamento dos processos
+Risco 6 - Mal gerenciamento dos processos
 * Probabilidade: 40%
-* Impacto: 0,8
-* Exposição: 0,32
-* Prioridade Alta
-
-
-*Risco 8 - Atraso no cronograma
-* Probabilidade: 60%
 * Impacto: 0,4
-* Exposição: 0,24
+* Exposição: 0,16
 * Prioridade Média
+* Contenção: Reuniões democráticas e resultados do Planning Poker condizentes com a realidade
+* Contingência: Disponibilidade dos integrantes para cobrir outras atividades
 
 
-*Risco 9 - Falta de capital
-* Probabilidade: 20%
-* Impacto: 1,0
-* Exposição: 0,20
-* Prioridade Média
+Risco 7 - Atraso no cronograma
+* Probabilidade: 40%
+* Impacto: 0,2
+* Exposição: 0,08
+* Prioridade Baixa
+* Contenção: Fazer Daily Meetings e checar e monitorar as atividades a cada Sprint, fazendo alterações quando necessário
+* Contingência: Deixar as atividades menos importantes para o final da Sprint
 
 
-Devemos considerar os riscos com probabilidade 0 ou impacto 0?
