@@ -1,0 +1,6 @@
+Esforço (Planing Poker): 338 homem-hora
+Salário: R$3.000,00 por mês por integrante, que é igual a R$750,00 por semana por integrante.
+    Assumindo 4 horas de trabalho por semana por integrante, temos R$175,00 por hora por integrante.
+    Ou seja, o custo de um homem-hora para o projeto é de R$175,00.
+Custo: 338 x 175 = R$59.150,00
+Orçamento: Com margem de lucro de 65%, temos 59150 x 1.65 = R$97.597,50
