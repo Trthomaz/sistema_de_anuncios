@@ -61,8 +61,8 @@ Backend: (48)
         Atendimento a requisições referentes à criação de anúncios: 3
         Atendimento a requisições referentes às mensagens: 3
     Construção do Banco de Dados: (15)
-        Projeto do Banco de Dados: 1
-        Implementação do Banco de Dados: 14
+        Projeto do Banco de Dados: 2
+        Implementação do Banco de Dados: 13
 Frontend: (69)
     Telas: (44)
         Tela de início: 10
