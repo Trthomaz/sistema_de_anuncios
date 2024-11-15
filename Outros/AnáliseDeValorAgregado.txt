@@ -9,3 +9,9 @@ Análise de Valor Agregado:
         SPI = 87.5 / 85.5 = 1.023
         CPI = 87.5 / 95.9 = 0.912
         * O CPI está abaixo principalmente por atividades iniciadas mas não concluídas.
+
+    Semana 4:
+
+        PV: Anterior + 3 + 1.5 + 0.6 + 0.4
+        EV: Anterior + 3 + 1.5 + 0.6 + 0.4 + 9 + 3
+        AC: Anterior + 
