@@ -2,7 +2,7 @@ from app import db
 
 #Fazer aqui as classes do banco de dados (a definir)
 
-class Anuncio(db.Model):
+'''class Anuncio(db.Model):
     __tablename__ = "anuncios"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -31,7 +31,7 @@ class User(db.Model):
     
     def __repr__(self):
         return '<User %r>' % self.name
-
+'''
 
 #Example
 
@@ -59,12 +59,16 @@ class Perfil(db.Model):
     __tablename__ = "perfis"
 
     id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String)
+    senha = db.Column(db.Integer)
     nome = db.Column(db.String)
     curso = db.Column(db.String)
     reputacao = db.Column(db.Float)
 
-    def __init__(self, nome, curso, reputacao):
+    def __init__(self, email, senha, nome, curso, reputacao):
 
+        self.email = email
+        self.senha = senha
         self.nome = nome
         self.curso = curso
         self.reputacao = reputacao
