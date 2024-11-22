@@ -21,9 +21,9 @@ Análise de Valor Agregado:
 
     Semana 5:
 
-        PV: Anterior + 50 + 2 + 5 + 9 = 91 + 66 = 157
-        EV: Anterior + 2 = 105 + 2 = 107
-        AC: Anterior + 2 + 3.5 + 2 = 106.9 + 7.5 = 114.4
+        PV: Anterior + 50 + 2 + 5 + 9 + 6 = 91 + 72 = 163
+        EV: Anterior + 2 + 6 = 105 + 8 = 113
+        AC: Anterior + 2 + 3.5 + 2 + 5 = 106.9 + 12.5 = 119.4
 
-        SPI = 107 / 157 = 0.682
-        CPI = 107 / 114.4 = 0.935
+        SPI = 113 / 163 = 0.693
+        CPI = 113 / 119.4 = 0.946
