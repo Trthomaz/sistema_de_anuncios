@@ -93,11 +93,23 @@ class _LoginState extends State<Login> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text(
-              "Configurações de Desenvolvimento",
-              style: TextStyle(
-                  color: Theme.of(context).primaryColorLight, fontSize: 20),
-            ),
+            title: SizedBox(
+                  height: 50,
+                  width: 360,
+                  child: Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    color: Theme.of(context).primaryColor,
+                    child: Center(
+                      child: Text("Configurações de Desenvolvimento",
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Theme.of(context).primaryColorLight,
+                          )),
+                    ),
+                  ),
+                ),
             content: TextField(
               controller: _ipController,
               autofocus: false,

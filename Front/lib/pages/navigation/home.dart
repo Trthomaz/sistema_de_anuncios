@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:sistema_de_anuncios/pages/pesquisa.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -31,6 +30,106 @@ class _HomeState extends State<Home> {
     {"titulo": "Calculadora", "preço": 20, "imagem": null},
     {"titulo": "Cadeira", "preço": 40, "imagem": null},
   ];
+
+  // Categoria
+  List<String> categorias = [];
+  final List<String> lista_categorias = ['Opção 1', 'Opção 2', 'Opção 3'];
+
+  // Lista de opções
+  final List<String> options = ['Opção 1', 'Opção 2', 'Opção 3', 'Opção 4'];
+
+  // Estado de seleção para cada opção
+  late Map<String, bool> selectedOptions;
+
+  @override
+  void initState() {
+    super.initState();
+    // Inicializa o estado de seleção (todas como não selecionadas)
+    selectedOptions = {for (var option in options) option: false};
+  }
+
+  void _showMultiSelectDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return AlertDialog(
+              title: Text('Selecione as opções'),
+              content: SingleChildScrollView(
+                child: Column(
+                  children: options.map((String option) {
+                    return CheckboxListTile(
+                      title: Text(option),
+                      value: selectedOptions[option],
+                      onChanged: (bool? value) {
+                        setDialogState(() {
+                          selectedOptions[option] = value ?? false;
+                        });
+                      },
+                    );
+                  }).toList(),
+                ),
+              ),
+              actions: [
+                TextButton(
+                  child: Text('Fechar'),
+                  onPressed: () {
+                    setState(() {}); // Atualiza o estado principal
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+
+  void _filtroDialog() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: SizedBox(
+                  height: 50,
+                  width: 150,
+                  child: Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    color: Theme.of(context).primaryColor,
+                    child: Center(
+                      child: Text("Filtro",
+                          style: TextStyle(
+                            fontSize: 24,
+                            color: Theme.of(context).primaryColorLight,
+                          )),
+                    ),
+                  ),
+                ),
+            content: FilledButton(onPressed: (){
+              _showMultiSelectDialog();
+            }, child: Text("Categorias")),
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            actions: [
+              ElevatedButton(
+                child: Text("Ok",
+                    style:
+                        TextStyle(color: Theme.of(context).primaryColorLight)),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                style: ElevatedButton.styleFrom(
+                    backgroundColor:
+                        Theme.of(context).primaryColor.withOpacity(1)),
+              )
+            ],
+          );
+        });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +190,9 @@ class _HomeState extends State<Home> {
                       size: 22,
                       color: Theme.of(context).primaryColorLight,
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      _filtroDialog();
+                    },
                   ),
                 ),
               ),
