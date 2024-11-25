@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sistema_de_anuncios/pages/mensagens.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -87,32 +88,33 @@ class _HomeState extends State<Home> {
     );
   }
 
-
   void _filtroDialog() {
     showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
             title: SizedBox(
-                  height: 50,
-                  width: 150,
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    color: Theme.of(context).primaryColor,
-                    child: Center(
-                      child: Text("Filtro",
-                          style: TextStyle(
-                            fontSize: 24,
-                            color: Theme.of(context).primaryColorLight,
-                          )),
-                    ),
-                  ),
+              height: 50,
+              width: 150,
+              child: Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
                 ),
-            content: FilledButton(onPressed: (){
-              _showMultiSelectDialog();
-            }, child: Text("Categorias")),
+                color: Theme.of(context).primaryColor,
+                child: Center(
+                  child: Text("Filtro",
+                      style: TextStyle(
+                        fontSize: 24,
+                        color: Theme.of(context).primaryColorLight,
+                      )),
+                ),
+              ),
+            ),
+            content: FilledButton(
+                onPressed: () {
+                  _showMultiSelectDialog();
+                },
+                child: Text("Categorias")),
             backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             actions: [
               ElevatedButton(
@@ -213,7 +215,10 @@ class _HomeState extends State<Home> {
                     size: 30,
                   ),
                   onPressed: () {
-                    // TODO: Implementar pra abrir a tela de mensagens
+                    setState(() {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => Mensagens()));
+                    });
                   },
                 ),
               ),

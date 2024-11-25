@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sistema_de_anuncios/pages/login.dart';
+import 'package:sistema_de_anuncios/pages/navigation/navigation.dart';
+import 'package:sistema_de_anuncios/pages/mensagens.dart';
 
 void main() async {
   runApp(MaterialApp(
@@ -22,5 +24,5 @@ void main() async {
                 .withOpacity(0.4), // Cor de fundo do texto selecionado
             selectionHandleColor: Colors.blueGrey),
       ),
-      home: Login()));
+      home: Navigation()));
 }
