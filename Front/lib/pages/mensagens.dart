@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sistema_de_anuncios/pages/navigation/meus_anuncios.dart';
+import 'package:sistema_de_anuncios/pages/navigation/chat.dart';
 import 'package:sistema_de_anuncios/pages/navigation/navigation.dart';
 
 class Mensagens extends StatefulWidget {
@@ -10,14 +11,22 @@ class Mensagens extends StatefulWidget {
 }
 
 class _MensagensState extends State<Mensagens> {
+  TextEditingController _buscaController = TextEditingController();
   List<Map<String, dynamic>> anuncios = [
     {
+      "id": 1,
       "item": "Cachecol",
       "cliente": "Garota que mora logo ali",
       "tipoAnuncio": "Venda"
     },
-    {"item": "Aula de Inglês", "cliente": "Poliglota", "tipoAnuncio": "Busca"},
     {
+      "id": 2,
+      "item": "Aula de Inglês",
+      "cliente": "Poliglota",
+      "tipoAnuncio": "Busca"
+    },
+    {
+      "id": 3,
       "item": "Comandante Miniatura",
       "cliente": "Rei João VI",
       "tipoAnuncio": "Busca"
@@ -61,39 +70,6 @@ class _MensagensState extends State<Mensagens> {
             return Center(
                 child: Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(15),
-                  child: TextField(
-                    onTap: () {
-                      // TODO
-                    },
-                    readOnly: true,
-                    autocorrect: false,
-                    style: TextStyle(
-                      color: Theme.of(context).primaryColor,
-                      fontSize: 16,
-                    ),
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(25),
-                        borderSide: BorderSide.none,
-                      ),
-                      filled: true,
-                      fillColor: Theme.of(context).primaryColor,
-                      prefixIcon: Icon(
-                        Icons.search,
-                        size: 22,
-                        color: Theme.of(context).primaryColorLight,
-                      ),
-                      contentPadding: EdgeInsets.symmetric(vertical: 14),
-                      hintText: "Pesquisar",
-                      hintStyle: TextStyle(
-                        color: Theme.of(context).primaryColorLight,
-                        fontSize: 16,
-                      ),
-                    ),
-                  ),
-                ),
                 SizedBox(height: 10),
                 LayoutBuilder(builder: (context, constraints) {
                   return SizedBox(
@@ -114,8 +90,17 @@ class _MensagensState extends State<Mensagens> {
                               ),
                             ),
                             onPressed: () {
-                              print(constraints.maxHeight);
-                              // TODO: Implementar abrir anuncio
+                              setState(() {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) {
+                                          return const Chat();
+                                        },
+                                        settings: RouteSettings(
+                                            arguments: {'id': index})));
+                              });
+                              // TODO: Requisição
                             },
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.start,
