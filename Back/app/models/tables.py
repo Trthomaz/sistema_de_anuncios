@@ -59,10 +59,10 @@ class Perfil(db.Model):
     __tablename__ = "perfis"
 
     id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String)
+    email = db.Column(db.String(100))
     senha = db.Column(db.Integer)
-    nome = db.Column(db.String)
-    curso = db.Column(db.String)
+    nome = db.Column(db.String(100))
+    curso = db.Column(db.String(100))
     reputacao = db.Column(db.Float)
 
     def __init__(self, email, senha, nome, curso, reputacao):
@@ -101,7 +101,7 @@ class Categoria(db.Model):
     __tablename__ = "categorias"
 
     id = db.Column(db.Integer, primary_key=True)
-    categoria = db.Column(db.String, unique=True)
+    categoria = db.Column(db.String(100), unique=True)
 
     def __init__(self, categoria):
          self.categoria = categoria
@@ -110,7 +110,7 @@ class Tipo(db.Model):
     __tablename__ = "tipos"
 
     id = db.Column(db.Integer, primary_key=True)
-    tipo = db.Column(db.String, unique=True)
+    tipo = db.Column(db.String(100), unique=True)
 
     def __init__(self, tipo):
          self.tipo = tipo
@@ -122,9 +122,9 @@ class Anuncio(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     anunciante = db.Column(db.Integer, db.ForeignKey('perfis.id'))
     descricao = db.Column(db.Text)
-    telefone = db.Column(db.String)
+    telefone = db.Column(db.String(100))
     #email?
-    local = db.Column(db.String)
+    local = db.Column(db.String(100))
     categoria = db.Column(db.Integer, db.ForeignKey('categorias.id'))
     tipo = db.Column(db.Integer, db.ForeignKey('tipos.id'))
 

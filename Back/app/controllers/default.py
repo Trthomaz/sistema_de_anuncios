@@ -23,7 +23,8 @@ def login():
     senha =  dados.get('senha')
 
     user = Perfil.query.filter_by(email=email).first()
-    if user and user.senha == senha:
+    print(user.senha)
+    if user and str(user.senha) == senha:
         return jsonify({"login":"true"})
     
     #insert into users(email, name, password) values("fabio@gabriel.com","Fabio","cruzeiro");
