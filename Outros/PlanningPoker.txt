@@ -63,13 +63,14 @@ Backend: (48)
     Construção do Banco de Dados: (15)
         Projeto do Banco de Dados: 2
         Implementação do Banco de Dados: 13
-Frontend: (69)
-    Telas: (44)
+Frontend: (72)
+    Telas: (47)
         Tela de início: 10
         Tela de login: 3
         Tela de Meus Anúncios: 5
         Tela de exibição de anúncios: 8
         Tela de perfil: 3
+        Tela de criação de anúncios: 3
         Telas de mensagens: 15
     Barra de navegação: 2
     Requisições: (23)
@@ -88,4 +89,4 @@ Testes: (32)
         Testes de aceitação alfa: 6
         Testes de aceitação beta: 8
 
-Total: 338 homem-hora.
+Total: 341 homem-hora.
