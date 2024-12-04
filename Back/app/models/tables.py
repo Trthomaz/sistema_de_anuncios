@@ -60,7 +60,7 @@ class Perfil(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String)
-    senha = db.Column(db.Integer)
+    senha = db.Column(db.String)
     nome = db.Column(db.String)
     curso = db.Column(db.String)
     reputacao = db.Column(db.Float)
