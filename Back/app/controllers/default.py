@@ -1,6 +1,6 @@
 from flask import jsonify, request #Usado para retornar paginas HTML, ocioso ainda
 from app import app, db
-from app.models.tables import *
+from app.models import *
 
 @app.route("/")
 def teste():
