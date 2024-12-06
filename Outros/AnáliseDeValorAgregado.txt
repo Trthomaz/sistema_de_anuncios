@@ -30,18 +30,27 @@ Análise de Valor Agregado:
 
     Semana 6:
 
-        PV: Anterior + 3 + 2 + 3 + 1 + 8 + 6 + 2 + 0.4 + 0.6 = 163 + 26 = 189
+        PV: Anterior + 3 + 2 + 3 + 1 + 8 + 6 + 2 + 0.4 + 0.6 + 13 = 163 + 39 = 202
         EV: Anterior + 6 + 0.4 + 5 + 3 = 113 + 14.4 = 127.4
         AC: Anterior + 6 + 0.5 + 2 = 119.4 + 8.5 = 127.9
 
-        SPI = 127.4 / 189 = 0.674
+        SPI = 127.4 / 202 = 0.631
         CPI = 127.4 / 127.9 = 0.996
 
     Semana 7:
 
-        PV: Anterior + 3 + 3 + 3 + 3 + 6 + 0.4 + 0.6 = 189 + 19 = 208
-        EV: Anterior + 6 + 0.4
-        AC: Anterior + 4
+        PV: Anterior + 3 + 3 + 3 + 3 + 6 + 0.4 + 0.6 = 202 + 19 = 221
+        EV: Anterior + 6 + 0.4 + 13 = 127.4 + 19.4 = 146.8
+        AC: Anterior + 4 + 0.5 = 127.9 + 4.5 = 132.4
+
+        SPI = 146.8 / 221 = 0.664
+        CPI = 146.8 / 132.4 = 1.109
+
+    Semana 8:
+
+        PV: Anterior + 8 (cdm) + 3 + 1.5
+        EV: Anterior + 8
+        AC: Anterior + 2
 
         SPI = 
         CPI = 
