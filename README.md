@@ -1,10 +1,10 @@
-<h1> Trabalho de Projeto de Engenharia de Software II 2024.2 - UFF </h1>
+<h1> Trabalho de Engenharia de Software II 2024.2 - UFF </h1>
 <hr>
 
 # Objetivo
 
 Neste trabalho tem como objetivo desenvolver habilidades e conhecimento em relação aos conceitos de Engenharia de Software, através da construção de uma aplicação denominada <b>Balcão</b>, usando as ferramentas estudadas durante o curso, aplicando métodos de controle e gerenciamnto de projetos.
-Para o desenvolvimento em conjunto, será usado como controller o <b>Flask</b> na linguagem Python, na model o uso do banco de dados <b>Postgres</b> e para a View no lado do cliente será o <b>Flutter</b> para uso mobile da aplicação.
+Para o desenvolvimento em conjunto, será usado como controller o <b>Flask</b> na linguagem Python, na model o uso do banco de dados <b>SQLite</b> migrando para o <b>MySQL</b> e para a View no lado do cliente será o <b>Flutter</b> para uso mobile da aplicação.
 
 # Escopo
 
