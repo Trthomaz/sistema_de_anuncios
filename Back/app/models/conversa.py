@@ -1,5 +1,4 @@
 from app.models import *
-from app.models.mensagem import Mensagem
 
 class Conversa(db.Model):
     __tablename__ = "conversas"

@@ -1,5 +1,13 @@
 from app import db
-db = db
+
+#Funcoes genericas do BD
+def rollback():
+    db.rollback()
+def add(data):
+    db.session.add(data)
+def commit():
+    db.session.commit()
+
 
 from app.models.anuncio import Anuncio
 from app.models.categoria import Categoria

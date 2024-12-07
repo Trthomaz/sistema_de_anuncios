@@ -1,22 +1,6 @@
-from flask import jsonify, request, session #Usado para retornar paginas HTML, ocioso ainda
-from app import app, db
-from app.models import *
+from app.controllers import *
 
-app.secret_key = "chave_secreta_com_Cruzeiro"
 
-@app.route("/")
-def teste():
-    #Requisicao estatica, nao personalizada
-    return "Cruzeiro e o melhor. Tryhard da computacao!"
-'''
-@app.route("/perfil/<user>")
-def perfil(user):
-    #Logica de exemplo de uma requisicao personalizada
-    if user == "Fabio":
-        return "Tudo ok"
-    else:
-        return "Nao autenticado"
-'''
 
 @app.route("/login", methods=["POST", "GET"])
 def login():
@@ -39,7 +23,6 @@ def login():
 
         return jsonify(dados)
     
-    #insert into users(email, name, password) values("fabio@gabriel.com","Fabio","cruzeiro");
     
     return jsonify({"login":"false"})
 
@@ -48,8 +31,59 @@ def logout():
     user_id = session["user_id"]
     if user_id:
         session.pop(user_id, None)
-        return jsonify({"status", "deslogado"})
-    return jsonify({"status", "Ninguem cadastrado"})
+        return jsonify({"status", True})
+    return jsonify({"status", False})
+
+
+@app.route("/get_anuncios_geral")
+def get_anuncios_geral():
+    dados = {}
+    if session['user_id']:
+        anuncios_pessoais = Anuncio.query().all()
+        
+        #Nao sei se funciona retornar a linha inteira
+        dados["dados"] = anuncios_pessoais
+        return jsonify(dados)
+    dados["dados"] = None
+    return jsonify(dados)
+
+@app.route("/get_anuncios_pessoais")
+def get_anuncios_pessoais():
+    dados = {}
+    if session['user_id']:
+        anuncios_pessoais = Anuncio.query.filter_by(id=session["user_id"])
+
+        #Nao sei se funciona retornar a linha inteira
+        dados["dados"] = anuncios_pessoais
+        return jsonify(dados)
+    dados["dados"] = None
+    return jsonify(dados)
+
+
+@app.route("/criar_anuncio", methods=["POST", "GET"])
+def criar_anuncio():
+    dados = request.get_json()
+    titulo = dados.get("titulo")
+    ativo = True
+    descricao = dados.get("descricao")
+    tipo_anuncio = dados.get("tipo_anuncio")
+    categoria = dados.get("categoria")
+    preco = dados.get("preco")
+    celular = dados.get("celular")
+    cep = dados.get("cep")
+    
+    user_id = session["user_id"]
+    anuncio = Anuncio(user_id,titulo,descricao,celular,cep,categoria,ativo=ativo,tipo=tipo_anuncio, reco=preco)
+    try:
+        Perfil().add_anuncio(anuncio)
+        return jsonify({"status":True})
+    except:
+        rollback()
+        return jsonify({"status":False})
+
+
+
+
 
 # @app.route("/teste1")
 # def teste1():
@@ -63,30 +97,17 @@ def logout():
 #     curso = s.curso
 #     return curso
 
+# @app.route("/")
+# def teste():
+#     #Requisicao estatica, nao personalizada
+#     return "Cruzeiro e o melhor. Tryhard da computacao!"
 
-@app.route("/anuncios_geral")
-def anuncios_geral():
-    dados = {}
-    if session['user_id']:
-        anuncios_pessoais = Anuncio.query().all()
-        
-        #Nao sei se funciona retornar a linha inteira
-        dados["dados"] = anuncios_pessoais
-        return jsonify(dados)
-    dados["dados"] = None
-    return jsonify(dados)
+# @app.route("/perfil/<user>")
+# def perfil(user):
+#     #Logica de exemplo de uma requisicao personalizada
+#     if user == "Fabio":
+#         return "Tudo ok"
+#     else:
+#         return "Nao autenticado"
 
-@app.route("/anuncios_pessoais")
-def anuncios_pessoais():
-    dados = {}
-    if session['user_id']:
-        anuncios_pessoais = Anuncio.query.filter_by(id=session["user_id"])
-
-        #Nao sei se funciona retornar a linha inteira
-        dados["dados"] = anuncios_pessoais
-        return jsonify(dados)
-    dados["dados"] = None
-    return jsonify(dados)
-
-
-#Fazer aqui o controle das requisicoes do flutter
+#insert into users(email, name, password) values("fabio@gabriel.com","Fabio","cruzeiro");

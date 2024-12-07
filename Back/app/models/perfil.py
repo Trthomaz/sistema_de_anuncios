@@ -1,5 +1,4 @@
 from app.models import *
-from app.models.anuncio import Anuncio
 
 class Perfil(db.Model):
     __tablename__ = "perfis"
@@ -33,11 +32,9 @@ class Perfil(db.Model):
             self.reputacacao = total/n
 
     def add_anuncio(self, anuncio):
-
-        db.session.add(anuncio)
-        db.session.commit()
+        add(anuncio)
+        commit()
 
     def add_conversa(self, conversa):
-
-        db.session.add(conversa)
-        db.session.commit()
+        add(conversa)
+        commit()
