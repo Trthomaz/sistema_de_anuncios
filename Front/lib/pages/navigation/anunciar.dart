@@ -637,10 +637,43 @@ class _AnunciarState extends State<Anunciar> {
                           print(id);
                           print('http://$ip:5000/criar_anuncio');
                           if (anunciar) {
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (context) {
-                              return Navigation(ip: ip, id: id);
-                            }));
+                            return showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text(
+                                      "Anúncio Cadastrado com Sucesso",
+                                      style: TextStyle(fontSize: 20),
+                                    ),
+                                    backgroundColor: Theme.of(context)
+                                        .scaffoldBackgroundColor,
+                                    content: Text(
+                                        "Seu anúncio de $tipo de ${_tituloController.text} foi cadastrado no sistema",
+                                        style: TextStyle(
+                                            color: const Color.fromARGB(
+                                                255, 0, 0, 0))),
+                                    actions: [
+                                      ElevatedButton(
+                                        child: Text("Ok",
+                                            style: TextStyle(
+                                                color: Theme.of(context)
+                                                    .primaryColorLight)),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                          Navigator.push(context,
+                                              MaterialPageRoute(
+                                                  builder: (context) {
+                                            return Navigation(ip: ip, id: id);
+                                          }));
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                            backgroundColor: Theme.of(context)
+                                                .primaryColor
+                                                .withOpacity(1)),
+                                      )
+                                    ],
+                                  );
+                                });
                           }
                         },
                         style: ButtonStyle(
@@ -652,7 +685,7 @@ class _AnunciarState extends State<Anunciar> {
                                   .withOpacity(0.1)),
                         ),
                         child: Text(
-                          "Entrar",
+                          "Cadastrar",
                           style: TextStyle(
                               fontSize: 20,
                               color: Theme.of(context).primaryColorLight),
