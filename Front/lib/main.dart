@@ -24,5 +24,5 @@ void main() async {
                 .withOpacity(0.4), // Cor de fundo do texto selecionado
             selectionHandleColor: Colors.blueGrey),
       ),
-      home: Login()));
+      home: Navigation()));
 }

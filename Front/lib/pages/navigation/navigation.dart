@@ -16,16 +16,27 @@ class _NavigationState extends State<Navigation> {
   // Index da página selecionada
   int _selectedIndex = 0;
 
-  final List<Widget> _pages = <Widget>[
-    Home(),
-    Perfil(),
-    Anunciar(),
-    MeusAnuncios(),
-    Configs(),
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final arguments = ModalRoute.of(context)?.settings.arguments;
+    Map<String, String> data;
+
+    if (arguments != null && arguments is Map<String, String>) {
+      data = arguments;
+    } else {
+      data = {}; // Valor padrão caso seja null ou não tenha o formato esperado
+    }
+
+    String ip = data['ip'] ?? '0';
+
+    final List<Widget> _pages = <Widget>[
+      Home(),
+      Perfil(),
+      Anunciar(ip: ip),
+      MeusAnuncios(),
+      Configs(),
+    ];
+
     return Scaffold(
       body: _pages[
           _selectedIndex], // Abre a página selecionada no BottomNavigationBar
