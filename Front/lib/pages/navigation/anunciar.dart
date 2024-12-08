@@ -118,6 +118,7 @@ class _AnunciarState extends State<Anunciar> {
         anunciarErrorMessage("Erro na comunicação, tente novamente mais tarde");
       }
     } catch (e) {
+      print(e);
       anunciarErrorMessage("IP inválido, tente novamente");
     }
     return false;
@@ -618,8 +619,17 @@ class _AnunciarState extends State<Anunciar> {
                       height: 60,
                       child: ElevatedButton(
                         onPressed: () async {
-                          bool entrar = await _anunciar();
-                          if (entrar) {
+                          bool anunciar = await _anunciar();
+                          print(_tituloController.text);
+                          print(_descricaoController.text);
+                          print(_precoController.text);
+                          print(categoria);
+                          print(tipo);
+                          print(_cepController.text);
+                          print(_celularController.text);
+                          print(ip);
+                          print('http://$ip:5000/criar_anuncio');
+                          if (anunciar) {
                             Navigator.push(context,
                                 MaterialPageRoute(builder: (context) {
                               return const Home();

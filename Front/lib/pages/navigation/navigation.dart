@@ -6,7 +6,9 @@ import 'package:sistema_de_anuncios/pages/navigation/meus_anuncios.dart';
 import 'package:sistema_de_anuncios/pages/navigation/perfil.dart';
 
 class Navigation extends StatefulWidget {
-  const Navigation({super.key});
+  final String ip;
+
+  const Navigation({super.key, required this.ip});
 
   @override
   State<Navigation> createState() => _NavigationState();
@@ -14,21 +16,16 @@ class Navigation extends StatefulWidget {
 
 class _NavigationState extends State<Navigation> {
   // Index da página selecionada
+  late String ip;
   int _selectedIndex = 0;
+
+  void initState() {
+    super.initState();
+    ip = widget.ip;
+  }
 
   @override
   Widget build(BuildContext context) {
-    final arguments = ModalRoute.of(context)?.settings.arguments;
-    Map<String, String> data;
-
-    if (arguments != null && arguments is Map<String, String>) {
-      data = arguments;
-    } else {
-      data = {}; // Valor padrão caso seja null ou não tenha o formato esperado
-    }
-
-    String ip = data['ip'] ?? '0';
-
     final List<Widget> _pages = <Widget>[
       Home(),
       Perfil(),
