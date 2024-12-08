@@ -11,6 +11,7 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
 from app.models import *
-from app.controllers import *
+from app.controllers import default
+#from app.controllers import perfil
 #Inutilizavel default, separado em novos arquivos
 #from app.controllers import default #Esta linha fica ao final mesmo, padrao do flask (Nao apague)
