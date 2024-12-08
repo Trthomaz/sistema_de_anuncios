@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:sistema_de_anuncios/pages/navigation/home.dart';
+import 'package:sistema_de_anuncios/pages/navigation/navigation.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -10,10 +11,12 @@ import 'dart:convert';
 class Anunciar extends StatefulWidget {
   // IP do servidor
   final String ip;
+  final int id;
 
   const Anunciar({
     super.key,
     required this.ip,
+    required this.id,
   });
 
   @override
@@ -22,11 +25,13 @@ class Anunciar extends StatefulWidget {
 
 class _AnunciarState extends State<Anunciar> {
   late String ip;
+  late int id;
 
   @override
   void initState() {
     super.initState();
     ip = widget.ip;
+    id = widget.id;
   }
 
   final PageStorageBucket _bucket = PageStorageBucket();
@@ -54,6 +59,7 @@ class _AnunciarState extends State<Anunciar> {
 
     // Dados enviados
     final dados = {
+      'user_id': id,
       'titulo': _tituloController.text,
       'descricao': _descricaoController.text,
       'tipo_anuncio': tipo,
@@ -109,7 +115,7 @@ class _AnunciarState extends State<Anunciar> {
         Map<String, dynamic> resposta = json.decode(response.body);
         print(response.statusCode);
         print(url);
-        if (resposta["status"] == "true") {
+        if (resposta['status'] == true) {
           return true;
         } else {
           anunciarErrorMessage("Campos Inválidos");
@@ -628,11 +634,12 @@ class _AnunciarState extends State<Anunciar> {
                           print(_cepController.text);
                           print(_celularController.text);
                           print(ip);
+                          print(id);
                           print('http://$ip:5000/criar_anuncio');
                           if (anunciar) {
                             Navigator.push(context,
                                 MaterialPageRoute(builder: (context) {
-                              return const Home();
+                              return Navigation(ip: ip, id: id);
                             }));
                           }
                         },

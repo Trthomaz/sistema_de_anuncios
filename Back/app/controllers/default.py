@@ -19,13 +19,13 @@ def login():
         dados["curso"] = user.curso
         dados["reputacao"] = user.reputacao
 
-        dados["login"] = "true" #Temporario para nao quebrar aplicacao
+        dados["login"] = True #Temporario para nao quebrar aplicacao
         dados["user_id"] = user.id
 
         return jsonify(dados)
     
     
-    return jsonify({"login":"false"})
+    return jsonify({"login":False})
 
 @app.route("/logout")
 def logout():

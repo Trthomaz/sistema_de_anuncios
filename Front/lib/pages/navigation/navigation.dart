@@ -7,8 +7,9 @@ import 'package:sistema_de_anuncios/pages/navigation/perfil.dart';
 
 class Navigation extends StatefulWidget {
   final String ip;
+  final int id;
 
-  const Navigation({super.key, required this.ip});
+  const Navigation({super.key, required this.ip, required this.id});
 
   @override
   State<Navigation> createState() => _NavigationState();
@@ -17,11 +18,13 @@ class Navigation extends StatefulWidget {
 class _NavigationState extends State<Navigation> {
   // Index da página selecionada
   late String ip;
+  late int id;
   int _selectedIndex = 0;
 
   void initState() {
     super.initState();
     ip = widget.ip;
+    id = widget.id;
   }
 
   @override
@@ -29,7 +32,7 @@ class _NavigationState extends State<Navigation> {
     final List<Widget> _pages = <Widget>[
       Home(),
       Perfil(),
-      Anunciar(ip: ip),
+      Anunciar(ip: ip, id: id),
       MeusAnuncios(),
       Configs(),
     ];

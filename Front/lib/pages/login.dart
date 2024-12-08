@@ -19,7 +19,7 @@ class _LoginState extends State<Login> {
   late String ip = _ipController.text;
 
   // Requisição de login
-  Future<bool> _login() async {
+  Future<int> _login() async {
     final url = Uri.parse('http://${_ipController.text}:5000/login');
 
     // Dados enviados
@@ -74,8 +74,8 @@ class _LoginState extends State<Login> {
         Map<String, dynamic> resposta = json.decode(response.body);
         print(response.statusCode);
         print(url);
-        if (resposta['login'] == "true") {
-          return true;
+        if (resposta['login'] == true) {
+          return resposta['user_id'];
         } else {
           loginErrorMessage("Login ou senha inválidos");
         }
@@ -85,7 +85,7 @@ class _LoginState extends State<Login> {
     } catch (e) {
       loginErrorMessage("IP inválido, tente novamente");
     }
-    return false;
+    return -1;
   }
 
   dynamic _ipDialog() {
@@ -288,15 +288,18 @@ class _LoginState extends State<Login> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const Navigation(ip: "0")),
+                            builder: (context) =>
+                                const Navigation(ip: "0", id: -1)),
                       );
                     },
                     onPressed: () async {
-                      bool entrar = await _login();
-                      if (entrar) {
+                      var entrar = await _login();
+                      print(entrar);
+                      print(_ipController.text);
+                      if (entrar != -1) {
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
-                          return Navigation(ip: ip);
+                          return Navigation(ip: ip, id: entrar);
                         }));
                       }
                     },
