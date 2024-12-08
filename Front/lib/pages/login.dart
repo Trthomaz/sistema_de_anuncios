@@ -288,20 +288,16 @@ class _LoginState extends State<Login> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const Navigation()),
+                            builder: (context) => const Navigation(ip: "0")),
                       );
                     },
                     onPressed: () async {
                       bool entrar = await _login();
                       if (entrar) {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) {
-                                  return const Navigation();
-                                },
-                                settings: RouteSettings(
-                                    arguments: {'ip': _ipController})));
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return Navigation(ip: ip);
+                        }));
                       }
                     },
                     style: ButtonStyle(
