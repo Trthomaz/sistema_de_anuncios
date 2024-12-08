@@ -94,22 +94,22 @@ class _LoginState extends State<Login> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: SizedBox(
-                  height: 50,
-                  width: 360,
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    color: Theme.of(context).primaryColor,
-                    child: Center(
-                      child: Text("Configurações de Desenvolvimento",
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: Theme.of(context).primaryColorLight,
-                          )),
-                    ),
-                  ),
+              height: 50,
+              width: 360,
+              child: Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
                 ),
+                color: Theme.of(context).primaryColor,
+                child: Center(
+                  child: Text("Configurações de Desenvolvimento",
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Theme.of(context).primaryColorLight,
+                      )),
+                ),
+              ),
+            ),
             content: TextField(
               controller: _ipController,
               autofocus: false,
@@ -295,10 +295,13 @@ class _LoginState extends State<Login> {
                       bool entrar = await _login();
                       if (entrar) {
                         Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const Navigation()),
-                        );
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) {
+                                  return const Navigation();
+                                },
+                                settings: RouteSettings(
+                                    arguments: {'ip': _ipController})));
                       }
                     },
                     style: ButtonStyle(
