@@ -20,6 +20,7 @@ def login():
         dados["reputacao"] = user.reputacao
 
         dados["login"] = "true" #Temporario para nao quebrar aplicacao
+        dados["user_id"] = user.id
 
         return jsonify(dados)
     
@@ -72,10 +73,11 @@ def criar_anuncio():
     celular = dados.get("celular")
     cep = dados.get("cep")
     
-    user_id = session["user_id"]
-    anuncio = Anuncio(user_id,titulo,descricao,celular,cep,categoria,ativo=ativo,tipo=tipo_anuncio, reco=preco)
+    user_id = dados.get("user_id")
+    anuncio = Anuncio(user_id,titulo,descricao,celular,cep,categoria,ativo=ativo,tipo=tipo_anuncio, preco=preco)
     try:
-        Perfil().add_anuncio(anuncio)
+        perfil = Perfil.query.filter_by(id=user_id).first()
+        perfil.add_anuncio(anuncio)
         return jsonify({"status":True})
     except:
         rollback()
