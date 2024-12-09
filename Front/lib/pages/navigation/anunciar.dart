@@ -125,7 +125,7 @@ class _AnunciarState extends State<Anunciar> {
       }
     } catch (e) {
       print(e);
-      anunciarErrorMessage("IP inválido, tente novamente");
+      anunciarErrorMessage("Por favor, preencha todos os campos");
     }
     return false;
   }
