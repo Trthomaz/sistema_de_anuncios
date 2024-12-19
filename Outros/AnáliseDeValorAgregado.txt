@@ -48,9 +48,18 @@ Análise de Valor Agregado:
 
     Semana 8:
 
-        PV: Anterior + 8 (cdm) + 3 + 1.5
-        EV: Anterior + 8
-        AC: Anterior + 2
+        PV: Anterior + 8 (cdm) + 3 + 1.5 + 6 + 0.4 + 0.6 + 3 + 3 + 3 + 2 + 4 = 221 + 34.5 = 255.5
+        EV: Anterior + 8 + 3 + 1.5 + 6 + 0.4 + 0.4 + 0.4 + 0.4 + 0.6 = 146.8 + 20.7 = 167.5
+        AC: Anterior + 2 + 2 + 0.5 + 8 + 6 + 5 + 1.5 + 5 = 132.4 + 30 = 162.4
+
+        SPI = 167.5 / 255.5 = 0.656
+        CPI = 167.5 / 162.4 = 1.031
+
+    Semana 9:
+
+        PV: Anterior + 4 + 4
+        EV: Anterior + 
+        AC: Anterior + 
 
         SPI = 
         CPI = 
