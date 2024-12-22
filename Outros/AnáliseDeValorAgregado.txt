@@ -57,7 +57,16 @@ Análise de Valor Agregado:
 
     Semana 9:
 
-        PV: Anterior + 4 + 4
+        PV: Anterior + 4 + 4 + 6 + 0.4 + 0.6 = 255.5 + 15 = 270.5
+        EV: Anterior + 6 + 0.4 = 167.5 + 6.4 = 173.9
+        AC: Anterior + 3 + 2.5 + 0.4 = 162.4 + 5.9 = 168.3
+
+        SPI = 173.9 / 270.5 = 0.643
+        CPI = 173.9 / 168.3 = 1.033
+
+    Semana 10-12:
+
+        PV: Anterior + 
         EV: Anterior + 
         AC: Anterior + 
 
