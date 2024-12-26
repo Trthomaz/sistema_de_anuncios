@@ -102,7 +102,7 @@ def get_meus_anuncios():
 def get_perfil():
     dados = request.get_json()
     id = dados.get("user_id")
-    perfil = Perfil.query.filter_by(id=id)
+    perfil = Perfil.query.filter_by(id=id).first()
     dados = {}
     dados["dados"] = {"nome": perfil.nome, "curso": perfil.curso, "reputacao": perfil.reputacao}
     return jsonify(dados)
