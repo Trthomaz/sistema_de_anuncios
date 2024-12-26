@@ -98,6 +98,15 @@ def get_meus_anuncios():
     dados["anuncios"] = anuncios_lista
     return jsonify(dados)
 
+@app.route("/get_perfil", methods = ["POST", "GET"])
+def get_perfil():
+    dados = request.get_json()
+    id = dados.get("user_id")
+    perfil = Perfil.query.filter_by(id=id)
+    dados = {}
+    dados["dados"] = {"nome": perfil.nome, "curso": perfil.curso, "reputacao": perfil.reputacao}
+    return jsonify(dados)
+
 @app.route("/inicializar1")
 def inicializar1():
     db.session.add(Tipo("venda"))
