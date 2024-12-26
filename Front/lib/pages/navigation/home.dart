@@ -1,35 +1,42 @@
 import 'package:flutter/material.dart';
+import 'package:sistema_de_anuncios/pages/anuncio.dart';
 import 'package:sistema_de_anuncios/pages/mensagens.dart';
 
 class Home extends StatefulWidget {
-  const Home({super.key});
+  final String ip;
+  final int id;
+
+  const Home({super.key, required this.ip, required this.id});
 
   @override
   State<Home> createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
+  late String ip;
+  late int id;
+
   // Lista dos anuncios
   List<Map<String, dynamic>> venda = [
-    {"titulo": "Calça", "preço": 60, "imagem": 'assets/images/calca.jpeg'},
+    {"titulo": "Calça", "preço": 60.00, "imagem": 'assets/images/calca.jpeg'},
     {
       "titulo": "Garrafa Térmica",
-      "preço": 30,
+      "preço": 30.00,
       "imagem": 'assets/images/garrafa.jpeg'
     },
-    {"titulo": "Mouse", "preço": 15, "imagem": 'assets/images/mouse.jpeg'},
-    {"titulo": "Aula de história", "preço": 50, "imagem": null},
+    {"titulo": "Mouse", "preço": 15.00, "imagem": 'assets/images/mouse.jpeg'},
+    {"titulo": "Aula de história", "preço": 50.00, "imagem": null},
   ];
 
   List<Map<String, dynamic>> busca = [
-    {"titulo": "Teclado", "preço": 30, "imagem": 'assets/images/teclado.jpeg'},
+    {"titulo": "Teclado", "preço": 30.00, "imagem": 'assets/images/teclado.jpeg'},
     {
       "titulo": "Mesa",
-      "preço": 70,
+      "preço": 70.00,
       "imagem": 'assets/images/mesa.jpeg',
     },
-    {"titulo": "Calculadora", "preço": 20, "imagem": null},
-    {"titulo": "Cadeira", "preço": 40, "imagem": null},
+    {"titulo": "Calculadora", "preço": 20.00, "imagem": null},
+    {"titulo": "Cadeira", "preço": 40.00, "imagem": null},
   ];
 
   // Categoria
@@ -45,6 +52,8 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
+    ip = widget.ip;
+    id = widget.id;
     // Inicializa o estado de seleção (todas como não selecionadas)
     selectedOptions = {for (var option in options) option: false};
   }
@@ -270,7 +279,14 @@ class _HomeState extends State<Home> {
                                 ),
                               ),
                               onPressed: () {
-                                // TODO: Implementar abrir anuncio
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Anuncio(
+                                        titulo: venda[index]["titulo"], 
+                                        preco: venda[index]["preço"] ?? 0.0,
+                                        imagem: venda[index]["imagem"],)),
+                                );
                               },
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -397,7 +413,14 @@ class _HomeState extends State<Home> {
                                 ),
                               ),
                               onPressed: () {
-                                // TODO: Implementar abrir anuncio
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Anuncio(
+                                        titulo: busca[index]["titulo"], 
+                                        preco: busca[index]["preço"] ?? 0.0,
+                                        imagem: busca[index]["imagem"],)),
+                                );
                               },
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,

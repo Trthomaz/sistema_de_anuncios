@@ -1,25 +1,76 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
 
 class MeusAnuncios extends StatefulWidget {
-  const MeusAnuncios({super.key});
+  final String ip;
+  final int id;
+  
+  const MeusAnuncios({super.key, required this.ip, required this.id});
 
   @override
   State<MeusAnuncios> createState() => _MeusAnunciosState();
 }
 
 class _MeusAnunciosState extends State<MeusAnuncios> {
-  List<Map<String, dynamic>> venda = [
-    {"titulo": "Calça", "preço": 60, "imagem": 'assets/images/calca.jpeg'},
-    {
-      "titulo": "Garrafa Térmica",
-      "preço": 30,
-      "imagem": 'assets/images/garrafa.jpeg'
-    },
-    {"titulo": "Mouse", "preço": 15, "imagem": 'assets/images/mouse.jpeg'},
-    {"titulo": "Aula de história", "preço": 50, "imagem": null},
-    {"titulo": "Aula de matemática", "preço": 60, "imagem": null},
-  ];
+  late String ip;
+  late int id;
+  late List<Map<String, dynamic>> anuncios;
+  
+  @override
+  void initState(){
+    super.initState();
+    ip = widget.ip;
+    id = widget.id;
+    _carregarAnuncios();
+  }
+
+  Future<void> _carregarAnuncios() async {
+    // Simula a busca de dados (substitua pela sua lógica real)
+    List<Map<String, dynamic>>? anunciosBuscados = await _meusAnuncios();
+    print(anunciosBuscados);
+
+    setState(() {
+      anuncios = anunciosBuscados!;
+    });
+  }
+
+  Future<List<Map<String, dynamic>>?> _meusAnuncios() async {
+    final url = Uri.parse('http://${ip}:5000/get_meus_anuncios');
+
+    // Dados enviados
+    final dados = {
+      'user_id': 2,
+    };
+
+    // Enviar requisição
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          // Define o tipo de conteúdo como json
+          'Content-Type': 'application/json'
+        },
+        body: json.encode(dados),
+      );
+      if (response.statusCode == 200) {
+        // Resposta da requisição
+        final resposta = json.decode(response.body);
+        final anuncios = resposta['anuncios'].cast<Map<String, dynamic>>(); // List<dynamic> -> List<Map<String, dynamic>>
+        print(resposta);
+        print("-------------------------");
+        return anuncios;
+      } else {
+        print("Erro na comunicação, tente novamente mais tarde");
+      }
+    } catch (e) {
+      print(e);
+    }
+    return null;
+  }
+
   
   @override
   Widget build(BuildContext context) {
@@ -90,7 +141,7 @@ class _MeusAnunciosState extends State<MeusAnuncios> {
                       width: containerWidth,
                       height: containerHeight,
                       child: ListView.builder(
-                        itemCount: venda.length,
+                        itemCount: anuncios.length,
                         itemBuilder: (context, index) {
                           return Padding(
                             padding: const EdgeInsets.only(bottom: 5, top: 5),
@@ -105,6 +156,7 @@ class _MeusAnunciosState extends State<MeusAnuncios> {
                               ),
                               onPressed: () {
                                 print(constraints.maxHeight);
+                                print(anuncios);
                                 // TODO: Implementar abrir anuncio
                               },
                               child: Row(
@@ -112,9 +164,9 @@ class _MeusAnunciosState extends State<MeusAnuncios> {
                                 children: [
                                   ClipRRect(
                                     borderRadius: BorderRadius.circular(10),
-                                    child: venda[index]["imagem"] != null
+                                    child: anuncios[index]["imagem"] != null
                                         ? Image.asset(
-                                            venda[index]["imagem"],
+                                            anuncios[index]["imagem"],
                                             fit: BoxFit.contain,
                                             height: imageSize,
                                             width: imageSize,
@@ -142,7 +194,7 @@ class _MeusAnunciosState extends State<MeusAnuncios> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          venda[index]["titulo"],
+                                          "Teste",
                                           softWrap: true,
                                           maxLines: 2,
                                           overflow: TextOverflow.ellipsis,
@@ -153,7 +205,7 @@ class _MeusAnunciosState extends State<MeusAnuncios> {
                                           ),
                                         ),
                                         Text(
-                                          "R\$${venda[index]["preço"]}",
+                                          "R\$${anuncios[index]["preco"]}",
                                           softWrap: true,
                                           maxLines: 1,
                                           style: TextStyle(

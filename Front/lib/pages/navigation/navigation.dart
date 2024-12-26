@@ -30,10 +30,10 @@ class _NavigationState extends State<Navigation> {
   @override
   Widget build(BuildContext context) {
     final List<Widget> _pages = <Widget>[
-      Home(),
-      Perfil(),
+      Home(ip: ip, id: id),
+      Perfil(ip: ip, id: id),
       Anunciar(ip: ip, id: id),
-      MeusAnuncios(),
+      MeusAnuncios(ip: ip, id: id),
       Configs(),
     ];
 

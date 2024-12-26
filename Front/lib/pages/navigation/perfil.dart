@@ -3,13 +3,26 @@ import 'package:sistema_de_anuncios/pages/pesquisa.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class Perfil extends StatefulWidget {
-  const Perfil({super.key});
+  final String ip;
+  final int id;
+
+  const Perfil({super.key, required this.ip, required this.id});
 
   @override
   State<Perfil> createState() => _PerfilState();
 }
 
 class _PerfilState extends State<Perfil> {
+  late String ip;
+  late int id;
+  
+  @override
+  void initState() {
+    super.initState();
+    ip = widget.ip;
+    id = widget.id;
+  }
+
   List<Map<String, dynamic>> venda = [
     {"titulo": "Calça", "preço": 60, "imagem": 'assets/images/calca.jpeg'},
     {

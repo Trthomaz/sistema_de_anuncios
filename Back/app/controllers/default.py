@@ -84,22 +84,16 @@ def criar_anuncio():
         return jsonify({"status":False})
     
 
-def destrinchar_anuncios(anuncios):
-    lista = []
-    for v in anuncios:
-        c = Categoria.query.filter_by(id=v.categoria).first()
-        t = Tipo.query.filter_by(id=v.tipo).first()
-        lista.append({"id": v.id, "anunciante_id": v.anunciante, "descricao": v.descricao, "telefone": v.telefone, "local": v.local, "categoria": c.categoria, "tipo": t.tipo, "nota": v.nota, "ativo": v.ativo, "preco": v.preco, "anunciante/interessado": "anunciante"})
-    return lista
-    
-
 @app.route("/get_meus_anuncios", methods = ["POST", "GET"])
 def get_meus_anuncios():
     dados = request.get_json()
-    id = dados.get("id")
-    perfil = Perfil.query.filter_by(id=id).first()
-    anuncios = Anuncio.query.filter_by(anunciante=perfil.id).all()
-    anuncios_lista = destrinchar_anuncios(anuncios)
+    id = dados.get("user_id")
+    anuncios = Anuncio.query.filter_by(anunciante=id).all()
+    anuncios_lista = []
+    for v in anuncios:
+        c = Categoria.query.filter_by(id=v.categoria).first()
+        t = Tipo.query.filter_by(id=v.tipo).first()
+        anuncios_lista.append({"id": v.id, "titulo":"Teste", "anunciante_id": v.anunciante, "descricao": v.descricao, "telefone": v.telefone, "local": v.local, "categoria": c.categoria, "tipo": t.tipo, "nota": v.nota, "ativo": v.ativo, "preco": v.preco, "anunciante/interessado": "anunciante", "imagem":None})
     dados = {}
     dados["anuncios"] = anuncios_lista
     return jsonify(dados)

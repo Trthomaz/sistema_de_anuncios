@@ -15,6 +15,7 @@ class _ConfigsState extends State<Configs> {
       // Impede o uso do botão de voltar do celular para voltar para a tela de login
       canPop: false,
       child: Scaffold(
+          backgroundColor: Theme.of(context).cardColor,
           appBar: PreferredSize(
             // Tamanho do AppBar
             preferredSize: Size.fromHeight(60.0),
@@ -27,7 +28,7 @@ class _ConfigsState extends State<Configs> {
                 size: 30,
               ),
               title: Padding(
-                  padding: const EdgeInsets.all(1),
+                  padding: const EdgeInsets.only(top: 3),
                   child: Text(
                     "Configurações",
                     style: TextStyle(
@@ -42,21 +43,21 @@ class _ConfigsState extends State<Configs> {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(
-                  height: 2,
-                ),
+                // Termos de Uso
                 FilledButton(
                     onPressed: () {
                       // Todo: Implementar a tela de termos de uso
                     },
                     style: FilledButton.styleFrom(
                       backgroundColor:
-                          Theme.of(context).primaryColor.withOpacity(0.3),
+                          Theme.of(context).cardColor,
                       fixedSize: Size(buttonWidth, buttonHeight),
                       shape: RoundedRectangleBorder(
                         borderRadius:
                             BorderRadius.zero, // Borda reta (90 graus)
                       ),
+                      overlayColor:
+                          Theme.of(context).primaryColor.withOpacity(0.3),
                     ),
                     child: Align(
                       alignment: Alignment.centerLeft,
@@ -79,9 +80,12 @@ class _ConfigsState extends State<Configs> {
                         ],
                       ),
                     )),
-                SizedBox(
+                Divider(
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                  thickness: 2,
                   height: 2,
                 ),
+                // Sair
                 FilledButton(
                     onPressed: () {
                       Navigator.push(
@@ -91,7 +95,7 @@ class _ConfigsState extends State<Configs> {
                     },
                     style: FilledButton.styleFrom(
                       backgroundColor:
-                          Theme.of(context).primaryColor.withOpacity(0.3),
+                          Theme.of(context).cardColor,
                       fixedSize: Size(buttonWidth, buttonHeight),
                       shape: RoundedRectangleBorder(
                         borderRadius:
@@ -121,6 +125,11 @@ class _ConfigsState extends State<Configs> {
                         ],
                       ),
                     )),
+                Divider(
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                  thickness: 2,
+                  height: 2,
+                ),
               ],
             );
           })),
