@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sistema_de_anuncios/pages/pesquisa.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class Perfil extends StatefulWidget {
   final String ip;
@@ -15,24 +17,117 @@ class Perfil extends StatefulWidget {
 class _PerfilState extends State<Perfil> {
   late String ip;
   late int id;
+  bool _isLoading = true;
   
+  late Map<String, dynamic> perfil;
+  late List<Map<String, dynamic>> anuncios;
+
   @override
   void initState() {
     super.initState();
     ip = widget.ip;
     id = widget.id;
+    _carregarPerfil();
+    _carregarAnuncios();
   }
 
-  List<Map<String, dynamic>> venda = [
-    {"titulo": "Calça", "preço": 60, "imagem": 'assets/images/calca.jpeg'},
-    {
-      "titulo": "Garrafa Térmica",
-      "preço": 30,
-      "imagem": 'assets/images/garrafa.jpeg'
-    },
-    {"titulo": "Mouse", "preço": 15, "imagem": 'assets/images/mouse.jpeg'},
-    {"titulo": "Aula de história", "preço": 50, "imagem": null},
-  ];
+  Future<Map<String, dynamic>?> _perfil() async {
+    final url = Uri.parse('http://${ip}:5000/get_perfil'); // URL de exemplo
+    
+    final dados = {
+      'user_id': 2,
+    };
+
+    // Enviar requisição
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          // Define o tipo de conteúdo como json
+          'Content-Type': 'application/json'
+        },
+        body: json.encode(dados),
+      );
+      if (response.statusCode == 200) {
+        // Resposta da requisição
+        final resposta = json.decode(response.body);
+        final perfil = resposta['dados'];
+        print(perfil);
+        print("-------------------------");
+        return perfil;
+      } else {
+        print("Erro na comunicação, tente novamente mais tarde");
+      }
+    } catch (e) {
+      print(e);
+    }
+    return null;
+  }
+
+  Future<List<Map<String, dynamic>>?> _meusAnuncios() async {
+    final url = Uri.parse('http://${ip}:5000/get_meus_anuncios');
+
+    // Dados enviados
+    final dados = {
+      'user_id': 2,
+    };
+
+    // Enviar requisição
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          // Define o tipo de conteúdo como json
+          'Content-Type': 'application/json'
+        },
+        body: json.encode(dados),
+      );
+      if (response.statusCode == 200) {
+        // Resposta da requisição
+        final resposta = json.decode(response.body);
+        final anuncios = resposta['anuncios'].cast<Map<String, dynamic>>(); // List<dynamic> -> List<Map<String, dynamic>>
+        print(resposta);
+        print("-------------------------");
+        return anuncios;
+      } else {
+        print("Erro na comunicação, tente novamente mais tarde");
+      }
+    } catch (e) {
+      print(e);
+    }
+    return null;
+  }
+
+  Future<void> _carregarPerfil() async {
+    // Simula a busca de dados (substitua pela sua lógica real)
+    Map<String, dynamic>? dados = await _perfil();
+    print(dados);
+
+    setState(() {
+      if (dados == null) {
+        perfil = {};
+        return;
+      }
+      perfil = dados;
+      print("----------AQUI---------------");
+      print(perfil);
+    });
+  }
+
+  Future<void> _carregarAnuncios() async {
+    // Simula a busca de dados (substitua pela sua lógica real)
+    List<Map<String, dynamic>>? anunciosBuscados = await _meusAnuncios();
+    print(anunciosBuscados);
+
+    setState(() {
+      if (anunciosBuscados == null) {
+        anuncios = [];
+        return;
+      }
+      anuncios = anunciosBuscados;
+      _isLoading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +138,9 @@ class _PerfilState extends State<Perfil> {
     return PopScope(
       // Impede o uso do botão de voltar do celular para voltar para a tela de login
       canPop: false,
-      child: Scaffold(
+      child: _isLoading
+      ? const Center(child: CircularProgressIndicator())
+      : Scaffold(
           appBar: PreferredSize(
             // Tamanho do AppBar
             preferredSize: Size.fromHeight(60.0),
@@ -122,7 +219,7 @@ class _PerfilState extends State<Perfil> {
           ),
           body: LayoutBuilder(builder: (context, constraints) {
             double containerWidth = constraints.maxWidth * 0.9;
-            double containerHeight = constraints.maxHeight - 184;
+            double containerHeight = constraints.maxHeight - 190;
             return Column(
               children: [
                 Padding(
@@ -149,12 +246,17 @@ class _PerfilState extends State<Perfil> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text("João Silva",
+                            Text(perfil["nome"],
                                 style: TextStyle(
                                   fontSize: 24,
                                   color: Theme.of(context).primaryColorLight,
                                 )),
                             SizedBox(height: 5),
+                            Text(perfil["curso"],
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: Theme.of(context).primaryColorLight,
+                                )),
                             Row(
                               children: [
                                 Padding(
@@ -170,7 +272,7 @@ class _PerfilState extends State<Perfil> {
                                 ),
                                 SizedBox(width: 8),
                                 RatingBarIndicator(
-                                  rating: 4.5,
+                                  rating: perfil["reputacao"],
                                   itemBuilder: (context, index) => Icon(
                                     Icons.star,
                                     color: Colors.yellow,
@@ -210,7 +312,7 @@ class _PerfilState extends State<Perfil> {
                     width: containerWidth,
                     height: containerHeight,
                     child: ListView.builder(
-                      itemCount: venda.length,
+                      itemCount: anuncios.length,
                       itemBuilder: (context, index) {
                         return Padding(
                           padding: const EdgeInsets.all(5),
@@ -232,9 +334,9 @@ class _PerfilState extends State<Perfil> {
                               children: [
                                 ClipRRect(
                                   borderRadius: BorderRadius.circular(10),
-                                  child: venda[index]["imagem"] != null
+                                  child: anuncios[index]["imagem"] != null
                                       ? Image.asset(
-                                          venda[index]["imagem"],
+                                          anuncios[index]["imagem"],
                                           fit: BoxFit.contain,
                                           height: imageSize,
                                           width: imageSize,
@@ -262,7 +364,7 @@ class _PerfilState extends State<Perfil> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        venda[index]["titulo"],
+                                        anuncios[index]["titulo"],
                                         softWrap: true,
                                         maxLines: 2,
                                         overflow: TextOverflow.ellipsis,
@@ -273,7 +375,7 @@ class _PerfilState extends State<Perfil> {
                                         ),
                                       ),
                                       Text(
-                                        "R\$${venda[index]["preço"]}",
+                                        "R\$${anuncios[index]["preco"]}",
                                         softWrap: true,
                                         maxLines: 1,
                                         style: TextStyle(

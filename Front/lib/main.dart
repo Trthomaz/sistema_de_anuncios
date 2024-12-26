@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sistema_de_anuncios/pages/login.dart';
 import 'package:sistema_de_anuncios/pages/navigation/navigation.dart';
 import 'package:sistema_de_anuncios/pages/mensagens.dart';
+import 'package:sistema_de_anuncios/pages/requisicao.dart';
 
 void main() async {
   runApp(MaterialApp(
