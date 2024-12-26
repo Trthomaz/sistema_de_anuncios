@@ -82,7 +82,47 @@ def criar_anuncio():
     except:
         rollback()
         return jsonify({"status":False})
+    
 
+def destrinchar_anuncios(anuncios):
+    lista = []
+    for v in anuncios:
+        c = Categoria.query.filter_by(id=v.categoria).first()
+        t = Tipo.query.filter_by(id=v.tipo).first()
+        lista.append({"id": v.id, "anunciante_id": v.anunciante, "descricao": v.descricao, "telefone": v.telefone, "local": v.local, "categoria": c.categoria, "tipo": t.tipo, "nota": v.nota, "ativo": v.ativo, "preco": v.preco, "anunciante/interessado": "anunciante"})
+    return lista
+    
+
+@app.route("/get_meus_anuncios", methods = ["POST", "GET"])
+def get_meus_anuncios():
+    dados = request.get_json()
+    id = dados.get("id")
+    perfil = Perfil.query.filter_by(id=id).first()
+    anuncios = Anuncio.query.filter_by(anunciante=perfil.id).all()
+    anuncios_lista = destrinchar_anuncios(anuncios)
+    dados = {}
+    dados["anuncios"] = anuncios_lista
+    return jsonify(dados)
+
+@app.route("/inicializar1")
+def inicializar1():
+    db.session.add(Tipo("venda"))
+    db.session.add(Tipo("procura"))
+    db.session.add(Categoria("serviço"))
+    db.session.add(Categoria("produto"))
+    db.session.commit()
+    return "ok"
+
+@app.route("/inicializar2")
+def inicializar2():
+    db.session.add(Anuncio(2, "bili jin is not mai louver xis jast a gral det cleims det ai em de uan", "1111-1111", "Grags", 1, True, 1, 5, 15))
+    db.session.commit()
+    return "ok"
+
+@app.route("/ver")
+def ver():
+    x = Anuncio.query.filter_by(anunciante=2).first()
+    return x.descricao
 
 
 

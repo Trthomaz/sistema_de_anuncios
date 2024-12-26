@@ -38,7 +38,7 @@ def criar_anuncio():
     cep = dados.get("cep")
     
     user_id = session["user_id"]
-    anuncio = Anuncio(user_id,titulo,descricao,celular,cep,categoria,ativo=ativo,tipo=tipo_anuncio, reco=preco)
+    anuncio = Anuncio(user_id,titulo,descricao,celular,cep,categoria,ativo=ativo,tipo=tipo_anuncio, preco=preco)
     try:
         Perfil().add_anuncio(anuncio)
         return jsonify({"status":True})

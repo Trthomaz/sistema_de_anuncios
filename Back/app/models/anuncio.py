@@ -17,9 +17,9 @@ class Anuncio(db.Model):
 
     #imagem
 
-    def __init__(self, anunciante, titulo, descricao, telefone, local, categoria, ativo=True, tipo = 0, nota = 5,preco=0.0): #Ver como puxar imagem
+    def __init__(self, anunciante, descricao, telefone, local, categoria, ativo=True, tipo = 1, nota = 5,preco=0.0): #Ver como puxar imagem
 
-        self.titulo = titulo
+        #self.titulo = titulo
         self.anunciante = anunciante
         self.descricao = descricao
         self.telefone = telefone
