@@ -4,6 +4,7 @@ class Anuncio(db.Model):
     __tablename__ = "anuncios"
 
     id = db.Column(db.Integer, primary_key=True)
+    titulo = db.Column(db.String)
     anunciante = db.Column(db.Integer, db.ForeignKey('perfis.id'))
     descricao = db.Column(db.Text)
     telefone = db.Column(db.String)
@@ -15,11 +16,11 @@ class Anuncio(db.Model):
     ativo = db.Column(db.Boolean, default=True)
     preco = db.Column(db.Float)
 
-    #imagem
+    imagem = db.Column(db.Text)
 
-    def __init__(self, anunciante, descricao, telefone, local, categoria, ativo=True, tipo = 1, nota = 5,preco=0.0): #Ver como puxar imagem
+    def __init__(self, anunciante, titulo, descricao, telefone, local, categoria, ativo=True, tipo = 1, nota = 5,preco=0.0, imagem=None): #Ver como puxar imagem
 
-        #self.titulo = titulo
+        self.titulo = titulo
         self.anunciante = anunciante
         self.descricao = descricao
         self.telefone = telefone
@@ -30,6 +31,8 @@ class Anuncio(db.Model):
         self.nota = nota
         self.ativo = ativo
         self.preco=preco
+        
+        self.imagem = imagem
 
     def arquivar(self):
         self.ativo = False

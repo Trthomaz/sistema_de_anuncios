@@ -86,7 +86,10 @@ def criar_anuncio():
         rollback()
         return jsonify({"status":False})
 
-    
+
+########################################### LEO #################################################
+
+# Parte real oficial
 
 @app.route("/get_meus_anuncios", methods = ["POST", "GET"])
 def get_meus_anuncios():
@@ -102,7 +105,7 @@ def get_meus_anuncios():
         print(c)
         t = Tipo.query.filter_by(id=v.tipo).first()
         print(t)
-        anuncios_lista.append({"id": v.id, "titulo":"Teste", "anunciante_id": v.anunciante, "descricao": v.descricao, "telefone": v.telefone, "local": v.local, "categoria": c.categoria, "tipo": t.tipo, "nota": v.nota, "ativo": v.ativo, "preco": v.preco, "anunciante/interessado": "anunciante", "imagem":None})
+        anuncios_lista.append({"id": v.id, "titulo": v.titulo, "anunciante_id": v.anunciante, "descricao": v.descricao, "telefone": v.telefone, "local": v.local, "categoria": c.categoria, "tipo": t.tipo, "nota": v.nota, "ativo": v.ativo, "preco": v.preco, "anunciante/interessado": "anunciante", "imagem": v.imagem})
     dados = {}
     dados["anuncios"] = anuncios_lista
     return jsonify(dados)
@@ -115,6 +118,14 @@ def get_perfil():
     dados = {}
     dados["dados"] = {"nome": perfil.nome, "curso": perfil.curso, "reputacao": perfil.reputacao}
     return jsonify(dados)
+
+'''@app.route("/get_feed", methods = ["POST", "GET"])
+def get_feed():
+    dados = request.get_json()
+    id = dados.get("user_id")
+    anuncios_venda = Anuncio.query.filter_by(id!= id, )'''
+
+# Testes e mexidas diretas no bd
 
 @app.route("/inicializar1")
 def inicializar1():
@@ -145,6 +156,8 @@ def get_teste():
     y = str(y)
     print(y)
     return x
+
+######################################### END LEO ################################################
 
 
 
