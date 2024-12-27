@@ -31,5 +31,5 @@ def logout():
     user_id = session["user_id"]
     if user_id:
         session.pop(user_id, None)
-        return jsonify({"status", True})
-    return jsonify({"status", False})
+        return jsonify({"status": True})
+    return jsonify({"status": False})
