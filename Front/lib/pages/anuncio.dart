@@ -225,40 +225,28 @@ class _AnuncioState extends State<Anuncio> {
                   children: [
                     Align(
                       alignment: Alignment.centerLeft,
-                      child: Card(
-                        color: Theme.of(context).cardColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 4, horizontal: 10),
-                          child: Text(
-                            widget.titulo,
-                            style: TextStyle(
-                              color: Theme.of(context).primaryColorLight,
-                              fontSize: 30,
-                            ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 4, horizontal: 10),
+                        child: Text(
+                          widget.titulo,
+                          style: TextStyle(
+                            color: Theme.of(context).primaryColorLight,
+                            fontSize: 30,
                           ),
                         ),
                       ),
                     ),
                     Align(
                       alignment: Alignment.centerLeft,
-                      child: Card(
-                        color: Theme.of(context).cardColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 4, horizontal: 10),
-                          child: Text(
-                            "R\$ ${widget.preco.toStringAsFixed(2)}",
-                            style: TextStyle(
-                              color: Theme.of(context).primaryColorLight,
-                              fontSize: 30,
-                            ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 4, horizontal: 10),
+                        child: Text(
+                          "R\$ ${widget.preco.toStringAsFixed(2)}",
+                          style: TextStyle(
+                            color: Theme.of(context).primaryColorLight,
+                            fontSize: 30,
                           ),
                         ),
                       ),

@@ -51,7 +51,7 @@ class _AnunciarState extends State<Anunciar> {
   String? tipo;
 
   List<String> categorias = ["Opção 1", "Opção 2"];
-  List<String> tipos = ["Busca", "Venda"];
+  List<String> tipos = ["Venda", "Busca"];
 
   // Requisição de login
   Future<bool> _anunciar() async {
@@ -68,6 +68,8 @@ class _AnunciarState extends State<Anunciar> {
       'celular': _celularController.text,
       'cep': _cepController.text
     };
+
+    print(tipos.indexOf(tipo!) + 1);
 
     // Mensagem de erro
     dynamic anunciarErrorMessage(String errorText) {

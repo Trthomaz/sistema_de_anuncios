@@ -75,7 +75,7 @@ def criar_anuncio():
     cep = dados.get("cep")
     
     user_id = dados.get("user_id")
-    anuncio = Anuncio(user_id,descricao,celular,cep,categoria,ativo=ativo,tipo=tipo_anuncio, preco=preco)
+    anuncio = Anuncio(user_id,descricao,titulo,celular,cep,categoria,ativo=ativo,tipo=tipo_anuncio, preco=preco)
     try:
         #Perfil().add_anuncio(anuncio)
         perfil = Perfil.query.filter_by(id=user_id).first()
@@ -119,11 +119,23 @@ def get_perfil():
     dados["dados"] = {"nome": perfil.nome, "curso": perfil.curso, "reputacao": perfil.reputacao}
     return jsonify(dados)
 
-'''@app.route("/get_feed", methods = ["POST", "GET"])
+@app.route("/get_feed", methods = ["POST", "GET"])
 def get_feed():
     dados = request.get_json()
     id = dados.get("user_id")
-    anuncios_venda = Anuncio.query.filter_by(id!= id, )'''
+    anuncios_venda = Anuncio.query.filter(Anuncio.anunciante != id, Anuncio.tipo == 1).all()
+    anuncios_busca = Anuncio.query.filter(Anuncio.anunciante != id, Anuncio.tipo == 2).all()
+    anuncios_venda = anuncios_venda[:5]
+    anuncios_busca = anuncios_busca[:5]
+    av = []
+    ab = []
+    for v in anuncios_venda:
+        av.append({"anuncio_id": v.id, "titulo": v.titulo, "imagem": v.imagem, "preco": v.preco}) # Substituir titulo e imagem
+    for v in anuncios_busca:
+        ab.append({"anuncio_id": v.id, "titulo": v.titulo, "imagem": v.imagem, "preco": v.preco}) # Substituir titulo e imagem
+    dados = {}
+    dados["dados"] = {"venda": av, "busca": ab}
+    return jsonify(dados)
 
 # Testes e mexidas diretas no bd
 

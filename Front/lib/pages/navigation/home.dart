@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sistema_de_anuncios/pages/anuncio.dart';
 import 'package:sistema_de_anuncios/pages/mensagens.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class Home extends StatefulWidget {
   final String ip;
@@ -15,36 +17,71 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   late String ip;
   late int id;
+  bool _isLoading = true;
 
-  // Lista dos anuncios
-  List<Map<String, dynamic>> venda = [
-    {"titulo": "Calça", "preço": 60.00, "imagem": 'assets/images/calca.jpeg'},
-    {
-      "titulo": "Garrafa Térmica",
-      "preço": 30.00,
-      "imagem": 'assets/images/garrafa.jpeg'
-    },
-    {"titulo": "Mouse", "preço": 15.00, "imagem": 'assets/images/mouse.jpeg'},
-    {"titulo": "Aula de história", "preço": 50.00, "imagem": null},
-  ];
+  late List<Map<String, dynamic>> venda;
+  late List<Map<String, dynamic>> busca;
 
-  List<Map<String, dynamic>> busca = [
-    {"titulo": "Teclado", "preço": 30.00, "imagem": 'assets/images/teclado.jpeg'},
-    {
-      "titulo": "Mesa",
-      "preço": 70.00,
-      "imagem": 'assets/images/mesa.jpeg',
-    },
-    {"titulo": "Calculadora", "preço": 20.00, "imagem": null},
-    {"titulo": "Cadeira", "preço": 40.00, "imagem": null},
-  ];
+  Future<void> _carregarAnuncios() async {
+    // Simula a busca de dados (substitua pela sua lógica real)
+    Map<String, List<Map<String, dynamic>>>? feed = await _feed();
 
-  // Categoria
-  List<String> categorias = [];
-  final List<String> lista_categorias = ['Opção 1', 'Opção 2', 'Opção 3'];
+    setState(() {
+      if (feed == null) {
+        venda = [];
+        busca = [];
+        return;
+      }
+      venda = feed['venda']!;
+      busca = feed['busca']!;
+      _isLoading = false;
+    });
+  }
+
+  Future<Map<String, List<Map<String, dynamic>>>?> _feed() async {
+    final url = Uri.parse('http://${ip}:5000/get_feed');
+
+    // Dados enviados
+    final dados = {
+      'user_id': id,
+    };
+
+    // Enviar requisição
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          // Define o tipo de conteúdo como json
+          'Content-Type': 'application/json'
+        },
+        body: json.encode(dados),
+      );
+      if (response.statusCode == 200) {
+        // Resposta da requisição
+        final resposta = json.decode(response.body);
+        final venda = resposta['dados']['venda'].cast<Map<String, dynamic>>();
+        final busca = resposta['dados']['busca'].cast<Map<String, dynamic>>();
+        print(resposta);
+        print("-------------------------");
+        print(venda);
+        print(busca);
+        Map<String, List<Map<String, dynamic>>>? anuncios = {
+          'venda': venda,
+          'busca': busca,
+        };
+        print(anuncios);
+        return anuncios;
+      } else {
+        print("Erro na comunicação, tente novamente mais tarde");
+      }
+    } catch (e) {
+      print(e);
+    }
+    return null;
+  }
 
   // Lista de opções
-  final List<String> options = ['Opção 1', 'Opção 2', 'Opção 3', 'Opção 4'];
+  final List<String> options = ['Opção 1', 'Opção 2',];
 
   // Estado de seleção para cada opção
   late Map<String, bool> selectedOptions;
@@ -56,6 +93,7 @@ class _HomeState extends State<Home> {
     id = widget.id;
     // Inicializa o estado de seleção (todas como não selecionadas)
     selectedOptions = {for (var option in options) option: false};
+    _carregarAnuncios();
   }
 
   void _showMultiSelectDialog() {
@@ -151,7 +189,11 @@ class _HomeState extends State<Home> {
     return PopScope(
       // Impede o uso do botão de voltar do celular para voltar para a tela de login
       canPop: false,
-      child: Scaffold(
+      child: _isLoading
+      ? Center(
+        child: CircularProgressIndicator(),
+      )
+      : Scaffold(
         appBar: PreferredSize(
           // Tamanho do AppBar
           preferredSize: Size.fromHeight(60.0),
@@ -284,7 +326,7 @@ class _HomeState extends State<Home> {
                                   MaterialPageRoute(
                                       builder: (context) => Anuncio(
                                         titulo: venda[index]["titulo"], 
-                                        preco: venda[index]["preço"] ?? 0.0,
+                                        preco: venda[index]["preco"] ?? 0.0,
                                         imagem: venda[index]["imagem"],)),
                                 );
                               },
@@ -335,7 +377,7 @@ class _HomeState extends State<Home> {
                                           ),
                                         ),
                                         Text(
-                                          "R\$${venda[index]["preço"]}",
+                                          "R\$${venda[index]["preco"]}",
                                           softWrap: true,
                                           maxLines: 1,
                                           style: TextStyle(
@@ -418,7 +460,7 @@ class _HomeState extends State<Home> {
                                   MaterialPageRoute(
                                       builder: (context) => Anuncio(
                                         titulo: busca[index]["titulo"], 
-                                        preco: busca[index]["preço"] ?? 0.0,
+                                        preco: busca[index]["preco"] ?? 0.0,
                                         imagem: busca[index]["imagem"],)),
                                 );
                               },
@@ -469,7 +511,7 @@ class _HomeState extends State<Home> {
                                           ),
                                         ),
                                         Text(
-                                          "R\$${busca[index]["preço"]}",
+                                          "R\$${busca[index]["preco"]}",
                                           softWrap: true,
                                           maxLines: 1,
                                           style: TextStyle(
