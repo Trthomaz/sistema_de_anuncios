@@ -76,6 +76,7 @@ def criar_anuncio():
     user_id = dados.get("user_id")
     anuncio = Anuncio(user_id,titulo,descricao,celular,cep,categoria,ativo=ativo,tipo=tipo_anuncio, preco=preco)
     try:
+        #Perfil().add_anuncio(anuncio)
         perfil = Perfil.query.filter_by(id=user_id).first()
         perfil.add_anuncio(anuncio)
         return jsonify({"status":True})
