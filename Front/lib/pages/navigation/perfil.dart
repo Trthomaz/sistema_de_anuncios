@@ -262,7 +262,7 @@ class _PerfilState extends State<Perfil> {
                                 Padding(
                                   padding: const EdgeInsets.only(top: 3),
                                   child: Text(
-                                    "4.5",
+                                    "${perfil["reputacao"]}",
                                     style: TextStyle(
                                       color:
                                           Theme.of(context).primaryColorLight,
@@ -387,7 +387,8 @@ class _PerfilState extends State<Perfil> {
                                       SizedBox(
                                         height: 15,
                                         width: 40,
-                                        child: Card(
+                                        child: anuncios[index]["tipo"] == "venda" 
+                                        ? Card(
                                           margin: EdgeInsets.all(0),
                                           color: Color(0xFF134E6C),
                                           child: Center(
@@ -399,7 +400,20 @@ class _PerfilState extends State<Perfil> {
                                                       .primaryColorLight),
                                             ),
                                           ),
-                                        ),
+                                        )
+                                        : Card(
+                                          margin: EdgeInsets.all(0),
+                                          color: Color(0xFF38524A),
+                                          child: Center(
+                                            child: Text(
+                                              "Busca",
+                                              style: TextStyle(
+                                                  fontSize: 8,
+                                                  color: Theme.of(context)
+                                                      .primaryColorLight),
+                                            ),
+                                          ),
+                                        )
                                       ),
                                     ],
                                   ),
