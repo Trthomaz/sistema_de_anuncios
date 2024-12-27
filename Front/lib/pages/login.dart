@@ -104,7 +104,7 @@ class _LoginState extends State<Login> {
                 child: Center(
                   child: Text("Configurações de Desenvolvimento",
                       style: TextStyle(
-                        fontSize: 20,
+                        fontSize: 16,
                         color: Theme.of(context).primaryColorLight,
                       )),
                 ),

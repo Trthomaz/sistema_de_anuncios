@@ -31,16 +31,16 @@ def login():
 def logout():
     user_id = session["user_id"]
     if user_id:
-        session.pop(user_id, None)
-        return jsonify({"status", True})
-    return jsonify({"status", False})
+        session.pop("user_id", None)
+        return jsonify({"status": True})
+    return jsonify({"status": False})
 
 
 @app.route("/get_anuncios_geral")
 def get_anuncios_geral():
     dados = {}
     if session['user_id']:
-        anuncios_pessoais = Anuncio.query().all()
+        anuncios_pessoais = Anuncio.query.all()
         
         #Nao sei se funciona retornar a linha inteira
         dados["dados"] = anuncios_pessoais
@@ -76,6 +76,7 @@ def criar_anuncio():
     user_id = dados.get("user_id")
     anuncio = Anuncio(user_id,titulo,descricao,celular,cep,categoria,ativo=ativo,tipo=tipo_anuncio, preco=preco)
     try:
+        #Perfil().add_anuncio(anuncio)
         perfil = Perfil.query.filter_by(id=user_id).first()
         perfil.add_anuncio(anuncio)
         return jsonify({"status":True})
