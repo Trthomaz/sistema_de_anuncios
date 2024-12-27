@@ -50,7 +50,7 @@ class _AnunciarState extends State<Anunciar> {
   String? categoria;
   String? tipo;
 
-  List<String> categorias = ["Opção 1", "Opção 2", "Opção 3"];
+  List<String> categorias = ["Opção 1", "Opção 2"];
   List<String> tipos = ["Busca", "Venda"];
 
   // Requisição de login
@@ -62,8 +62,8 @@ class _AnunciarState extends State<Anunciar> {
       'user_id': id,
       'titulo': _tituloController.text,
       'descricao': _descricaoController.text,
-      'tipo_anuncio': tipo,
-      'categoria': categoria,
+      'tipo_anuncio': tipos.indexOf(tipo!) + 1,
+      'categoria': categorias.indexOf(categoria!) + 1,
       'preco': _precoController.text,
       'celular': _celularController.text,
       'cep': _cepController.text

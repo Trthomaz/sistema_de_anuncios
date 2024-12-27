@@ -70,30 +70,38 @@ def criar_anuncio():
     tipo_anuncio = dados.get("tipo_anuncio")
     categoria = dados.get("categoria")
     preco = dados.get("preco")
+    preco = float(preco.replace(',', '.'))
     celular = dados.get("celular")
     cep = dados.get("cep")
     
     user_id = dados.get("user_id")
-    anuncio = Anuncio(user_id,titulo,descricao,celular,cep,categoria,ativo=ativo,tipo=tipo_anuncio, preco=preco)
+    anuncio = Anuncio(user_id,descricao,celular,cep,categoria,ativo=ativo,tipo=tipo_anuncio, preco=preco)
     try:
         #Perfil().add_anuncio(anuncio)
         perfil = Perfil.query.filter_by(id=user_id).first()
         perfil.add_anuncio(anuncio)
         return jsonify({"status":True})
-    except:
+    except Exception as e:
+        print(e)
         rollback()
         return jsonify({"status":False})
+
     
 
 @app.route("/get_meus_anuncios", methods = ["POST", "GET"])
 def get_meus_anuncios():
     dados = request.get_json()
     id = dados.get("user_id")
+    print(id)
     anuncios = Anuncio.query.filter_by(anunciante=id).all()
+    print(anuncios)
     anuncios_lista = []
     for v in anuncios:
+        print(v)
         c = Categoria.query.filter_by(id=v.categoria).first()
+        print(c)
         t = Tipo.query.filter_by(id=v.tipo).first()
+        print(t)
         anuncios_lista.append({"id": v.id, "titulo":"Teste", "anunciante_id": v.anunciante, "descricao": v.descricao, "telefone": v.telefone, "local": v.local, "categoria": c.categoria, "tipo": t.tipo, "nota": v.nota, "ativo": v.ativo, "preco": v.preco, "anunciante/interessado": "anunciante", "imagem":None})
     dados = {}
     dados["anuncios"] = anuncios_lista
@@ -128,14 +136,23 @@ def ver():
     x = Anuncio.query.filter_by(anunciante=2).first()
     return x.descricao
 
+@app.route("/get_teste")
+def get_teste():
+    x = Anuncio.query.filter_by(anunciante=1).all()
+    y = []
+    for v in x:
+        y.append(v.categoria)
+    y = str(y)
+    print(y)
+    return x
 
 
 
-# @app.route("/teste1")
-# def teste1():
-#     db.session.add(Perfil("lmeato@id.uff.br", "1234", "Leo", "CC", 5))
-#     db.session.commit()
-#     return "ok"
+@app.route("/teste1")
+def teste1():
+    db.session.add(Perfil("b", "b", "B", "BB", 5))
+    db.session.commit()
+    return "ok"
 
 # @app.route("/teste2")
 # def teste2():

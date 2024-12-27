@@ -35,7 +35,7 @@ class _PerfilState extends State<Perfil> {
     final url = Uri.parse('http://${ip}:5000/get_perfil'); // URL de exemplo
     
     final dados = {
-      'user_id': 2,
+      'user_id': id,
     };
 
     // Enviar requisição
@@ -69,7 +69,7 @@ class _PerfilState extends State<Perfil> {
 
     // Dados enviados
     final dados = {
-      'user_id': 2,
+      'user_id': id,
     };
 
     // Enviar requisição

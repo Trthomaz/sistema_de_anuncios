@@ -48,7 +48,7 @@ class _MeusAnunciosState extends State<MeusAnuncios> {
 
     // Dados enviados
     final dados = {
-      'user_id': 2,
+      'user_id': id,
     };
 
     // Enviar requisição
