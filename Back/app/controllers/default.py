@@ -137,6 +137,24 @@ def get_feed():
     dados["dados"] = {"venda": av, "busca": ab}
     return jsonify(dados)
 
+@app.route("/get_conversas", methods = ["POST", "GET"])
+def get_conversas():
+    dados = request.get_json()
+    id = dados.get("user_id")
+    conversas = Conversa.query.filter((Conversa.anunciante == id) | (Conversa.interessado == id), Conversa.arquivada == False).all()
+    compra = []
+    venda = []
+    for v in conversas:
+        a = Perfil.query.filter_by(id=v.anunciante).first().nome
+        i = Perfil.query.filter_by(id=v.interessado).first().nome
+        if id == v.interessado:
+            compra.append({"conversa_id": v.id, "anunciante_id": v.anunciante, "interessado_id": v.interessado, "anunciante_nome": a, "interessado_nome": i})
+        if id == v.anunciante:
+            venda.append({"conversa_id": v.id, "anunciante_id": v.anunciante, "interessado_id": v.interessado, "anunciante_nome": a, "interessado_nome": i})
+    dados = {}
+    dados["dados"] = {"compra": compra, "venda": venda}
+    return jsonify(dados)
+
 # Testes e mexidas diretas no bd
 
 @app.route("/inicializar1")
@@ -151,6 +169,13 @@ def inicializar1():
 @app.route("/inicializar2")
 def inicializar2():
     db.session.add(Anuncio(2, "bili jin is not mai louver xis jast a gral det cleims det ai em de uan", "1111-1111", "Grags", 1, True, 1, 5, 15))
+    db.session.commit()
+    return "ok"
+
+@app.route("/inicializar3")
+def inicializar3():
+    db.session.add(Conversa(1, 2))
+    db.session.add(Conversa(2, 1))
     db.session.commit()
     return "ok"
 
@@ -175,7 +200,7 @@ def get_teste():
 
 @app.route("/teste1")
 def teste1():
-    db.session.add(Perfil("b", "b", "B", "BB", 5))
+    db.session.add(Perfil("a", "a", "A", "AA", 5))
     db.session.commit()
     return "ok"
 
