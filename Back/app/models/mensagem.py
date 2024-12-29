@@ -9,8 +9,10 @@ class Mensagem(db.Model):
     date = db.Column(db.DateTime)
     conversa = db.Column(db.Integer, db.ForeignKey('conversas.id'))
 
-    def __init__(self, user, txt, date):
+    def __init__(self, user, txt, date, conversa):
 
         self.user = user
         self.txt = txt
         self.date = date
+
+        self.conversa = conversa

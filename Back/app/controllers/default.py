@@ -155,6 +155,29 @@ def get_conversas():
     dados["dados"] = {"compra": compra, "venda": venda}
     return jsonify(dados)
 
+@app.route("/get_mensagens", methods = ["POST", "GET"])
+def get_mensagens():
+    dados = request.get_json()
+    id = dados.get("id")
+    mensagens = Mensagem.query.filter_by(conversa=id).all().sort(key=lambda x: x.date)
+    m = []
+    for v in mensagens:
+        m.append({"msg_id": v.id, "user_id": v.user, "txt": v.txt, "date": v.date})
+    dados = {}
+    dados["dados"] = m
+    return jsonify(dados)
+
+@app.route("/add_mensgem", methods = ["POST", "GET"])
+def add_mensagem():
+    dados = request.get_json()
+    user_id = dados.get("user_id")
+    txt = dados.get("txt")
+    date = dados.get("date")
+    cvv_id = dados.get("conversa_id")
+    db.session.add(Mensagem(user_id, txt, date, cvv_id))
+    db.session.commit()
+    return "ok"
+
 # Testes e mexidas diretas no bd
 
 @app.route("/inicializar1")
