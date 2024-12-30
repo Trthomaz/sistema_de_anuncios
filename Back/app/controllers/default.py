@@ -137,22 +137,55 @@ def get_feed():
     dados["dados"] = {"venda": av, "busca": ab}
     return jsonify(dados)
 
+@app.route("/fazer_busca", methods = ["POST", "GET"])  # precisa ser bem testado. não tenho certeza se funciona. (nem tá pronta ainda)
+def fazer_busca():
+    dados = request.get_json()
+    user_id = dados.get("user_id")
+    txt = dados.get("txt")
+    categoria = dados.get("categoria")
+    local = dados.get("local")
+    preco_i = dados.get("preco_inicial")
+    preco_f = dados.get("preco_final")
+    c = categoria == -1
+    l = local == "-1"
+    pi = preco_i == -1
+    pf = preco_f == -1
+    anuncios = Anuncio.query.filter((Anuncio.categoria == categoria) | (c),
+                                    (Anuncio.local == local) | (l),
+                                    (Anuncio.preco > preco_i) | (pi),
+                                    (Anuncio.preco < preco_f) | (pf),
+                                    Anuncio.anunciante != user_id,
+                                    txt in Anuncio.titulo).all()
+    
+
 @app.route("/get_conversas", methods = ["POST", "GET"])
 def get_conversas():
     dados = request.get_json()
     id = dados.get("user_id")
     conversas = Conversa.query.filter((Conversa.anunciante == id) | (Conversa.interessado == id), Conversa.arquivada == False).all()
-    compra = []
-    venda = []
+    c = []
     for v in conversas:
         a = Perfil.query.filter_by(id=v.anunciante).first().nome
         i = Perfil.query.filter_by(id=v.interessado).first().nome
-        if id == v.interessado:
-            compra.append({"conversa_id": v.id, "anunciante_id": v.anunciante, "interessado_id": v.interessado, "anunciante_nome": a, "interessado_nome": i})
-        if id == v.anunciante:
-            venda.append({"conversa_id": v.id, "anunciante_id": v.anunciante, "interessado_id": v.interessado, "anunciante_nome": a, "interessado_nome": i})
+        c.append({"conversa_id": v.id, "anunciante_id": v.anunciante, "interessado_id": v.interessado, "anunciante_nome": a, "interessado_nome": i})
     dados = {}
-    dados["dados"] = {"compra": compra, "venda": venda}
+    dados["dados"] = {"conversas": c}
+    return jsonify(dados)
+
+@app.route("/iniciar_conversa", methods = ["POST", "GET"])
+def iniciar_conversa():
+    dados = request.get_json()
+    anunciante_id = dados.get("anunciante_id")
+    interessado_id = dados.get("interessado_id")
+    dados = {}
+    conversas = Conversa.query.filter(Conversa.anunciante == anunciante_id, Conversa.interessado == interessado_id).all()
+    if conversas == []:
+        db.session.add(Conversa(interessado_id, anunciante_id))
+        db.session.commit()
+        id = Conversa.query.filter(Conversa.anunciante == anunciante_id, Conversa.interessado == interessado_id).first().id
+        dados["dados"] = {"conversa_id": id, "erro": "Tudo certo!"}
+    else:
+        dados["dados"] = {"conversa_id": -1, "erro": "Conversa já existe!"}
     return jsonify(dados)
 
 @app.route("/get_mensagens", methods = ["POST", "GET"])
