@@ -230,6 +230,47 @@ def get_anuncio():
     dados["dados"] = anuncio
     return jsonify(dados)
 
+@app.route("/excluir_anuncio", methods = ["POST", "GET"])
+def excluir_anuncio():
+    dados = request.get_json()
+    user_id = dados.get("user_id")
+    anuncio_id = dados.get("anuncio_id")
+    anuncio = Anuncio.query.filter_by(id=anuncio_id).first()
+    if anuncio.anunciante == user_id:
+        db.session.delete(anuncio)
+        db.session.commit()
+        return "Anúncio deletado."
+    return "O usuário não é o proprietário deste anúncio."
+
+@app.route("/editar_anuncio", methods = ["POST", "GET"])
+def editar_anuncio():
+
+    dados = request.get_json()
+    id = dados.get("anuncio_id")
+    titulo = dados.get("titulo")
+    descricao = dados.get("descricao")
+    tipo_anuncio = dados.get("tipo_anuncio")
+    categoria = dados.get("categoria")
+    preco = dados.get("preco")
+    preco = float(preco.replace(',', '.'))
+    celular = dados.get("celular")
+    cep = dados.get("cep")
+    imagem = dados.get("imagem")
+
+    anuncio = Anuncio.query.filter_by(id = id).first()
+    anuncio.titulo = titulo
+    anuncio.descricao = descricao
+    anuncio.telefone = celular
+    anuncio.local = cep
+    anuncio.categoria = categoria
+    anuncio.tipo = tipo_anuncio
+    anuncio.preco = preco
+    anuncio.imagem = imagem
+
+    db.session.commit()
+
+    return "ok"
+
 # Testes e mexidas diretas no bd
 
 @app.route("/inicializar1")
