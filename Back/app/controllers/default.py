@@ -206,7 +206,7 @@ def get_mensagens():
     dados["dados"] = m
     return jsonify(dados)
 
-@app.route("/add_mensgem", methods = ["POST", "GET"])
+@app.route("/add_mensagem", methods = ["POST", "GET"])
 def add_mensagem():
     dados = request.get_json()
     user_id = dados.get("user_id")
