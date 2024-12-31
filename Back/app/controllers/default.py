@@ -1,5 +1,5 @@
 from app.controllers import *
-import time
+import datetime
 
 
 @app.route("/login", methods=["POST", "GET"])
@@ -212,7 +212,7 @@ def add_mensagem():
     user_id = dados.get("user_id")
     txt = dados.get("txt")
     #date = dados.get("date")
-    date = time.time()
+    date = datetime.datetime.utcnow()
     cvv_id = dados.get("conversa_id")
     db.session.add(Mensagem(user_id, txt, date, cvv_id))
     db.session.commit()
@@ -251,6 +251,12 @@ def inicializar2():
 def inicializar3():
     db.session.add(Conversa(1, 2))
     db.session.add(Conversa(2, 1))
+    db.session.commit()
+    return "ok"
+
+@app.route("/inicializar4")
+def inicializar4():
+    db.session.add(Mensagem(1, "oi", datetime.datetime.utcnow(), 1))
     db.session.commit()
     return "ok"
 
