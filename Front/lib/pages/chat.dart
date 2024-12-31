@@ -93,8 +93,78 @@ class _ChatState extends State<Chat> {
         print(resposta["dados"]);
         if (!resposta["dados"].isEmpty) {
           return resposta["dados"];
-        } else {
-          mensagemErrorMessage("ID de conversa inválido");
+        }
+      } else {
+        mensagemErrorMessage("Erro na comunicação, tente novamente mais tarde");
+      }
+    } catch (e) {
+      mensagemErrorMessage(
+          "IP inválido ou problema na requisição (front ou back)");
+    }
+    return [];
+  }
+
+  Future<List<dynamic>> _addMensagem(
+      String ip, int user_id, String txt, String date, int conversa_id) async {
+    final url = Uri.parse('http://$ip:5000/add_mensagem');
+
+    // Dados enviados
+    final dados = {
+      'user_id': user_id,
+      'txt': txt,
+      'date': date,
+      'conversa_id': conversa_id
+    };
+
+    // Mensagem de erro
+    dynamic mensagemErrorMessage(String errorText) {
+      return showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text(
+                "Erro ao buscar mensagens",
+                style: TextStyle(fontSize: 20),
+              ),
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+              content: Text(errorText,
+                  style:
+                      TextStyle(color: const Color.fromARGB(255, 192, 65, 55))),
+              actions: [
+                ElevatedButton(
+                  child: Text("Ok",
+                      style: TextStyle(
+                          color: Theme.of(context).primaryColorLight)),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor:
+                          Theme.of(context).primaryColor.withOpacity(1)),
+                )
+              ],
+            );
+          });
+    }
+
+    // Enviar requisição
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          // Define o tipo de conteúdo como json
+          'Content-Type': 'application/json'
+        },
+        body: json.encode(dados),
+      );
+      print(response.statusCode);
+      if (response.statusCode == 200) {
+        // Resposta da requisição
+
+        Map<String, dynamic> resposta = json.decode(response.body);
+        print(resposta["dados"]);
+        if (!resposta["dados"].isEmpty) {
+          return resposta["dados"];
         }
       } else {
         mensagemErrorMessage("Erro na comunicação, tente novamente mais tarde");
@@ -230,6 +300,15 @@ class _ChatState extends State<Chat> {
                             );
                           }
                         })),
+                ElevatedButton(
+                    onPressed: () => _addMensagem(
+                        ip, 1, "primeira mensagem", "12/12/2002", 1),
+                    child: Text(
+                      "Enviar Mensagem",
+                      style: TextStyle(
+                          fontSize: 20,
+                          color: Theme.of(context).primaryColorLight),
+                    ))
               ],
             ));
           },

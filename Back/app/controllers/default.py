@@ -192,7 +192,7 @@ def iniciar_conversa():
 def get_mensagens():
     dados = request.get_json()
     id = dados.get("id")
-    mensagens = Mensagem.query.filter_by(conversa=id).all().sort(key=lambda x: x.date)
+    mensagens = Mensagem.query.filter_by(conversa=id).all()
     m = []
     for v in mensagens:
         m.append({"msg_id": v.id, "user_id": v.user, "txt": v.txt, "date": v.date})
@@ -200,7 +200,7 @@ def get_mensagens():
     dados["dados"] = m
     return jsonify(dados)
 
-@app.route("/add_mensgem", methods = ["POST", "GET"])
+@app.route("/add_mensagem", methods = ["POST", "GET"])
 def add_mensagem():
     dados = request.get_json()
     user_id = dados.get("user_id")
