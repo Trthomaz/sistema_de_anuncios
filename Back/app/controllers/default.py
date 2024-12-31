@@ -1,5 +1,5 @@
 from app.controllers import *
-
+import time
 
 
 @app.route("/login", methods=["POST", "GET"])
@@ -95,16 +95,11 @@ def criar_anuncio():
 def get_meus_anuncios():
     dados = request.get_json()
     id = dados.get("user_id")
-    print(id)
     anuncios = Anuncio.query.filter_by(anunciante=id).all()
-    print(anuncios)
     anuncios_lista = []
     for v in anuncios:
-        print(v)
         c = Categoria.query.filter_by(id=v.categoria).first()
-        print(c)
         t = Tipo.query.filter_by(id=v.tipo).first()
-        print(t)
         anuncios_lista.append({"id": v.id, "titulo": v.titulo, "anunciante_id": v.anunciante, "descricao": v.descricao, "telefone": v.telefone, "local": v.local, "categoria": c.categoria, "tipo": t.tipo, "nota": v.nota, "ativo": v.ativo, "preco": v.preco, "anunciante/interessado": "anunciante", "imagem": v.imagem})
     dados = {}
     dados["anuncios"] = anuncios_lista
@@ -137,25 +132,36 @@ def get_feed():
     dados["dados"] = {"venda": av, "busca": ab}
     return jsonify(dados)
 
-@app.route("/fazer_busca", methods = ["POST", "GET"])  # precisa ser bem testado. não tenho certeza se funciona. (nem tá pronta ainda)
+@app.route("/fazer_busca", methods = ["POST", "GET"])  # precisa ser bem testado. não tenho certeza se funciona.
 def fazer_busca():
     dados = request.get_json()
     user_id = dados.get("user_id")
     txt = dados.get("txt")
     categoria = dados.get("categoria")
+    tipo = dados.get("tipo")
     local = dados.get("local")
     preco_i = dados.get("preco_inicial")
     preco_f = dados.get("preco_final")
     c = categoria == -1
+    t = tipo == -1
     l = local == "-1"
     pi = preco_i == -1
     pf = preco_f == -1
     anuncios = Anuncio.query.filter((Anuncio.categoria == categoria) | (c),
+                                    (Anuncio.tipo == tipo) | (t),
                                     (Anuncio.local == local) | (l),
                                     (Anuncio.preco > preco_i) | (pi),
                                     (Anuncio.preco < preco_f) | (pf),
                                     Anuncio.anunciante != user_id,
                                     txt in Anuncio.titulo).all()
+    anuncios_lista = []
+    for v in anuncios:
+        c = Categoria.query.filter_by(id=v.categoria).first()
+        t = Tipo.query.filter_by(id=v.tipo).first()
+        anuncios_lista.append({"anuncio_id": v.id, "titulo": v.titulo, "imagem": v.imagem, "preco": v.preco})
+    dados = {}
+    dados["dados"] = {"anuncios": anuncios_lista}
+    return jsonify(dados)
     
 
 @app.route("/get_conversas", methods = ["POST", "GET"])
@@ -192,7 +198,7 @@ def iniciar_conversa():
 def get_mensagens():
     dados = request.get_json()
     id = dados.get("id")
-    mensagens = Mensagem.query.filter_by(conversa=id).all()
+    mensagens = Mensagem.query.filter_by(conversa=id).all()  # ver o sort
     m = []
     for v in mensagens:
         m.append({"msg_id": v.id, "user_id": v.user, "txt": v.txt, "date": v.date})
@@ -200,16 +206,29 @@ def get_mensagens():
     dados["dados"] = m
     return jsonify(dados)
 
-@app.route("/add_mensagem", methods = ["POST", "GET"])
+@app.route("/add_mensgem", methods = ["POST", "GET"])
 def add_mensagem():
     dados = request.get_json()
     user_id = dados.get("user_id")
     txt = dados.get("txt")
-    date = dados.get("date")
+    #date = dados.get("date")
+    date = time.time()
     cvv_id = dados.get("conversa_id")
     db.session.add(Mensagem(user_id, txt, date, cvv_id))
     db.session.commit()
     return "ok"
+
+@app.route("/get_anuncio", methods = ["POST", "GET"])
+def get_anuncio():
+    dados = request.get_json()
+    id = dados.get("anuncio_id")
+    a = Anuncio.query.filter_by(id=id).first()
+    c = Categoria.query.filter_by(id=a.categoria).first()
+    t = Tipo.query.filter_by(id=a.tipo).first()
+    anuncio = {"id": a.id, "titulo": a.titulo, "anunciante_id": a.anunciante, "descricao": a.descricao, "telefone": a.telefone, "local": a.local, "categoria": c.categoria, "tipo": t.tipo, "nota": a.nota, "ativo": a.ativo, "preco": a.preco, "imagem": a.imagem}
+    dados = {}
+    dados["dados"] = anuncio
+    return jsonify(dados)
 
 # Testes e mexidas diretas no bd
 

@@ -68,7 +68,7 @@ Análise de Valor Agregado:
 
         PV: Anterior + 
         EV: Anterior + 
-        AC: Anterior + 7 + 6 + 1 + 1
+        AC: Anterior + 7 + 6 + 3
 
         SPI = 
         CPI = 
