@@ -3,25 +3,27 @@
 import pytest
 
 
-@pytest.mark.skip(reason="Persistir dado para teste")
+#@pytest.mark.skip(reason="Persistir dado para teste")
 @pytest.mark.smoke
-def test_login_success(client):
-    response = client.get("/login", json={"cpf":"fabio@gabriel", "senha": "cruzeiro"})
+def test_login_success(client, perfil_model):
+    response = client.get("/login", json={"cpf":perfil_model.email, "senha": perfil_model.senha})
     assert response.status_code == 200
     
     json = response.get_json()
 
     assert json["login"] == True
-    assert json["email"] == "fabio@gabriel"
-    assert json["nome"] == "Fabio Gabriel"
-    assert json["curso"] == "Computacao"
-    assert json["reputacao"] == 4.9
+    assert json["email"] == perfil_model.email
+    assert json["nome"] == perfil_model.nome
+    assert json["curso"] == perfil_model.curso
+    assert json["reputacao"] == perfil_model.reputacao
 
 
-@pytest.mark.skip(reason="Persistir dado para teste")
+#@pytest.mark.skip(reason="Persistir dado para teste")
 @pytest.mark.smoke
-def test_login_fail(client):
-    response = client.get("/login", json={"cpf":"fabio@gabriel", "senha": "atletico"})
+def test_login_fail(client, perfil_model):
+    senha_errada = "atletico"
+
+    response = client.get("/login", json={"cpf":perfil_model.email, "senha": senha_errada})
     assert response.status_code == 200
     
     json = response.get_json()
@@ -30,10 +32,10 @@ def test_login_fail(client):
 
 
 
-@pytest.mark.skip(reason="Persistir dado para teste")
+#@pytest.mark.skip(reason="Persistir dado para teste")
 @pytest.mark.smoke
-def test_logout_success(client):
-    response = client.get("/login", json={"cpf":"fabio@gabriel", "senha": "cruzeiro"})
+def test_logout_success(client, perfil_model):
+    response = client.get("/login", json={"cpf": perfil_model.email, "senha": perfil_model.senha})
 
     response = client.get("/logout")
     assert response.status_code == 200
@@ -43,10 +45,12 @@ def test_logout_success(client):
     assert json["status"] == True
 
 
-@pytest.mark.skip(reason="Persistir dado para teste")
+#@pytest.mark.skip(reason="Persistir dado para teste")
 @pytest.mark.smoke
-def test_logout_fail(client):
-    response = client.get("/login", json={"cpf":"fabio@gabriel", "senha": "atletico"})
+def test_logout_fail(client, perfil_model):
+    senha_errada = "atletico"
+
+    response = client.get("/login", json={"cpf": perfil_model.email, "senha": senha_errada})
 
     response = client.get("/logout")
     assert response.status_code == 200
@@ -59,6 +63,7 @@ def test_logout_fail(client):
 
 def test_get_meus_anuncios_success(client):
     anunciante_id = 1
+    
     response = client.get("/get_meus_anuncios", json={"user_id":anunciante_id})
     assert response.status_code == 200
 
