@@ -173,11 +173,13 @@ class _MensagensState extends State<Mensagens> {
                                                         },
                                                         settings: RouteSettings(
                                                             arguments: {
-                                                              'id': snapshot
-                                                                          .data![
-                                                                      index][
-                                                                  "conversa_id"],
-                                                              'ip': ip
+                                                              'id_conversa':
+                                                                  snapshot.data![
+                                                                          index]
+                                                                      [
+                                                                      "conversa_id"],
+                                                              'ip': ip,
+                                                              'id': id
                                                             })));
                                               });
                                               // TODO: Requisição

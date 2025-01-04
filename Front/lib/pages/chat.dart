@@ -85,7 +85,6 @@ class _ChatState extends State<Chat> {
         },
         body: json.encode(dados),
       );
-      print(response.statusCode);
       if (response.statusCode == 200) {
         // Resposta da requisição
 
@@ -99,22 +98,17 @@ class _ChatState extends State<Chat> {
       }
     } catch (e) {
       mensagemErrorMessage(
-          "IP inválido ou problema na requisição (front ou back)");
+          "IP inválido ou problema na requisi (front ou back)");
     }
     return [];
   }
 
-  Future<List<dynamic>> _addMensagem(
-      String ip, int user_id, String txt, String date, int conversa_id) async {
+  Future<String> _addMensagem(
+      String ip, int user_id, String txt, int conversa_id) async {
     final url = Uri.parse('http://$ip:5000/add_mensagem');
 
     // Dados enviados
-    final dados = {
-      'user_id': user_id,
-      'txt': txt,
-      'date': date,
-      'conversa_id': conversa_id
-    };
+    final dados = {'user_id': user_id, 'txt': txt, 'conversa_id': conversa_id};
 
     // Mensagem de erro
     dynamic mensagemErrorMessage(String errorText) {
@@ -160,11 +154,14 @@ class _ChatState extends State<Chat> {
       print(response.statusCode);
       if (response.statusCode == 200) {
         // Resposta da requisição
-
-        Map<String, dynamic> resposta = json.decode(response.body);
-        print(resposta["dados"]);
-        if (!resposta["dados"].isEmpty) {
-          return resposta["dados"];
+        print(response.body);
+        print(response.toString());
+        print(response);
+        if (response.body == "ok") {
+          print("alo");
+          return response.body;
+        } else {
+          print("oi");
         }
       } else {
         mensagemErrorMessage("Erro na comunicação, tente novamente mais tarde");
@@ -173,17 +170,19 @@ class _ChatState extends State<Chat> {
       mensagemErrorMessage(
           "IP inválido ou problema na requisição (front ou back)");
     }
-    return [];
+    return "a";
   }
 
   @override
   Widget build(BuildContext context) {
     var arguments =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    int id = arguments['id'] ?? -1;
+    int id_conversa = arguments['id_conversa'] ?? -1;
     String ip = arguments['ip'] ?? -1;
-    print(ip);
-    print(id);
+    int id = arguments['id'] ?? -1;
+    print("ip $ip");
+    print("id $id");
+    print("id conversa $id_conversa");
     return Scaffold(
         appBar: PreferredSize(
           // Tamanho do AppBar
@@ -221,7 +220,7 @@ class _ChatState extends State<Chat> {
               children: [
                 Container(
                     child: FutureBuilder(
-                        future: _getMensagens(ip, id),
+                        future: _getMensagens(ip, id_conversa),
                         builder: (context, snapshot) {
                           if (snapshot.hasData) {
                             return Center(
@@ -301,8 +300,10 @@ class _ChatState extends State<Chat> {
                           }
                         })),
                 ElevatedButton(
-                    onPressed: () => _addMensagem(
-                        ip, 1, "primeira mensagem", "12/12/2002", 1),
+                    onPressed: () => setState(() {
+                          _addMensagem(
+                              ip, id, "primeira mensagem", id_conversa);
+                        }),
                     child: Text(
                       "Enviar Mensagem",
                       style: TextStyle(
