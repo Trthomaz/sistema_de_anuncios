@@ -12,29 +12,11 @@ class Chat extends StatefulWidget {
 }
 
 class _ChatState extends State<Chat> {
-  TextEditingController _messageController = TextEditingController();
+  TextEditingController _mensagemController = TextEditingController();
 
-  // Lista viria de requisição com os dados
-  List<Map<String, dynamic>> anuncios = [
-    {
-      "id": 1,
-      "item": "Cachecol",
-      "cliente": "Garota que mora logo ali",
-      "tipoAnuncio": "Venda"
-    },
-    {
-      "id": 2,
-      "item": "Aula de Inglês",
-      "cliente": "Poliglota",
-      "tipoAnuncio": "Busca"
-    },
-    {
-      "id": 3,
-      "item": "Comandante Miniatura",
-      "cliente": "Rei João VI",
-      "tipoAnuncio": "Busca"
-    },
-  ];
+  // ------------------------------------------------------ Funções para REQUISIÇÕES -----------------------------------------------------
+
+  // -------------------------------------------- Pegar as mensagens
 
   Future<List<dynamic>> _getMensagens(String ip, int id) async {
     final url = Uri.parse('http://$ip:5000/get_mensagens');
@@ -97,18 +79,23 @@ class _ChatState extends State<Chat> {
         mensagemErrorMessage("Erro na comunicação, tente novamente mais tarde");
       }
     } catch (e) {
-      mensagemErrorMessage(
-          "IP inválido ou problema na requisi (front ou back)");
+      mensagemErrorMessage("IP inválido ou problema na r (front ou back)");
     }
     return [];
   }
 
+  // ------------------------------------------------------- Adicionar uma mensagem
   Future<String> _addMensagem(
       String ip, int user_id, String txt, int conversa_id) async {
     final url = Uri.parse('http://$ip:5000/add_mensagem');
 
     // Dados enviados
     final dados = {'user_id': user_id, 'txt': txt, 'conversa_id': conversa_id};
+
+    if (txt == "" || txt == '') {
+      print("texto vazio");
+      return "";
+    }
 
     // Mensagem de erro
     dynamic mensagemErrorMessage(String errorText) {
@@ -154,11 +141,7 @@ class _ChatState extends State<Chat> {
       print(response.statusCode);
       if (response.statusCode == 200) {
         // Resposta da requisição
-        print(response.body);
-        print(response.toString());
-        print(response);
         if (response.body == "ok") {
-          print("alo");
           return response.body;
         } else {
           print("oi");
@@ -172,6 +155,30 @@ class _ChatState extends State<Chat> {
     }
     return "a";
   }
+
+  Future<String> _getNomebyID(String ip, int user_id) async {
+    final url = Uri.parse('http://$ip:5000/add_mensagem');
+
+    // Dados enviados
+    final dados = {'user_id': user_id};
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          // Define o tipo de conteúdo como json
+          'Content-Type': 'application/json'
+        },
+        body: json.encode(dados),
+      );
+      Map<String, dynamic> resposta = json.decode(response.body);
+      return resposta["nome"];
+    } catch (e) {
+      print(e);
+      return "Erro";
+    }
+  }
+  //  -------------------------------------------------------------------------------------------------------------------------------------------
 
   @override
   Widget build(BuildContext context) {
@@ -299,17 +306,63 @@ class _ChatState extends State<Chat> {
                             );
                           }
                         })),
-                ElevatedButton(
-                    onPressed: () => setState(() {
-                          _addMensagem(
-                              ip, id, "primeira mensagem", id_conversa);
-                        }),
-                    child: Text(
-                      "Enviar Mensagem",
-                      style: TextStyle(
-                          fontSize: 20,
-                          color: Theme.of(context).primaryColorLight),
-                    ))
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: SizedBox(
+                        width: constraints.maxWidth * 0.85,
+                        height: 60,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 10.0),
+                          child: TextField(
+                            controller: _mensagemController,
+                            autofocus: false,
+                            autocorrect: false,
+                            style: TextStyle(
+                              color: Theme.of(context).primaryColorLight,
+                              fontSize: 16,
+                            ),
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              filled: true,
+                              fillColor: Theme.of(context).cardColor,
+                              contentPadding: EdgeInsets.symmetric(
+                                  vertical: 14, horizontal: 14),
+                              hintText: "Mensagem",
+                              hintStyle: TextStyle(
+                                color: Theme.of(context).primaryColorLight,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 8),
+                      child: SizedBox(
+                        width: 90,
+                        height: 40,
+                        child: ElevatedButton(
+                            onPressed: () => setState(() {
+                                  _addMensagem(ip, id, _mensagemController.text,
+                                      id_conversa);
+                                }),
+                            child: Text(
+                              "Enviar",
+                              style: TextStyle(
+                                  fontSize: 15,
+                                  color: Theme.of(context).primaryColorDark),
+                            )),
+                      ),
+                    ),
+                  ],
+                )
               ],
             ));
           },
