@@ -157,7 +157,7 @@ class _ChatState extends State<Chat> {
   }
 
   Future<String> _getNomebyID(String ip, int user_id) async {
-    final url = Uri.parse('http://$ip:5000/add_mensagem');
+    final url = Uri.parse('http://$ip:5000/get_perfil');
 
     // Dados enviados
     final dados = {'user_id': user_id};
@@ -171,8 +171,9 @@ class _ChatState extends State<Chat> {
         },
         body: json.encode(dados),
       );
+      print(response.body);
       Map<String, dynamic> resposta = json.decode(response.body);
-      return resposta["nome"];
+      return resposta["dados"]["nome"];
     } catch (e) {
       print(e);
       return "Erro";
@@ -190,182 +191,223 @@ class _ChatState extends State<Chat> {
     print("ip $ip");
     print("id $id");
     print("id conversa $id_conversa");
-    return Scaffold(
-        appBar: PreferredSize(
-          // Tamanho do AppBar
-          preferredSize: Size.fromHeight(60.0),
-          child: AppBar(
-            backgroundColor: Theme.of(context).primaryColor,
-            elevation: 3,
-            leading: Padding(
-              // Leading é o ícone à esquerda do AppBar
-              padding: const EdgeInsets.only(
-                  left: 10, top: 10, bottom: 10, right: 1),
-              child: IconButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  icon: Icon(
-                    Icons.arrow_back,
-                    color: Theme.of(context).primaryColorLight,
-                  )),
-            ),
-            title: Padding(
-                padding: const EdgeInsets.all(1),
-                child: Text(
-                  "Chat",
-                  style: TextStyle(color: Theme.of(context).primaryColorLight),
-                )),
-          ),
-        ),
-        body: LayoutBuilder(
-          builder: (context, constraints) {
-            double containerWidth = constraints.maxWidth * 0.9;
-            double containerHeight = constraints.maxHeight - 184;
-            return Center(
-                child: Column(
-              children: [
-                Container(
-                    child: FutureBuilder(
-                        future: _getMensagens(ip, id_conversa),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            return Center(
-                              child: Column(children: [
-                                SizedBox(height: 10),
-                                LayoutBuilder(builder: (context, constraints) {
-                                  return SizedBox(
-                                    width: containerWidth,
-                                    height: containerHeight,
-                                    child: ListView.builder(
-                                      itemCount: snapshot.data!.length,
-                                      itemBuilder: (context, index) {
-                                        return Padding(
-                                          padding: const EdgeInsets.all(5),
-                                          child: FilledButton(
-                                            style: FilledButton.styleFrom(
-                                              padding: EdgeInsets.all(6),
-                                              backgroundColor:
-                                                  Theme.of(context).cardColor,
-                                              fixedSize: Size(122, 122),
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                              ),
-                                            ),
-                                            onPressed: () {
-                                              // TODO: Requisição
-                                            },
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              children: [
-                                                Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            5)),
-                                                Expanded(
-                                                  child: Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Text(
-                                                        snapshot.data![index]
-                                                            ["txt"],
-                                                        softWrap: true,
-                                                        maxLines: 2,
-                                                        overflow: TextOverflow
-                                                            .ellipsis,
-                                                        style: TextStyle(
-                                                          color: Theme.of(
-                                                                  context)
-                                                              .primaryColorLight,
-                                                          fontSize: 16,
+    return FutureBuilder(
+        future: _getNomebyID(ip, id),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return Scaffold(
+                appBar: PreferredSize(
+                  // Tamanho do AppBar
+                  preferredSize: Size.fromHeight(60.0),
+                  child: AppBar(
+                    backgroundColor: Theme.of(context).primaryColor,
+                    elevation: 3,
+                    leading: Padding(
+                      // Leading é o ícone à esquerda do AppBar
+                      padding: const EdgeInsets.only(
+                          left: 10, top: 10, bottom: 10, right: 1),
+                      child: IconButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          icon: Icon(
+                            Icons.arrow_back,
+                            color: Theme.of(context).primaryColorLight,
+                          )),
+                    ),
+                    title: Padding(
+                        padding: const EdgeInsets.all(1),
+                        child: Text(
+                          snapshot.data!,
+                          style: TextStyle(
+                              color: Theme.of(context).primaryColorLight),
+                        )),
+                  ),
+                ),
+                body: LayoutBuilder(
+                  builder: (context, constraints) {
+                    double containerWidth = constraints.maxWidth * 0.9;
+                    double containerHeight = constraints.maxHeight - 184;
+                    return Center(
+                        child: Column(
+                      children: [
+                        Container(
+                            child: FutureBuilder(
+                                future: _getMensagens(ip, id_conversa),
+                                builder: (context, snapshot) {
+                                  if (snapshot.hasData) {
+                                    return Center(
+                                      child: Column(children: [
+                                        SizedBox(height: 10),
+                                        LayoutBuilder(
+                                            builder: (context, constraints) {
+                                          return SizedBox(
+                                            width: containerWidth,
+                                            height: containerHeight,
+                                            child: ListView.builder(
+                                              itemCount: snapshot.data!.length,
+                                              itemBuilder: (context, index) {
+                                                return Padding(
+                                                  padding: snapshot.data![index]
+                                                              ["user_id"] ==
+                                                          id
+                                                      ? const EdgeInsets.only(
+                                                          left: 200, bottom: 20)
+                                                      : const EdgeInsets.only(
+                                                          right: 200,
+                                                          bottom: 20),
+                                                  child: FilledButton(
+                                                    style:
+                                                        FilledButton.styleFrom(
+                                                      padding:
+                                                          EdgeInsets.all(6),
+                                                      backgroundColor: snapshot
+                                                                          .data![
+                                                                      index]
+                                                                  ["user_id"] ==
+                                                              id
+                                                          ? Theme.of(context)
+                                                              .cardColor
+                                                          : Theme.of(context)
+                                                              .highlightColor,
+                                                      fixedSize: Size(122, 122),
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10),
+                                                      ),
+                                                    ),
+                                                    onPressed: () {
+                                                      // TODO: Requisição
+                                                    },
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(5)),
+                                                        Expanded(
+                                                          child: Column(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              Text(
+                                                                snapshot.data![
+                                                                        index]
+                                                                    ["txt"],
+                                                                softWrap: true,
+                                                                maxLines: 2,
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .ellipsis,
+                                                                style:
+                                                                    TextStyle(
+                                                                  color: Theme.of(
+                                                                          context)
+                                                                      .primaryColorLight,
+                                                                  fontSize: 16,
+                                                                ),
+                                                              )
+                                                            ],
+                                                          ),
                                                         ),
-                                                      )
-                                                    ],
+                                                      ],
+                                                    ),
                                                   ),
-                                                ),
-                                              ],
+                                                );
+                                              },
                                             ),
-                                          ),
-                                        );
-                                      },
+                                          );
+                                        })
+                                      ]),
+                                    );
+                                  } else {
+                                    return Center(
+                                      child: CircularProgressIndicator(),
+                                    );
+                                  }
+                                })),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: SizedBox(
+                                width: constraints.maxWidth * 0.85,
+                                height: 60,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(top: 10.0),
+                                  child: TextField(
+                                    controller: _mensagemController,
+                                    autofocus: false,
+                                    autocorrect: false,
+                                    style: TextStyle(
+                                      color:
+                                          Theme.of(context).primaryColorLight,
+                                      fontSize: 16,
                                     ),
-                                  );
-                                })
-                              ]),
-                            );
-                          } else {
-                            return Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          }
-                        })),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: SizedBox(
-                        width: constraints.maxWidth * 0.85,
-                        height: 60,
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 10.0),
-                          child: TextField(
-                            controller: _mensagemController,
-                            autofocus: false,
-                            autocorrect: false,
-                            style: TextStyle(
-                              color: Theme.of(context).primaryColorLight,
-                              fontSize: 16,
-                            ),
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderSide: BorderSide.none,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              filled: true,
-                              fillColor: Theme.of(context).cardColor,
-                              contentPadding: EdgeInsets.symmetric(
-                                  vertical: 14, horizontal: 14),
-                              hintText: "Mensagem",
-                              hintStyle: TextStyle(
-                                color: Theme.of(context).primaryColorLight,
-                                fontSize: 16,
+                                    decoration: InputDecoration(
+                                      border: OutlineInputBorder(
+                                        borderSide: BorderSide.none,
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      filled: true,
+                                      fillColor: Theme.of(context).cardColor,
+                                      contentPadding: EdgeInsets.symmetric(
+                                          vertical: 14, horizontal: 14),
+                                      hintText: "Mensagem",
+                                      hintStyle: TextStyle(
+                                        color:
+                                            Theme.of(context).primaryColorLight,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 8),
-                      child: SizedBox(
-                        width: 90,
-                        height: 40,
-                        child: ElevatedButton(
-                            onPressed: () => setState(() {
-                                  _addMensagem(ip, id, _mensagemController.text,
-                                      id_conversa);
-                                }),
-                            child: Text(
-                              "Enviar",
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  color: Theme.of(context).primaryColorDark),
-                            )),
-                      ),
-                    ),
-                  ],
-                )
-              ],
-            ));
-          },
-        ));
+                            Padding(
+                              padding: const EdgeInsets.only(right: 8),
+                              child: SizedBox(
+                                width: 90,
+                                height: 40,
+                                child: ElevatedButton(
+                                    onPressed: () => setState(() {
+                                          _addMensagem(
+                                              ip,
+                                              id,
+                                              _mensagemController.text,
+                                              id_conversa);
+                                          _mensagemController.text = "";
+                                        }),
+                                    child: Text(
+                                      "Enviar",
+                                      style: TextStyle(
+                                          fontSize: 15,
+                                          color: Theme.of(context)
+                                              .primaryColorDark),
+                                    )),
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
+                    ));
+                  },
+                ));
+          } else {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        });
   }
 }
