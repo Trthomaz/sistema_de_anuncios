@@ -36,29 +36,29 @@ def logout():
     return jsonify({"status": False})
 
 
-@app.route("/get_anuncios_geral")
-def get_anuncios_geral():
-    dados = {}
-    if session['user_id']:
-        anuncios_pessoais = Anuncio.query.all()
+# @app.route("/get_anuncios_geral")
+# def get_anuncios_geral():
+#     dados = {}
+#     if session['user_id']:
+#         anuncios_pessoais = Anuncio.query.all()
         
-        #Nao sei se funciona retornar a linha inteira
-        dados["dados"] = anuncios_pessoais
-        return jsonify(dados)
-    dados["dados"] = None
-    return jsonify(dados)
+#         #Nao sei se funciona retornar a linha inteira
+#         dados["dados"] = anuncios_pessoais
+#         return jsonify(dados)
+#     dados["dados"] = None
+#     return jsonify(dados)
 
-@app.route("/get_anuncios_pessoais")
-def get_anuncios_pessoais():
-    dados = {}
-    if session['user_id']:
-        anuncios_pessoais = Anuncio.query.filter_by(id=session["user_id"])
+# @app.route("/get_anuncios_pessoais")
+# def get_anuncios_pessoais():
+#     dados = {}
+#     if session['user_id']:
+#         anuncios_pessoais = Anuncio.query.filter_by(id=session["user_id"])
 
-        #Nao sei se funciona retornar a linha inteira
-        dados["dados"] = anuncios_pessoais
-        return jsonify(dados)
-    dados["dados"] = None
-    return jsonify(dados)
+#         #Nao sei se funciona retornar a linha inteira
+#         dados["dados"] = anuncios_pessoais
+#         return jsonify(dados)
+#     dados["dados"] = None
+#     return jsonify(dados)
 
 
 @app.route("/criar_anuncio", methods=["POST", "GET"])

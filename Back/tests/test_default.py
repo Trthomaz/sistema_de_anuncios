@@ -61,8 +61,19 @@ def test_logout_fail(client, perfil_model):
 
 
 
-def test_get_meus_anuncios_success(client):
-    anunciante_id = 1
+def test_criar_anuncio_success(client, anuncio_model_mount):
+    #Anuncio nao foi criado
+    pass
+
+
+def test_criar_anuncio_fail(client, anuncio_model):
+    #Anuncio ja criado
+    pass
+
+
+
+def test_get_meus_anuncios_success(client, perfil_model, anuncio_model, categoria_model, tipo_model):
+    anunciante_id = perfil_model.id
     
     response = client.get("/get_meus_anuncios", json={"user_id":anunciante_id})
     assert response.status_code == 200
@@ -72,20 +83,21 @@ def test_get_meus_anuncios_success(client):
     
     response = response["anuncios"][0]
 
+    assert response["id"] == anuncio_model.id
+    assert response["titulo"] == anuncio_model.titulo
+    assert response['anunciante_id'] == anuncio_model.anunciante
+    assert response["descricao"] == anuncio_model.descricao
+    assert response["telefone"] == anuncio_model.telefone
+    assert response["local"] == anuncio_model.local
+    assert response['categoria'] == categoria_model.categoria
+    assert response["tipo"] == tipo_model.tipo
+    assert response["nota"] == anuncio_model.nota
+    assert response['ativo'] == anuncio_model.ativo
+    assert response["preco"] == anuncio_model.preco
     assert response["anunciante/interessado"] == 'anunciante'
-    assert response['anunciante_id'] == anunciante_id
-    assert response['ativo'] == True
-    assert response['categoria'] == "serviço"
-    assert response["descricao"] == "Fabio"
-    assert response["id"] == 1
-    assert response["imagem"] == None
-    assert response["local"] == '11111-111'
-    assert response["nota"] == 5
-    assert response["preco"] == 49.9
-    assert response["telefone"] == '(21) 99999-9999'
-    assert response["tipo"] == "venda"
-    assert response["titulo"] == "Cruzeirense"
+    assert response["imagem"] == anuncio_model.imagem
     
+    #a
 
 @pytest.mark.xfail()#Falhara propositalmente
 def test_get_meus_anuncios_fail(client):
@@ -93,7 +105,9 @@ def test_get_meus_anuncios_fail(client):
     response = client.get("/get_meus_anuncios", json={"user_id":anunciante_id})
     assert response.status_code == 200
     
-    assert len(response["anuncios"]) > 0
+    response = response.get_json()
+
+    assert len(response["anuncios"]) > 0 #Nao tem nenhum anuncio
 
 
 

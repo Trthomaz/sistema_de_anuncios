@@ -82,26 +82,34 @@ def categoria_model():
 
 
 @pytest.fixture()
-def anuncio_model(perfil_model, categoria_model):
+def anuncio_model_mount(perfil_model, categoria_model, tipo_model):
     titulo = "Camiseta Cruzeiro"
     id_anunciante = perfil_model.id
     descricao = "Camiseta do Gabigol 2025 com logo da Mafia Azul bordado com autografo."
     telefone = "(31) 99999-9999"
     local = "UFF Computacao"
-    categoria = categoria_model.categoria
-    id_tipo = categoria_model.tipo
+    categoria = categoria_model.id
+    id_tipo = tipo_model.id
     nota = 5
     ativo = True
     preco = 254.99
     imagem = None
 
     anuncio = Anuncio(id_anunciante, titulo, descricao, telefone, local, categoria, ativo, id_tipo, nota, preco, imagem)
+    
+    yield anuncio
+
+
+@pytest.fixture()
+def anuncio_model(perfil_model, anuncio_model_mount, categoria_model, tipo_model):
+
+    anuncio = anuncio_model_mount
 
     with app.app_context():
         db.session.add(anuncio)
         db.session.commit()
 
-        anuncio_atual = Anuncio.query.filter_by(anunciante= id_anunciante).first()
+        anuncio_atual = Anuncio.query.filter_by(anunciante= anuncio.anunciante).first()
     
     yield anuncio_atual
 
