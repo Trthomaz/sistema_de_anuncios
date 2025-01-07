@@ -2,7 +2,7 @@ from app import db
 
 #Funcoes genericas do BD
 def rollback():
-    db.rollback()
+    db.session.rollback()
 def add(data):
     db.session.add(data)
 def commit():

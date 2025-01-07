@@ -118,6 +118,11 @@ def anuncio_model(perfil_model, anuncio_model_mount, categoria_model, tipo_model
         db.session.commit()
 
 
+def anuncio_model_unmount(anuncio:Anuncio)->None:
+    db.session.delete(anuncio)
+    db.session.commit()
+
+
 @pytest.fixture()
 def perfil_model2():
     email = "dario@chen"

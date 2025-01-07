@@ -3,7 +3,6 @@
 import pytest
 
 
-#@pytest.mark.skip(reason="Persistir dado para teste")
 @pytest.mark.smoke
 def test_login_success(client, perfil_model):
     response = client.get("/login", json={"cpf":perfil_model.email, "senha": perfil_model.senha})
@@ -18,7 +17,6 @@ def test_login_success(client, perfil_model):
     assert json["reputacao"] == perfil_model.reputacao
 
 
-#@pytest.mark.skip(reason="Persistir dado para teste")
 @pytest.mark.smoke
 def test_login_fail(client, perfil_model):
     senha_errada = "atletico"
@@ -32,7 +30,6 @@ def test_login_fail(client, perfil_model):
 
 
 
-#@pytest.mark.skip(reason="Persistir dado para teste")
 @pytest.mark.smoke
 def test_logout_success(client, perfil_model):
     response = client.get("/login", json={"cpf": perfil_model.email, "senha": perfil_model.senha})
@@ -45,7 +42,6 @@ def test_logout_success(client, perfil_model):
     assert json["status"] == True
 
 
-#@pytest.mark.skip(reason="Persistir dado para teste")
 @pytest.mark.smoke
 def test_logout_fail(client, perfil_model):
     senha_errada = "atletico"
@@ -61,14 +57,31 @@ def test_logout_fail(client, perfil_model):
 
 
 
+@pytest.mark.skip(reason="Tem que importar corretamente o conftest")
 def test_criar_anuncio_success(client, anuncio_model_mount):
-    #Anuncio nao foi criado
-    pass
+    from conftest import anuncio_model_unmount
+
+    preco = str(anuncio_model_mount.preco).replace(".", ",")
+    response = client.get("/criar_anuncio", json={"titulo":anuncio_model_mount.titulo, "descricao": anuncio_model_mount.descricao, "tipo_anuncio":anuncio_model_mount.tipo, "categoria":anuncio_model_mount.categoria, "preco":preco, "celular":anuncio_model_mount.telefone, "cep":anuncio_model_mount.local})
+
+    assert response.status_code == 200
+
+    json = response.get_json()
+
+    assert json["status"] == True
+    
+    anuncio_model_unmount(anuncio_model_mount)#Retirando a persistencia
 
 
-def test_criar_anuncio_fail(client, anuncio_model):
-    #Anuncio ja criado
-    pass
+def test_criar_anuncio_fail(client, anuncio_model_mount, anuncio_model):
+    preco = str(anuncio_model_mount.preco).replace(".", ",")
+    response = client.get("/criar_anuncio", json={"titulo":anuncio_model_mount.titulo, "descricao": anuncio_model_mount.descricao, "tipo_anuncio":anuncio_model_mount.tipo, "categoria":anuncio_model_mount.categoria, "preco":preco, "celular":anuncio_model_mount.telefone, "cep":anuncio_model_mount.local})
+
+    assert response.status_code == 200
+
+    json = response.get_json()
+
+    assert json["status"] == False
 
 
 
@@ -97,7 +110,6 @@ def test_get_meus_anuncios_success(client, perfil_model, anuncio_model, categori
     assert response["anunciante/interessado"] == 'anunciante'
     assert response["imagem"] == anuncio_model.imagem
     
-    #a
 
 @pytest.mark.xfail()#Falhara propositalmente
 def test_get_meus_anuncios_fail(client):

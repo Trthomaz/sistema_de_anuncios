@@ -4,6 +4,7 @@
 #https://flask.palletsprojects.com/en/stable/testing/           - Guia do flask a se usar com mock
 
 
+#coverage run -m pytest     -Usado anteriormente para gerar o relatorio apos
 #coverage report    - Usado para ver a cobertura de codigo ja visitado
 #pytest             - Usado para rodar os testes
 #pytest <file>      - Usado para rodar os testes somente neste <file>
