@@ -197,9 +197,10 @@ def conversa_model_unmount(conversa_model_mount):
 
 @pytest.fixture()
 def mensagem_model(conversa_model):
+    from datetime import datetime
     user = conversa_model.anunciante
     txt = "Esta camisa é original, autografada por ele proprio."
-    date = "2025-01-01 03:25:42.591522"
+    date = datetime.strptime("2025-01-01 03:25:42.591522", '%Y-%m-%d %H:%M:%S.%f')
     conversa = conversa_model.id
 
     mensagem = Mensagem(user, txt, date, conversa)
@@ -208,7 +209,7 @@ def mensagem_model(conversa_model):
         db.session.add(mensagem)
         db.session.commit()
 
-        mensagem_atual = Mensagem.query.filter_by(user= user)
+        mensagem_atual = Mensagem.query.filter_by(user= user).first()
     
     yield mensagem_atual
 
