@@ -57,7 +57,7 @@ def test_logout_fail(client, perfil_model):
 
 
 
-@pytest.mark.skip(reason="Tem que importar corretamente o conftest")
+@pytest.mark.skip(reason="Tem que importar corretamente o conftest, a resolver.")
 def test_criar_anuncio_success(client, anuncio_model_mount):
     from conftest import anuncio_model_unmount
 
@@ -73,7 +73,7 @@ def test_criar_anuncio_success(client, anuncio_model_mount):
     anuncio_model_unmount(anuncio_model_mount)#Retirando a persistencia
 
 
-def test_criar_anuncio_fail(client, anuncio_model_mount, anuncio_model):
+def test_criar_anuncio_fail(client, anuncio_model_mount):
     preco = str(anuncio_model_mount.preco).replace(".", ",")
     response = client.get("/criar_anuncio", json={"titulo":anuncio_model_mount.titulo, "descricao": anuncio_model_mount.descricao, "tipo_anuncio":anuncio_model_mount.tipo, "categoria":anuncio_model_mount.categoria, "preco":preco, "celular":anuncio_model_mount.telefone, "cep":anuncio_model_mount.local})
 
@@ -91,24 +91,25 @@ def test_get_meus_anuncios_success(client, perfil_model, anuncio_model, categori
     response = client.get("/get_meus_anuncios", json={"user_id":anunciante_id})
     assert response.status_code == 200
 
-    response = response.get_json()
-    assert len(response["anuncios"]) > 0
-    
-    response = response["anuncios"][0]
+    json = response.get_json()
 
-    assert response["id"] == anuncio_model.id
-    assert response["titulo"] == anuncio_model.titulo
-    assert response['anunciante_id'] == anuncio_model.anunciante
-    assert response["descricao"] == anuncio_model.descricao
-    assert response["telefone"] == anuncio_model.telefone
-    assert response["local"] == anuncio_model.local
-    assert response['categoria'] == categoria_model.categoria
-    assert response["tipo"] == tipo_model.tipo
-    assert response["nota"] == anuncio_model.nota
-    assert response['ativo'] == anuncio_model.ativo
-    assert response["preco"] == anuncio_model.preco
-    assert response["anunciante/interessado"] == 'anunciante'
-    assert response["imagem"] == anuncio_model.imagem
+    assert len(json["anuncios"]) > 0
+    
+    json = json["anuncios"][0]
+
+    assert json["id"] == anuncio_model.id
+    assert json["titulo"] == anuncio_model.titulo
+    assert json['anunciante_id'] == anuncio_model.anunciante
+    assert json["descricao"] == anuncio_model.descricao
+    assert json["telefone"] == anuncio_model.telefone
+    assert json["local"] == anuncio_model.local
+    assert json['categoria'] == categoria_model.categoria
+    assert json["tipo"] == tipo_model.tipo
+    assert json["nota"] == anuncio_model.nota
+    assert json['ativo'] == anuncio_model.ativo
+    assert json["preco"] == anuncio_model.preco
+    assert json["anunciante/interessado"] == 'anunciante'
+    assert json["imagem"] == anuncio_model.imagem
     
 
 @pytest.mark.xfail()#Falhara propositalmente
@@ -117,34 +118,82 @@ def test_get_meus_anuncios_fail(client):
     response = client.get("/get_meus_anuncios", json={"user_id":anunciante_id})
     assert response.status_code == 200
     
-    response = response.get_json()
+    json = response.get_json()
 
-    assert len(response["anuncios"]) > 0 #Nao tem nenhum anuncio
+    assert len(json["anuncios"]) > 0 #Nao tem nenhum anuncio
 
 
 
 @pytest.mark.smoke
-def test_get_perfil_success(client):
-    pass
+def test_get_perfil_success(client, perfil_model):
+    response = client.get("/get_perfil", json={"user_id":perfil_model.id})
+    assert response.status_code == 200
+
+    json = response.get_json()
+
+    json = json["dados"]
+    
+    assert json["nome"] == perfil_model.nome
+    assert json["curso"] == perfil_model.curso
+    assert json["reputacao"] == perfil_model.reputacao
 
 
+@pytest.mark.skip(reason="Nao tem tratamento de excessao nesta rota, exemplo de possivel tratamento.")
 @pytest.mark.smoke
 def test_get_perfil_fail(client):
+    response = client.get("/get_perfil", json={"user_id":-1})
+    assert response.status_code == 200
+
+    json = response.get_json()
+
+    json = json["dados"]
+    
+    assert json["nome"] == None
+    assert json["curso"] == None
+    assert json["reputacao"] == None
+
+
+
+def test_get_feed_success(client, perfil_model):#Tem 2 tipos de anuncios
+    response = client.get("/get_feed", json={"user_id":perfil_model.id})
+    assert response.status_code == 200
+
+    json = response.get_json()
+
+    json = json["dados"]
+
+    assert len(json) == 2
+
+    for venda in json["venda"]:
+        assert type(venda["anuncio_id"]) == int
+        assert type(venda["titulo"]) == str
+        assert type(venda["preco"]) == float
+
+    for busca in json["busca"]:
+        assert type(busca["anuncio_id"]) == int
+        assert type(busca["titulo"]) == str
+        assert type(busca["preco"]) == float
+
+
+@pytest.mark.skip(reason="Talvez nao faca sentido este teste, ja que qualquer forma se retorna 'a mesma estrutura'.")
+def test_get_feed_fail(client, perfil_model):
     pass
 
 
 
-def test_get_feed_success(client):#Tem 2 tipos de anuncios
-    pass
+@pytest.mark.skip(reason="Tem que corrigir na rota, ou ver como funciona.")
+def test_fazer_busca_success(client, anuncio_model, perfil_model2):
+    response = client.get("/fazer_busca", json={"user_id":perfil_model2.id, "txt":anuncio_model.titulo, "categoria":anuncio_model.categoria, "tipo":anuncio_model.tipo, "local":anuncio_model.local, "preco_inicial":anuncio_model.preco -1, "preco_final":anuncio_model.preco +1})
+    assert response.status_code == 200
 
+    json = response.get_json()
 
-def test_get_feed_fail(client):
-    pass
+    json = json["dados"]
 
-
-
-def test_fazer_busca_success(client):
-    pass
+    assert len(json["anuncios"]) == 1
+    assert json["anuncios"][0]["anuncio_id"] == anuncio_model.id
+    assert json["anuncios"][0]["titulo"] == anuncio_model.imagem
+    assert json["anuncios"][0]["preco"] == anuncio_model.preco
 
 
 def test_fazer_busca_fail(client):

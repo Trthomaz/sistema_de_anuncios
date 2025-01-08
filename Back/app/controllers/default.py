@@ -148,12 +148,12 @@ def fazer_busca():
     pi = preco_i == -1
     pf = preco_f == -1
     anuncios = Anuncio.query.filter((Anuncio.categoria == categoria) | (c),
-                                    (Anuncio.tipo == tipo) | (t),
+                                    (Anuncio.tipo == tipo) | (t),#(Anuncio.tipo == tipo) if t else True
                                     (Anuncio.local == local) | (l),
                                     (Anuncio.preco > preco_i) | (pi),
                                     (Anuncio.preco < preco_f) | (pf),
                                     Anuncio.anunciante != user_id,
-                                    txt in Anuncio.titulo).all()
+                                    txt in Anuncio.titulo).all()#Anuncio.titulo.like(f'%{txt}%')
     anuncios_lista = []
     for v in anuncios:
         c = Categoria.query.filter_by(id=v.categoria).first()
