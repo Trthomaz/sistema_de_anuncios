@@ -157,7 +157,7 @@ def conversa_model(perfil_model, perfil_model2):
         db.session.add(conversa)
         db.session.commit()
 
-        conversa_atual = Conversa.query.filter_by(interessado= interessado, anunciante= anunciante)
+        conversa_atual = Conversa.query.filter_by(interessado= interessado, anunciante= anunciante).first()
     
     yield conversa_atual
 

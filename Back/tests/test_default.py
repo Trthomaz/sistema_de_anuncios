@@ -196,21 +196,49 @@ def test_fazer_busca_success(client, anuncio_model, perfil_model2):
     assert json["anuncios"][0]["preco"] == anuncio_model.preco
 
 
-def test_fazer_busca_fail(client):
-    pass
+@pytest.mark.skip(reason="Tem que corrigir na rota, ou ver como funciona.")
+def test_fazer_busca_fail(client, anuncio_model, perfil_model2):
+    response = client.get("/fazer_busca", json={"user_id":perfil_model2.id, "txt":anuncio_model.titulo, "categoria":anuncio_model.categoria, "tipo":anuncio_model.tipo, "local":anuncio_model.local, "preco_inicial":anuncio_model.preco +1, "preco_final":anuncio_model.preco -1})
+    assert response.status_code == 200
+
+    json = response.get_json()
+
+    json = json["dados"]
+
+    assert len(json["anuncios"]) == 1
+    assert len(json["anuncios"][0]) == 0
 
 
 
-def test_get_conversas_success(client):
-    pass
+def test_get_conversas_success(client, perfil_model, perfil_model2 ,conversa_model):
+    response = client.get("/get_conversas", json={"user_id":perfil_model.id})
+    assert response.status_code == 200
+
+    json = response.get_json()
+
+    json = json["dados"]["conversas"]
+
+    assert json[0]["conversa_id"] == conversa_model.id
+    assert json[0]["anunciante_id"] == perfil_model.id
+    assert json[0]["interessado_id"] == perfil_model2.id
+    assert json[0]["anunciante_nome"] == perfil_model.nome
+    assert json[0]["interessado_nome"] == perfil_model2.nome
 
 
 def test_get_conversas_fail(client):
-    pass
+    response = client.get("/get_conversas", json={"user_id":-1})
+    assert response.status_code == 200
+
+    json = response.get_json()
+
+    json = json["dados"]
+
+    assert len(json["conversas"]) == 0
 
 
 
 def test_iniciar_conversa_success(client):
+    #response = client.get("/get_conversas", json={"anunciante_id":perfil_model.id, "interessado_id":perfil_model2.id})
     pass
 
 
