@@ -68,7 +68,7 @@ Análise de Valor Agregado:
 
         PV: Anterior + 0.4 + 0.6 + 6 + 3 + 15 + 4 = 270.5 + 29 = 299.5
         EV: Anterior + 3 + 3 + 3 + 3 + 
-        AC: Anterior + 7 + 6 + 3 + 0.4
+        AC: Anterior + 7 + 6 + 3 + 0.4        ## AC: Anterior + 7 + 6 + 3 + 3 + 7.5
 
         SPI = 
         CPI = 

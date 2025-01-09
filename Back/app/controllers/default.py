@@ -105,14 +105,14 @@ def get_meus_anuncios():
     transacoes = Transacao.query.filter_by(interessado = id).all()
     for v in transacoes:
         a = Anuncio.query.filter_by(id=v.anuncio).first()
-        diff = datetime.datetime.utcnow() - v.data_inicio
-        if (diff.days < 1):
+        if transacao_valida(v):
             c = Categoria.query.filter_by(id=a.categoria).first()
             t = Tipo.query.filter_by(id=a.tipo).first()
             anuncios_lista.append({"id": a.id, "titulo": a.titulo, "anunciante_id": a.anunciante, "descricao": a.descricao, "telefone": a.telefone, "local": a.local, "categoria": c.categoria, "tipo": t.tipo, "nota": a.nota, "ativo": a.ativo, "preco": a.preco, "anunciante/interessado": "interessado", "imagem": a.imagem})
         else:
-            db.session.delete(t)
-            db.session.commit()
+            if a.ativo:
+                db.session.delete(t)
+                db.session.commit()
     ###################################
     dados = {}
     dados["anuncios"] = anuncios_lista
@@ -166,7 +166,7 @@ def fazer_busca():
                                     (Anuncio.preco > preco_i) | (pi),
                                     (Anuncio.preco < preco_f) | (pf),
                                     Anuncio.anunciante != user_id,
-                                    txt in Anuncio.titulo).all()#Anuncio.titulo.like(f'%{txt}%')
+                                    Anuncio.titulo.like(f'%{txt}%')).all()#Anuncio.titulo.like(f'%{txt}%')  #txt in Anuncio.titulo
     anuncios_lista = []
     for v in anuncios:
         c = Categoria.query.filter_by(id=v.categoria).first()
@@ -198,6 +198,7 @@ def iniciar_conversa():
     interessado_id = dados.get("interessado_id")
     dados = {}
     conversas = Conversa.query.filter(Conversa.anunciante == anunciante_id, Conversa.interessado == interessado_id).all()
+    #fazer o contrário também
     if conversas == []:
         db.session.add(Conversa(interessado_id, anunciante_id))
         db.session.commit()
@@ -283,6 +284,75 @@ def editar_anuncio():
     db.session.commit()
 
     return "ok"
+
+@app.route("/finalizar_transação", methods = ["POST", "GET"])
+def finalizar_transação():
+
+    dados = request.get_json()
+    user_id = dados.get("user_id")
+    anuncio_id = dados.get("anuncio_id")
+    anuncio = Anuncio.query.filter_by(id=anuncio_id).first()
+    transacoes = Transacao.query.filter_by(anuncio = anuncio_id).all()
+    resposta = ""
+    if transacoes == []:
+        if user_id != anuncio.anunciante:
+            db.session.add(Transacao(datetime.datetime.utcnow(), anuncio_id, user_id))
+            db.session.commit()
+            resposta = "Transação criada com sucesso!"
+        else:
+            resposta = "O anunciante não pode iniciar a transação!"
+    else:
+        if len(transacoes) > 1:
+            # Não deveria acontecer em hipótese alguma. Se acontecer, tratar aqui.
+            pass
+        else:
+            transacao = transacoes[0]
+            if transacao_valida(transacao):
+                if user_id != anuncio.anunciante:
+                    resposta = "Outro usuário já está interessado em fechar negócio."
+                else:
+                    anuncio.ativo = False
+                    resposta = "Transação finalizada com sucesso!"
+            else:
+                db.session.delete(transacao)
+                if user_id != anuncio.anunciante:
+                    db.session.add(Transacao(datetime.datetime.utcnow(), anuncio_id, user_id))
+                    resposta = "Transação criada com sucesso!"
+                else:
+                    resposta = "O anunciante não pode iniciar a transação!"
+                db.session.commit()
+    return resposta
+
+@app.route("/avaliar", methods = ["POST", "GET"])
+def avaliar():
+    dados = request.get_json()
+    id = dados.get("user_id")
+    a_id = dados.get("anuncio_id")
+    nota = dados.get("nota")
+    if not (0 < nota < 5):
+        return "Nota fora do escopo."
+    anuncio = Anuncio.query.filter_by(id = a_id)
+    if anuncio.ativo:
+        return "Transação não encerrada"
+    transacao = Transacao.query.filter_by(anuncio = a_id)
+    perfil = Perfil.query.filter_by(id=id)
+    if id == transacao.interessado:
+        transacao.add_nota_interessado(nota)
+    elif id == anuncio.anunciante:
+        transacao.add_nota_anunciante(nota)
+    else:
+        return "vixe mano kkk de quem que é esse id aí vei...."
+    #atualizar reputação do perfil
+    #ver confusão com a nota do anuncio e dar um jeito de saber se a nota já foi dada
+    db.session.commit()
+    return "Nota dada com sucesso!"
+    
+        
+# Funções auxiliares
+
+def transacao_valida(transacao):
+    diff = datetime.datetime.utcnow() - transacao.data_inicio
+    return (diff.days < 1)
 
 # Testes e mexidas diretas no bd
 
