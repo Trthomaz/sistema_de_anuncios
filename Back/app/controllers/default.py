@@ -101,6 +101,19 @@ def get_meus_anuncios():
         c = Categoria.query.filter_by(id=v.categoria).first()
         t = Tipo.query.filter_by(id=v.tipo).first()
         anuncios_lista.append({"id": v.id, "titulo": v.titulo, "anunciante_id": v.anunciante, "descricao": v.descricao, "telefone": v.telefone, "local": v.local, "categoria": c.categoria, "tipo": t.tipo, "nota": v.nota, "ativo": v.ativo, "preco": v.preco, "anunciante/interessado": "anunciante", "imagem": v.imagem})
+    ############# Não sei se funciona
+    transacoes = Transacao.query.filter_by(interessado = id).all()
+    for v in transacoes:
+        a = Anuncio.query.filter_by(id=v.anuncio).first()
+        diff = datetime.datetime.utcnow() - v.data_inicio
+        if (diff.days < 1):
+            c = Categoria.query.filter_by(id=a.categoria).first()
+            t = Tipo.query.filter_by(id=a.tipo).first()
+            anuncios_lista.append({"id": a.id, "titulo": a.titulo, "anunciante_id": a.anunciante, "descricao": a.descricao, "telefone": a.telefone, "local": a.local, "categoria": c.categoria, "tipo": t.tipo, "nota": a.nota, "ativo": a.ativo, "preco": a.preco, "anunciante/interessado": "interessado", "imagem": a.imagem})
+        else:
+            db.session.delete(t)
+            db.session.commit()
+    ###################################
     dados = {}
     dados["anuncios"] = anuncios_lista
     return jsonify(dados)

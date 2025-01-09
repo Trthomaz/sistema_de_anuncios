@@ -15,5 +15,6 @@ from app.models.conversa import Conversa
 from app.models.mensagem import Mensagem
 from app.models.perfil import Perfil
 from app.models.tipo import Tipo
+from app.models.transacao import Transacao
 
 #from models import *
