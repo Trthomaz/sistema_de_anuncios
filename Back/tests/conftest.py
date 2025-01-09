@@ -101,7 +101,7 @@ def anuncio_model_mount(perfil_model, categoria_model, tipo_model):
 
 
 @pytest.fixture()
-def anuncio_model(perfil_model, anuncio_model_mount, categoria_model, tipo_model):
+def anuncio_model(anuncio_model_mount):
 
     anuncio = anuncio_model_mount
 
@@ -118,9 +118,17 @@ def anuncio_model(perfil_model, anuncio_model_mount, categoria_model, tipo_model
         db.session.commit()
 
 
-def anuncio_model_unmount(anuncio:Anuncio)->None:
-    db.session.delete(anuncio)
-    db.session.commit()
+@pytest.fixture()
+def anuncio_model_unmount(anuncio_model_mount):
+
+    anuncio = anuncio_model_mount
+
+    yield anuncio
+
+    with app.app_context():
+        anuncio = Anuncio.query.filter_by(anunciante= anuncio_model_mount.anunciante).first()
+        db.session.delete(anuncio)
+        db.session.commit()
 
 
 @pytest.fixture()
@@ -147,17 +155,25 @@ def perfil_model2():
 
 
 @pytest.fixture()
-def conversa_model(perfil_model, perfil_model2):
+def conversa_model_mount(perfil_model, perfil_model2):
     interessado = perfil_model2.id
     anunciante = perfil_model.id
 
     conversa = Conversa(interessado, anunciante)
+    
+    yield conversa
+
+
+@pytest.fixture()
+def conversa_model(conversa_model_mount):
+    
+    conversa = conversa_model_mount
 
     with app.app_context():
         db.session.add(conversa)
         db.session.commit()
 
-        conversa_atual = Conversa.query.filter_by(interessado= interessado, anunciante= anunciante).first()
+        conversa_atual = Conversa.query.filter_by(interessado= conversa.interessado, anunciante= conversa.anunciante).first()
     
     yield conversa_atual
 
@@ -165,12 +181,26 @@ def conversa_model(perfil_model, perfil_model2):
         db.session.delete(conversa)
         db.session.commit()
 
+@pytest.fixture()
+def conversa_model_unmount(conversa_model_mount):
+    
+    conversa = conversa_model_mount
+
+    yield conversa
+
+    with app.app_context():
+        conversa = Conversa.query.filter(Conversa.anunciante == conversa_model_mount.anunciante, Conversa.interessado == conversa_model_mount.interessado).first()
+        db.session.delete(conversa)
+        db.session.commit()
+
+
 
 @pytest.fixture()
 def mensagem_model(conversa_model):
+    from datetime import datetime
     user = conversa_model.anunciante
     txt = "Esta camisa é original, autografada por ele proprio."
-    date = "2025-01-01 03:25:42.591522"
+    date = datetime.strptime("2025-01-01 03:25:42.591522", '%Y-%m-%d %H:%M:%S.%f')
     conversa = conversa_model.id
 
     mensagem = Mensagem(user, txt, date, conversa)
@@ -179,7 +209,7 @@ def mensagem_model(conversa_model):
         db.session.add(mensagem)
         db.session.commit()
 
-        mensagem_atual = Mensagem.query.filter_by(user= user)
+        mensagem_atual = Mensagem.query.filter_by(user= user).first()
     
     yield mensagem_atual
 

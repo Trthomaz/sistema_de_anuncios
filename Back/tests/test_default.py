@@ -57,20 +57,16 @@ def test_logout_fail(client, perfil_model):
 
 
 
-@pytest.mark.skip(reason="Tem que importar corretamente o conftest, a resolver.")
 def test_criar_anuncio_success(client, anuncio_model_mount):
-    from conftest import anuncio_model_unmount
 
     preco = str(anuncio_model_mount.preco).replace(".", ",")
-    response = client.get("/criar_anuncio", json={"titulo":anuncio_model_mount.titulo, "descricao": anuncio_model_mount.descricao, "tipo_anuncio":anuncio_model_mount.tipo, "categoria":anuncio_model_mount.categoria, "preco":preco, "celular":anuncio_model_mount.telefone, "cep":anuncio_model_mount.local})
+    response = client.get("/criar_anuncio", json={"user_id":anuncio_model_mount.anunciante,"titulo":anuncio_model_mount.titulo, "descricao": anuncio_model_mount.descricao, "tipo_anuncio":anuncio_model_mount.tipo, "categoria":anuncio_model_mount.categoria, "preco":preco, "celular":anuncio_model_mount.telefone, "cep":anuncio_model_mount.local})
 
     assert response.status_code == 200
 
     json = response.get_json()
 
     assert json["status"] == True
-    
-    anuncio_model_unmount(anuncio_model_mount)#Retirando a persistencia
 
 
 def test_criar_anuncio_fail(client, anuncio_model_mount):
@@ -237,56 +233,122 @@ def test_get_conversas_fail(client):
 
 
 
-def test_iniciar_conversa_success(client):
-    #response = client.get("/get_conversas", json={"anunciante_id":perfil_model.id, "interessado_id":perfil_model2.id})
-    pass
+def test_iniciar_conversa_success(client, conversa_model_unmount):
+    from app import app
+    from app.models.conversa import Conversa
+
+    response = client.get("/iniciar_conversa", json={"anunciante_id":conversa_model_unmount.anunciante, "interessado_id":conversa_model_unmount.interessado})
+    assert response.status_code == 200
+
+    json = response.get_json()
+
+    json = json["dados"]
+
+    with app.app_context():
+        id = Conversa.query.filter(Conversa.anunciante == conversa_model_unmount.anunciante, Conversa.interessado == conversa_model_unmount.interessado).first().id
+
+    assert json["conversa_id"] == id
+    assert json["erro"] == "Tudo certo!"
 
 
-def test_iniciar_conversa_fail(client):
-    pass
+def test_iniciar_conversa_fail(client, conversa_model):
+    response = client.get("/iniciar_conversa", json={"anunciante_id":conversa_model.anunciante, "interessado_id":conversa_model.interessado})
+    assert response.status_code == 200
+
+    json = response.get_json()
+
+    json = json["dados"]
+
+    assert json["conversa_id"] == -1
+    assert json["erro"] == "Conversa já existe!"
 
 
 
-def test_get_mensagens_success(client):
-    pass
+@pytest.mark.skip(reason="Arrumar implementacao de data/hora.")
+def test_get_mensagens_success(client, mensagem_model):
+    from datetime import datetime
 
+    response = client.get("/get_mensagens", json={"id":mensagem_model.conversa})
+    assert response.status_code == 200
 
+    json = response.get_json()
+
+    json = json["dados"]
+
+    assert len(json) == 1
+    assert json[0]["msg_id"] == mensagem_model.id
+    assert json[0]["user_id"] == mensagem_model.user
+    assert json[0]["txt"] == mensagem_model.txt
+    
+    date = json[0]["date"]
+    date_obj = datetime.strptime(date, '%a, %d %b %Y %H:%M:%S GMT')
+    
+    assert date_obj == mensagem_model.date.replace(microsecond=0)
+    
+
+@pytest.mark.skip(reason="Arrumar implementacao de data/hora.")
+@pytest.mark.skip(reason="Talvez nao faca sentido este teste, ja que qualquer forma se retorna 'a mesma estrutura'.")
 def test_get_mensagens_fail(client):
     pass
 
 
 
+@pytest.mark.skip(reason="Arrumar implementacao de data/hora.")
 def test_add_mensagem_success(client):
     pass
 
 
+@pytest.mark.skip(reason="Arrumar implementacao de data/hora.")
 def test_add_mensagem_fail(client):
     pass
 
 
 
-def test_get_anuncio_success(client):
-    pass
+def test_get_anuncio_success(client, anuncio_model, categoria_model, tipo_model):
+    response = client.get("/get_anuncio", json={"anuncio_id":anuncio_model.id})
+    assert response.status_code == 200
+
+    json = response.get_json()
+
+    json = json["dados"]
+
+    assert json["id"] == anuncio_model.id
+    assert json["titulo"] == anuncio_model.titulo
+    assert json["anunciante_id"] == anuncio_model.anunciante
+    assert json["descricao"] == anuncio_model.descricao
+    assert json["telefone"] == anuncio_model.telefone
+    assert json["local"] == anuncio_model.local
+    assert json["categoria"] == categoria_model.categoria
+    assert json["tipo"] == tipo_model.tipo
+    assert json["nota"] == anuncio_model.nota
+    assert json["ativo"] == anuncio_model.ativo
+    assert json["preco"] == anuncio_model.preco
+    assert json["imagem"] == anuncio_model.imagem
 
 
+@pytest.mark.skip(reason="Nao ha tratamento de erro nesta rota (anuncio nao existe).")
 def test_get_anuncio_fail(client):
     pass
 
 
 
+@pytest.mark.skip(reason="Nao finalizado rota.")
 def test_excluir_anuncio_success(client):
     pass
 
 
+@pytest.mark.skip(reason="Nao finalizado rota.")
 def test_excluir_anuncio_fail(client):
     pass
 
 
 
+@pytest.mark.skip(reason="Nao finalizado rota.")
 def test_editar_anuncio_success(client):
     pass
 
 
+@pytest.mark.skip(reason="Nao finalizado rota.")
 def test_editar_anuncio_fail(client):
     pass
 
