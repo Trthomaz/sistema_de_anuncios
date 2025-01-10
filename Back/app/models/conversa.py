@@ -8,11 +8,11 @@ class Conversa(db.Model):
     anunciante = db.Column(db.Integer, db.ForeignKey('perfis.id'))
     arquivada = db.Column(db.Boolean)
 
-    def __init__(self, interessado, anunciante):
+    def __init__(self, interessado, anunciante, arquivada=False):
                 
             self.interessado = interessado
             self.anunciante = anunciante
-            self.arquivada = False
+            self.arquivada = arquivada
 
     def add_msg(self, user, txt, date):
 

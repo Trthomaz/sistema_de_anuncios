@@ -19,17 +19,25 @@ class Perfil(db.Model):
         self.reputacao = reputacao
 
     def att_reputacao(self):
-            
-            historico = Anuncio.query.filter_by(id=self.id).all()
 
-            n = total = 0
-            for a in historico:
-                
-                if not a.ativo:
-                    total += a.nota ### FALHA. HÁ APENAS UMA NOTA POR ANÚNCIO
+            n = 0
+            total = 0
+
+            q1 = Anuncio.query.filter_by(anunciante=self.id).all()
+            for a in q1:
+                 q2 = Transacao.query.filter_by(anuncio=a.id).all()
+                 for t in q2:
+                      if total is not None:
+                        total += t.nota_interessado
+                        n += 1
+            
+            q3 = Transacao.query.filter_by(interessado=self.id).all()
+            for t in q3:
+                if total is not None:
+                    total += t.nota_anunciante
                     n += 1
 
-            self.reputacacao = total/n
+            self.reputacao = total/n
 
     def add_anuncio(self, anuncio):
         add(anuncio)

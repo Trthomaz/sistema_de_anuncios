@@ -36,29 +36,29 @@ def logout():
     return jsonify({"status": False})
 
 
-@app.route("/get_anuncios_geral")
-def get_anuncios_geral():
-    dados = {}
-    if session['user_id']:
-        anuncios_pessoais = Anuncio.query.all()
+# @app.route("/get_anuncios_geral")
+# def get_anuncios_geral():
+#     dados = {}
+#     if session['user_id']:
+#         anuncios_pessoais = Anuncio.query.all()
         
-        #Nao sei se funciona retornar a linha inteira
-        dados["dados"] = anuncios_pessoais
-        return jsonify(dados)
-    dados["dados"] = None
-    return jsonify(dados)
+#         #Nao sei se funciona retornar a linha inteira
+#         dados["dados"] = anuncios_pessoais
+#         return jsonify(dados)
+#     dados["dados"] = None
+#     return jsonify(dados)
 
-@app.route("/get_anuncios_pessoais")
-def get_anuncios_pessoais():
-    dados = {}
-    if session['user_id']:
-        anuncios_pessoais = Anuncio.query.filter_by(id=session["user_id"])
+# @app.route("/get_anuncios_pessoais")
+# def get_anuncios_pessoais():
+#     dados = {}
+#     if session['user_id']:
+#         anuncios_pessoais = Anuncio.query.filter_by(id=session["user_id"])
 
-        #Nao sei se funciona retornar a linha inteira
-        dados["dados"] = anuncios_pessoais
-        return jsonify(dados)
-    dados["dados"] = None
-    return jsonify(dados)
+#         #Nao sei se funciona retornar a linha inteira
+#         dados["dados"] = anuncios_pessoais
+#         return jsonify(dados)
+#     dados["dados"] = None
+#     return jsonify(dados)
 
 
 @app.route("/criar_anuncio", methods=["POST", "GET"])
@@ -95,12 +95,23 @@ def criar_anuncio():
 def get_meus_anuncios():
     dados = request.get_json()
     id = dados.get("user_id")
+    data = dados.get("data")
+    data = datetime.datetime.strptime(data, '%a, %d %b %Y %H:%M:%S GMT')
     anuncios = Anuncio.query.filter_by(anunciante=id).all()
     anuncios_lista = []
     for v in anuncios:
-        c = Categoria.query.filter_by(id=v.categoria).first()
-        t = Tipo.query.filter_by(id=v.tipo).first()
-        anuncios_lista.append({"id": v.id, "titulo": v.titulo, "anunciante_id": v.anunciante, "descricao": v.descricao, "telefone": v.telefone, "local": v.local, "categoria": c.categoria, "tipo": t.tipo, "nota": v.nota, "ativo": v.ativo, "preco": v.preco, "anunciante/interessado": "anunciante", "imagem": v.imagem})
+        anuncios_lista.append(anuncio_para_dicionario(v, "anunciante"))
+    ############# Não sei se funciona
+    transacoes = Transacao.query.filter_by(interessado = id).all()
+    for v in transacoes:
+        a = Anuncio.query.filter_by(id=v.anuncio).first()
+        if transacao_valida(v, data):
+            anuncios_lista.append(anuncio_para_dicionario(a, "interessado"))
+        else:
+            if a.ativo:
+                db.session.delete(v)  # possível fonte de erro
+                db.session.commit()
+    ###################################
     dados = {}
     dados["anuncios"] = anuncios_lista
     return jsonify(dados)
@@ -127,7 +138,7 @@ def get_feed():
     for v in anuncios_venda:
         av.append({"anuncio_id": v.id, "titulo": v.titulo, "imagem": v.imagem, "preco": v.preco}) # Substituir titulo e imagem
     for v in anuncios_busca:
-        ab.append({"anuncio_id": v.id, "titulo": v.titulo, "imagem": v.imagem, "preco": v.preco}) # Substituir titulo e imagem
+        ab.append({"anuncio_id": v.id, "titulo": v.titulo, "imagem": v.imagem, "preco": v.preco}) # Substituir titulo e imagem  # (???)
     dados = {}
     dados["dados"] = {"venda": av, "busca": ab}
     return jsonify(dados)
@@ -148,12 +159,12 @@ def fazer_busca():
     pi = preco_i == -1
     pf = preco_f == -1
     anuncios = Anuncio.query.filter((Anuncio.categoria == categoria) | (c),
-                                    (Anuncio.tipo == tipo) | (t),
+                                    (Anuncio.tipo == tipo) | (t),#(Anuncio.tipo == tipo) if t else True
                                     (Anuncio.local == local) | (l),
                                     (Anuncio.preco > preco_i) | (pi),
                                     (Anuncio.preco < preco_f) | (pf),
                                     Anuncio.anunciante != user_id,
-                                    txt in Anuncio.titulo).all()
+                                    Anuncio.titulo.like(f'%{txt}%')).all()#Anuncio.titulo.like(f'%{txt}%')  #txt in Anuncio.titulo
     anuncios_lista = []
     for v in anuncios:
         c = Categoria.query.filter_by(id=v.categoria).first()
@@ -185,6 +196,8 @@ def iniciar_conversa():
     interessado_id = dados.get("interessado_id")
     dados = {}
     conversas = Conversa.query.filter(Conversa.anunciante == anunciante_id, Conversa.interessado == interessado_id).all()
+    c = Conversa.query.filter(Conversa.anunciante == interessado_id, Conversa.interessado == anunciante_id).all()  # ponto com chance de dar ruim
+    conversas = conversas + c
     if conversas == []:
         db.session.add(Conversa(interessado_id, anunciante_id))
         db.session.commit()
@@ -198,7 +211,8 @@ def iniciar_conversa():
 def get_mensagens():
     dados = request.get_json()
     id = dados.get("id")
-    mensagens = Mensagem.query.filter_by(conversa=id).all()  # ver o sort
+    mensagens = Mensagem.query.filter_by(conversa=id).all()
+    mensagens = sort_by_date(mensagens, "bubble")
     m = []
     for v in mensagens:
         m.append({"msg_id": v.id, "user_id": v.user, "txt": v.txt, "date": v.date})
@@ -211,21 +225,19 @@ def add_mensagem():
     dados = request.get_json()
     user_id = dados.get("user_id")
     txt = dados.get("txt")
-    #date = dados.get("date")
-    date = datetime.datetime.utcnow()
+    data = dados.get("data")
+    data = datetime.datetime.strptime(data, '%a, %d %b %Y %H:%M:%S GMT')
     cvv_id = dados.get("conversa_id")
-    db.session.add(Mensagem(user_id, txt, date, cvv_id))
+    db.session.add(Mensagem(user_id, txt, data, cvv_id))
     db.session.commit()
-    return "ok"
+    return jsonify({"dados": {"msg": "ok"}})
 
 @app.route("/get_anuncio", methods = ["POST", "GET"])
 def get_anuncio():
     dados = request.get_json()
     id = dados.get("anuncio_id")
     a = Anuncio.query.filter_by(id=id).first()
-    c = Categoria.query.filter_by(id=a.categoria).first()
-    t = Tipo.query.filter_by(id=a.tipo).first()
-    anuncio = {"id": a.id, "titulo": a.titulo, "anunciante_id": a.anunciante, "descricao": a.descricao, "telefone": a.telefone, "local": a.local, "categoria": c.categoria, "tipo": t.tipo, "nota": a.nota, "ativo": a.ativo, "preco": a.preco, "imagem": a.imagem}
+    anuncio = anuncio_para_dicionario(a, "anunciante")
     dados = {}
     dados["dados"] = anuncio
     return jsonify(dados)
@@ -239,8 +251,8 @@ def excluir_anuncio():
     if anuncio.anunciante == user_id:
         db.session.delete(anuncio)
         db.session.commit()
-        return "Anúncio deletado."
-    return "O usuário não é o proprietário deste anúncio."
+        return jsonify({"dados": {"msg": "Anúncio deletado."}})
+    return jsonify({"dados": {"msg": "O usuário não é o proprietário deste anúncio."}})
 
 @app.route("/editar_anuncio", methods = ["POST", "GET"])
 def editar_anuncio():
@@ -269,62 +281,175 @@ def editar_anuncio():
 
     db.session.commit()
 
-    return "ok"
+    return jsonify({"dados": {"msg": "ok"}})
+
+@app.route("/finalizar_transação", methods = ["POST", "GET"])
+def finalizar_transação():
+
+    dados = request.get_json()
+    user_id = dados.get("user_id")
+    anuncio_id = dados.get("anuncio_id")
+    data = dados.get("data")
+    data = datetime.datetime.strptime(data, '%a, %d %b %Y %H:%M:%S GMT')
+    anuncio = Anuncio.query.filter_by(id=anuncio_id).first()
+    transacoes = Transacao.query.filter_by(anuncio = anuncio_id).all()
+    resposta = ""
+    if transacoes == []:
+        if user_id != anuncio.anunciante:
+            db.session.add(Transacao(data, anuncio_id, user_id))
+            db.session.commit()
+            resposta = "Transação criada com sucesso!"
+        else:
+            resposta = "O anunciante não pode iniciar a transação!"
+    else:
+        if len(transacoes) > 1:
+            # Não deveria acontecer em hipótese alguma. Se acontecer, tratar aqui.
+            pass
+        else:
+            transacao = transacoes[0]
+            if transacao_valida(transacao, data):
+                if user_id != anuncio.anunciante:
+                    resposta = "Outro usuário já está interessado em fechar negócio."
+                else:
+                    anuncio.ativo = False
+                    resposta = "Transação finalizada com sucesso!"
+            else:
+                db.session.delete(transacao)
+                if user_id != anuncio.anunciante:
+                    db.session.add(Transacao(data, anuncio_id, user_id))
+                    resposta = "Transação criada com sucesso!"
+                else:
+                    resposta = "O anunciante não pode iniciar a transação!"
+                db.session.commit()
+    return jsonify({"dados": {"msg": resposta}})
+
+@app.route("/avaliar", methods = ["POST", "GET"])
+def avaliar():
+    dados = request.get_json()
+    id = dados.get("user_id")
+    a_id = dados.get("anuncio_id")
+    nota = dados.get("nota")
+    if not (0 < nota < 5):
+        return jsonify({"dados": {"msg": "Nota fora do escopo."}})
+    anuncio = Anuncio.query.filter_by(id = a_id)
+    if anuncio.ativo:
+        return jsonify({"dados": {"msg": "Transação não encerrada"}})
+    if anuncio.nota:
+        return jsonify({"dados": {"msg": "Notas já foram dadas"}})
+    transacao = Transacao.query.filter_by(anuncio = a_id)
+    perfil = Perfil.query.filter_by(id=id)
+    if id == transacao.interessado:
+        transacao.add_nota_interessado(nota)
+    elif id == anuncio.anunciante:
+        transacao.add_nota_anunciante(nota)
+    else:
+        return jsonify({"dados": {"msg": "vixe mano kkk de quem que é esse id aí vei...."}})
+    perfil.att_reputacao()
+    if (transacao.nota_interessado is not None) and (transacao.nota_anunciante is not None):
+        anuncio.nota = True
+    #ver confusão com a nota do anuncio e dar um jeito de saber se a nota já foi dada
+    db.session.commit()
+    return jsonify({"dados": {"msg": "Nota dada com sucesso!"}})
+    
+        
+# Funções auxiliares
+
+def transacao_valida(transacao, data):
+    diff = data - transacao.data_inicio
+    return (diff.days < 1)
+
+def anuncio_para_dicionario(a, anunciante_or_interessado):
+    c = Categoria.query.filter_by(id=a.categoria).first()
+    t = Tipo.query.filter_by(id=a.tipo).first()
+    anuncio = {"id": a.id, "titulo": a.titulo, "anunciante_id": a.anunciante, "descricao": a.descricao, "telefone": a.telefone, "local": a.local, "categoria": c.categoria, "tipo": t.tipo, "nota": a.nota, "ativo": a.ativo, "preco": a.preco, "anunciante/interessado": anunciante_or_interessado, "imagem": a.imagem}
+    return anuncio
+
+def sort_by_date(objs, type):
+    if type == "bubble":
+        n = len(objs)
+        for i in range (n):
+            for j in range (n - 1):
+                if objs[j].date > objs[j + 1].date:
+                    aux = objs[j]
+                    objs[j] = objs[j+1]
+                    objs[j+1] = aux
+        return objs
+    elif type == "quick":
+        return quick_sort(objs)
+
+def quick_sort(lista):
+    if len(lista) <= 1:
+        return lista
+
+    pivo = lista[0]
+    lista1 = []
+    lista2 = []
+    for v in lista[1::]:
+        if v.date > pivo.date:
+            lista2.append(v)
+        else:
+            lista1.append(v)
+    return quick_sort(lista1) + [pivo] + quick_sort(lista2)
+
 
 # Testes e mexidas diretas no bd
 
-@app.route("/inicializar1")
-def inicializar1():
-    db.session.add(Tipo("venda"))
-    db.session.add(Tipo("procura"))
-    db.session.add(Categoria("serviço"))
-    db.session.add(Categoria("produto"))
-    db.session.commit()
-    return "ok"
+# @app.route("/inicializar1")
+# def inicializar1():
+#     db.session.add(Tipo("venda"))
+#     db.session.add(Tipo("procura"))
+#     db.session.add(Categoria("serviço"))
+#     db.session.add(Categoria("produto"))
+#     db.session.add(Perfil("a", "a", "A", "AA", 5))
+#     db.session.add(Perfil("b", "b", "B", "BB", 5))
+#     db.session.add(Anuncio(2, "bili jin is not mai louver xis jast a gral det cleims det ai em de uan", "1111-1111", "Grags", 1, True, 1, 15))
+#     db.session.add(Conversa(1, 2))
+#     db.session.add(Mensagem(1, "oi", datetime.datetime.utcnow(), 1))
+#     db.session.commit()
+#     return "ok"
 
-@app.route("/inicializar2")
-def inicializar2():
-    db.session.add(Anuncio(2, "bili jin is not mai louver xis jast a gral det cleims det ai em de uan", "1111-1111", "Grags", 1, True, 1, 5, 15))
-    db.session.commit()
-    return "ok"
+# @app.route("/inicializar2")
+# def inicializar2():
+#     db.session.add(Anuncio(2, "bili jin is not mai louver xis jast a gral det cleims det ai em de uan", "1111-1111", "Grags", 1, True, 1, 15))
+#     db.session.commit()
+#     return "ok"
 
-@app.route("/inicializar3")
-def inicializar3():
-    db.session.add(Conversa(1, 2))
-    db.session.add(Conversa(2, 1))
-    db.session.commit()
-    return "ok"
+# @app.route("/inicializar3")
+# def inicializar3():
+#     db.session.add(Conversa(1, 2))
+#     db.session.commit()
+#     return "ok"
 
-@app.route("/inicializar4")
-def inicializar4():
-    db.session.add(Mensagem(1, "oi", datetime.datetime.utcnow(), 1))
-    db.session.commit()
-    return "ok"
+# @app.route("/inicializar4")
+# def inicializar4():
+#     db.session.add(Mensagem(1, "oi", datetime.datetime.utcnow(), 1))
+#     db.session.commit()
+#     return "ok"
 
-@app.route("/ver")
-def ver():
-    x = Anuncio.query.filter_by(anunciante=2).first()
-    return x.descricao
+# @app.route("/ver")
+# def ver():
+#     x = Anuncio.query.filter_by(anunciante=2).first()
+#     return x.descricao
 
-@app.route("/get_teste")
-def get_teste():
-    x = Anuncio.query.filter_by(anunciante=1).all()
-    y = []
-    for v in x:
-        y.append(v.categoria)
-    y = str(y)
-    print(y)
-    return x
+# @app.route("/get_teste")
+# def get_teste():
+#     x = Anuncio.query.filter_by(anunciante=1).all()
+#     y = []
+#     for v in x:
+#         y.append(v.categoria)
+#     y = str(y)
+#     print(y)
+#     return x
 
 ######################################### END LEO ################################################
 
 
 
-@app.route("/teste1")
-def teste1():
-    db.session.add(Perfil("a", "a", "A", "AA", 5))
-    db.session.commit()
-    return "ok"
+# @app.route("/teste1")
+# def teste1():
+#     db.session.add(Perfil("a", "a", "A", "AA", 5))
+#     db.session.commit()
+#     return "ok"
 
 # @app.route("/teste2")
 # def teste2():
