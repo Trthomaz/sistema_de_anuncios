@@ -88,9 +88,16 @@ class _ChatState extends State<Chat> {
   Future<String> _addMensagem(
       String ip, int user_id, String txt, int conversa_id) async {
     final url = Uri.parse('http://$ip:5000/add_mensagem');
+    final now = DateTime.now().toLocal();
+    final date = now.toString().substring(0, 19);
 
     // Dados enviados
-    final dados = {'user_id': user_id, 'txt': txt, 'conversa_id': conversa_id};
+    final dados = {
+      'user_id': user_id,
+      'txt': txt,
+      'conversa_id': conversa_id,
+      'date': date
+    };
 
     if (txt == "" || txt == '') {
       print("texto vazio");
