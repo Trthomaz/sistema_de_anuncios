@@ -12,13 +12,13 @@ class Anuncio(db.Model):
     categoria = db.Column(db.Integer, db.ForeignKey('categorias.id'))
     tipo = db.Column(db.Integer, db.ForeignKey('tipos.id'))
 
-    nota = db.Column(db.Integer)
+    nota = db.Column(db.Boolean)
     ativo = db.Column(db.Boolean, default=True)
     preco = db.Column(db.Float)
 
     imagem = db.Column(db.Text)
 
-    def __init__(self, anunciante, titulo, descricao, telefone, local, categoria, ativo=True, tipo = 1, nota = 5,preco=0.0, imagem=None): #Ver como puxar imagem
+    def __init__(self, anunciante, titulo, descricao, telefone, local, categoria, ativo=True, tipo = 1,preco=0.0, imagem=None):
 
         self.titulo = titulo
         self.anunciante = anunciante
@@ -28,7 +28,7 @@ class Anuncio(db.Model):
         self.categoria = categoria
         self.tipo = tipo
 
-        self.nota = nota
+        self.nota = False
         self.ativo = ativo
         self.preco=preco
         

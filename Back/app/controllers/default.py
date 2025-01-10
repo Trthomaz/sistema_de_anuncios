@@ -98,20 +98,16 @@ def get_meus_anuncios():
     anuncios = Anuncio.query.filter_by(anunciante=id).all()
     anuncios_lista = []
     for v in anuncios:
-        c = Categoria.query.filter_by(id=v.categoria).first()
-        t = Tipo.query.filter_by(id=v.tipo).first()
-        anuncios_lista.append({"id": v.id, "titulo": v.titulo, "anunciante_id": v.anunciante, "descricao": v.descricao, "telefone": v.telefone, "local": v.local, "categoria": c.categoria, "tipo": t.tipo, "nota": v.nota, "ativo": v.ativo, "preco": v.preco, "anunciante/interessado": "anunciante", "imagem": v.imagem})
+        anuncios_lista.append(anuncio_para_dicionario(v))
     ############# Não sei se funciona
     transacoes = Transacao.query.filter_by(interessado = id).all()
     for v in transacoes:
         a = Anuncio.query.filter_by(id=v.anuncio).first()
         if transacao_valida(v):
-            c = Categoria.query.filter_by(id=a.categoria).first()
-            t = Tipo.query.filter_by(id=a.tipo).first()
-            anuncios_lista.append({"id": a.id, "titulo": a.titulo, "anunciante_id": a.anunciante, "descricao": a.descricao, "telefone": a.telefone, "local": a.local, "categoria": c.categoria, "tipo": t.tipo, "nota": a.nota, "ativo": a.ativo, "preco": a.preco, "anunciante/interessado": "interessado", "imagem": a.imagem})
+            anuncios_lista.append(anuncio_para_dicionario(a))
         else:
             if a.ativo:
-                db.session.delete(t)
+                db.session.delete(v)  # possível fonte de erro
                 db.session.commit()
     ###################################
     dados = {}
@@ -140,7 +136,7 @@ def get_feed():
     for v in anuncios_venda:
         av.append({"anuncio_id": v.id, "titulo": v.titulo, "imagem": v.imagem, "preco": v.preco}) # Substituir titulo e imagem
     for v in anuncios_busca:
-        ab.append({"anuncio_id": v.id, "titulo": v.titulo, "imagem": v.imagem, "preco": v.preco}) # Substituir titulo e imagem
+        ab.append({"anuncio_id": v.id, "titulo": v.titulo, "imagem": v.imagem, "preco": v.preco}) # Substituir titulo e imagem  # (???)
     dados = {}
     dados["dados"] = {"venda": av, "busca": ab}
     return jsonify(dados)
@@ -198,7 +194,8 @@ def iniciar_conversa():
     interessado_id = dados.get("interessado_id")
     dados = {}
     conversas = Conversa.query.filter(Conversa.anunciante == anunciante_id, Conversa.interessado == interessado_id).all()
-    #fazer o contrário também
+    c = Conversa.query.filter(Conversa.anunciante == interessado_id, Conversa.interessado == anunciante_id).all()  # ponto com chance de dar ruim
+    conversas = conversas + c
     if conversas == []:
         db.session.add(Conversa(interessado_id, anunciante_id))
         db.session.commit()
@@ -212,7 +209,8 @@ def iniciar_conversa():
 def get_mensagens():
     dados = request.get_json()
     id = dados.get("id")
-    mensagens = Mensagem.query.filter_by(conversa=id).all()  # ver o sort
+    mensagens = Mensagem.query.filter_by(conversa=id).all()
+    sort_by_date(mensagens)
     m = []
     for v in mensagens:
         m.append({"msg_id": v.id, "user_id": v.user, "txt": v.txt, "date": v.date})
@@ -237,9 +235,7 @@ def get_anuncio():
     dados = request.get_json()
     id = dados.get("anuncio_id")
     a = Anuncio.query.filter_by(id=id).first()
-    c = Categoria.query.filter_by(id=a.categoria).first()
-    t = Tipo.query.filter_by(id=a.tipo).first()
-    anuncio = {"id": a.id, "titulo": a.titulo, "anunciante_id": a.anunciante, "descricao": a.descricao, "telefone": a.telefone, "local": a.local, "categoria": c.categoria, "tipo": t.tipo, "nota": a.nota, "ativo": a.ativo, "preco": a.preco, "imagem": a.imagem}
+    anuncio = anuncio_para_dicionario(a)
     dados = {}
     dados["dados"] = anuncio
     return jsonify(dados)
@@ -353,6 +349,22 @@ def avaliar():
 def transacao_valida(transacao):
     diff = datetime.datetime.utcnow() - transacao.data_inicio
     return (diff.days < 1)
+
+def anuncio_para_dicionario(a):
+    c = Categoria.query.filter_by(id=a.categoria).first()
+    t = Tipo.query.filter_by(id=a.tipo).first()
+    anuncio = {"id": a.id, "titulo": a.titulo, "anunciante_id": a.anunciante, "descricao": a.descricao, "telefone": a.telefone, "local": a.local, "categoria": c.categoria, "tipo": t.tipo, "nota": a.nota, "ativo": a.ativo, "preco": a.preco, "anunciante/interessado": "interessado", "imagem": a.imagem}
+    return anuncio
+
+def sort_by_date(objs):
+    n = len(objs)
+    for i in range (n):
+        for j in range (n - 1):
+            if objs[j].date > objs[j + 1].date:
+                aux = objs[j]
+                objs[j] = objs[j+1]
+                objs[j+1] = aux
+
 
 # Testes e mexidas diretas no bd
 
