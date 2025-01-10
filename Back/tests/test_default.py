@@ -177,7 +177,7 @@ def test_get_feed_fail(client, perfil_model):
 
 
 
-@pytest.mark.skip(reason="Tem que corrigir na rota, ou ver como funciona.")
+#@pytest.mark.skip(reason="Tem que corrigir na rota, ou ver como funciona.")
 def test_fazer_busca_success(client, anuncio_model, perfil_model2):
     response = client.get("/fazer_busca", json={"user_id":perfil_model2.id, "txt":anuncio_model.titulo, "categoria":anuncio_model.categoria, "tipo":anuncio_model.tipo, "local":anuncio_model.local, "preco_inicial":anuncio_model.preco -1, "preco_final":anuncio_model.preco +1})
     assert response.status_code == 200
