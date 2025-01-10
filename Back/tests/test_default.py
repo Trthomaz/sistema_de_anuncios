@@ -354,5 +354,35 @@ def test_editar_anuncio_fail(client):
 
 
 
+def test_finalizar_transação_success():
+    pass
 
+
+def test_finalizar_transação_fail():
+    pass
+
+
+
+def test_avaliar_success():
+    pass
+
+
+def test_avaliar_fail():
+    pass
+
+
+
+#Testes funcoes  auxiliares
+
+def test_transacao_valida():
+    pass
+
+
+def test_anuncio_para_dicionario():
+    pass
+
+
+
+def test_sort_by_date():
+    pass
 #Implementar fixture de response que repete varias vezes, eliminando redundancia

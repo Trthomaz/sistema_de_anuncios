@@ -368,58 +368,58 @@ def sort_by_date(objs):
 
 # Testes e mexidas diretas no bd
 
-@app.route("/inicializar1")
-def inicializar1():
-    db.session.add(Tipo("venda"))
-    db.session.add(Tipo("procura"))
-    db.session.add(Categoria("serviço"))
-    db.session.add(Categoria("produto"))
-    db.session.commit()
-    return "ok"
+# @app.route("/inicializar1")
+# def inicializar1():
+#     db.session.add(Tipo("venda"))
+#     db.session.add(Tipo("procura"))
+#     db.session.add(Categoria("serviço"))
+#     db.session.add(Categoria("produto"))
+#     db.session.commit()
+#     return "ok"
 
-@app.route("/inicializar2")
-def inicializar2():
-    db.session.add(Anuncio(2, "bili jin is not mai louver xis jast a gral det cleims det ai em de uan", "1111-1111", "Grags", 1, True, 1, 5, 15))
-    db.session.commit()
-    return "ok"
+# @app.route("/inicializar2")
+# def inicializar2():
+#     db.session.add(Anuncio(2, "bili jin is not mai louver xis jast a gral det cleims det ai em de uan", "1111-1111", "Grags", 1, True, 1, 5, 15))
+#     db.session.commit()
+#     return "ok"
 
-@app.route("/inicializar3")
-def inicializar3():
-    db.session.add(Conversa(1, 2))
-    db.session.add(Conversa(2, 1))
-    db.session.commit()
-    return "ok"
+# @app.route("/inicializar3")
+# def inicializar3():
+#     db.session.add(Conversa(1, 2))
+#     db.session.add(Conversa(2, 1))
+#     db.session.commit()
+#     return "ok"
 
-@app.route("/inicializar4")
-def inicializar4():
-    db.session.add(Mensagem(1, "oi", datetime.datetime.utcnow(), 1))
-    db.session.commit()
-    return "ok"
+# @app.route("/inicializar4")
+# def inicializar4():
+#     db.session.add(Mensagem(1, "oi", datetime.datetime.utcnow(), 1))
+#     db.session.commit()
+#     return "ok"
 
-@app.route("/ver")
-def ver():
-    x = Anuncio.query.filter_by(anunciante=2).first()
-    return x.descricao
+# @app.route("/ver")
+# def ver():
+#     x = Anuncio.query.filter_by(anunciante=2).first()
+#     return x.descricao
 
-@app.route("/get_teste")
-def get_teste():
-    x = Anuncio.query.filter_by(anunciante=1).all()
-    y = []
-    for v in x:
-        y.append(v.categoria)
-    y = str(y)
-    print(y)
-    return x
+# @app.route("/get_teste")
+# def get_teste():
+#     x = Anuncio.query.filter_by(anunciante=1).all()
+#     y = []
+#     for v in x:
+#         y.append(v.categoria)
+#     y = str(y)
+#     print(y)
+#     return x
 
 ######################################### END LEO ################################################
 
 
 
-@app.route("/teste1")
-def teste1():
-    db.session.add(Perfil("a", "a", "A", "AA", 5))
-    db.session.commit()
-    return "ok"
+# @app.route("/teste1")
+# def teste1():
+#     db.session.add(Perfil("a", "a", "A", "AA", 5))
+#     db.session.commit()
+#     return "ok"
 
 # @app.route("/teste2")
 # def teste2():
