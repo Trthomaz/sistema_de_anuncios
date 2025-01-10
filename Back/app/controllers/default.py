@@ -95,6 +95,8 @@ def criar_anuncio():
 def get_meus_anuncios():
     dados = request.get_json()
     id = dados.get("user_id")
+    data = dados.get("data")
+    data = datetime.datetime.strptime(data, '%a, %d %b %Y %H:%M:%S GMT')
     anuncios = Anuncio.query.filter_by(anunciante=id).all()
     anuncios_lista = []
     for v in anuncios:
@@ -103,7 +105,7 @@ def get_meus_anuncios():
     transacoes = Transacao.query.filter_by(interessado = id).all()
     for v in transacoes:
         a = Anuncio.query.filter_by(id=v.anuncio).first()
-        if transacao_valida(v):
+        if transacao_valida(v, data):
             anuncios_lista.append(anuncio_para_dicionario(a, "interessado"))
         else:
             if a.ativo:
@@ -223,10 +225,10 @@ def add_mensagem():
     dados = request.get_json()
     user_id = dados.get("user_id")
     txt = dados.get("txt")
-    #date = dados.get("date")
-    date = datetime.datetime.utcnow()
+    data = dados.get("data")
+    data = datetime.datetime.strptime(data, '%a, %d %b %Y %H:%M:%S GMT')
     cvv_id = dados.get("conversa_id")
-    db.session.add(Mensagem(user_id, txt, date, cvv_id))
+    db.session.add(Mensagem(user_id, txt, data, cvv_id))
     db.session.commit()
     return jsonify({"dados": {"msg": "ok"}})
 
@@ -287,12 +289,14 @@ def finalizar_transação():
     dados = request.get_json()
     user_id = dados.get("user_id")
     anuncio_id = dados.get("anuncio_id")
+    data = dados.get("data")
+    data = datetime.datetime.strptime(data, '%a, %d %b %Y %H:%M:%S GMT')
     anuncio = Anuncio.query.filter_by(id=anuncio_id).first()
     transacoes = Transacao.query.filter_by(anuncio = anuncio_id).all()
     resposta = ""
     if transacoes == []:
         if user_id != anuncio.anunciante:
-            db.session.add(Transacao(datetime.datetime.utcnow(), anuncio_id, user_id))
+            db.session.add(Transacao(data, anuncio_id, user_id))
             db.session.commit()
             resposta = "Transação criada com sucesso!"
         else:
@@ -303,7 +307,7 @@ def finalizar_transação():
             pass
         else:
             transacao = transacoes[0]
-            if transacao_valida(transacao):
+            if transacao_valida(transacao, data):
                 if user_id != anuncio.anunciante:
                     resposta = "Outro usuário já está interessado em fechar negócio."
                 else:
@@ -312,7 +316,7 @@ def finalizar_transação():
             else:
                 db.session.delete(transacao)
                 if user_id != anuncio.anunciante:
-                    db.session.add(Transacao(datetime.datetime.utcnow(), anuncio_id, user_id))
+                    db.session.add(Transacao(data, anuncio_id, user_id))
                     resposta = "Transação criada com sucesso!"
                 else:
                     resposta = "O anunciante não pode iniciar a transação!"
@@ -350,8 +354,8 @@ def avaliar():
         
 # Funções auxiliares
 
-def transacao_valida(transacao):
-    diff = datetime.datetime.utcnow() - transacao.data_inicio
+def transacao_valida(transacao, data):
+    diff = data - transacao.data_inicio
     return (diff.days < 1)
 
 def anuncio_para_dicionario(a, anunciante_or_interessado):
