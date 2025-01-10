@@ -188,7 +188,7 @@ def test_fazer_busca_success(client, anuncio_model, perfil_model2):
 
     assert len(json["anuncios"]) == 1
     assert json["anuncios"][0]["anuncio_id"] == anuncio_model.id
-    assert json["anuncios"][0]["titulo"] == anuncio_model.imagem
+    assert json["anuncios"][0]["titulo"] == anuncio_model.titulo
     assert json["anuncios"][0]["preco"] == anuncio_model.preco
 
 

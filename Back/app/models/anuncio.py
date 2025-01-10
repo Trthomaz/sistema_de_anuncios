@@ -18,7 +18,7 @@ class Anuncio(db.Model):
 
     imagem = db.Column(db.Text)
 
-    def __init__(self, anunciante, titulo, descricao, telefone, local, categoria, ativo=True, tipo = 1,preco=0.0, imagem=None):
+    def __init__(self, anunciante, titulo, descricao, telefone, local, categoria, ativo=True, tipo = 1,preco=0.0, imagem=None, nota=False):
 
         self.titulo = titulo
         self.anunciante = anunciante
@@ -28,7 +28,7 @@ class Anuncio(db.Model):
         self.categoria = categoria
         self.tipo = tipo
 
-        self.nota = False
+        self.nota = nota
         self.ativo = ativo
         self.preco=preco
         

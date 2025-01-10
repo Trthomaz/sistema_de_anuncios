@@ -90,12 +90,12 @@ def anuncio_model_mount(perfil_model, categoria_model, tipo_model):
     local = "UFF Computacao"
     categoria = categoria_model.id
     id_tipo = tipo_model.id
-    nota = 5
+    nota = False
     ativo = True
     preco = 254.99
     imagem = None
 
-    anuncio = Anuncio(id_anunciante, titulo, descricao, telefone, local, categoria, ativo, id_tipo, nota, preco, imagem)
+    anuncio = Anuncio(id_anunciante, titulo, descricao, telefone, local, categoria, ativo, id_tipo, preco, imagem, nota)
     
     yield anuncio
 
@@ -158,8 +158,9 @@ def perfil_model2():
 def conversa_model_mount(perfil_model, perfil_model2):
     interessado = perfil_model2.id
     anunciante = perfil_model.id
+    arquivada = False
 
-    conversa = Conversa(interessado, anunciante)
+    conversa = Conversa(interessado, anunciante, arquivada)
     
     yield conversa
 
@@ -198,6 +199,7 @@ def conversa_model_unmount(conversa_model_mount):
 @pytest.fixture()
 def mensagem_model(conversa_model):
     from datetime import datetime
+
     user = conversa_model.anunciante
     txt = "Esta camisa é original, autografada por ele proprio."
     date = datetime.strptime("2025-01-01 03:25:42.591522", '%Y-%m-%d %H:%M:%S.%f')

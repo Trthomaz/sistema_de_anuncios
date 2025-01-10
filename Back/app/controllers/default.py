@@ -98,13 +98,13 @@ def get_meus_anuncios():
     anuncios = Anuncio.query.filter_by(anunciante=id).all()
     anuncios_lista = []
     for v in anuncios:
-        anuncios_lista.append(anuncio_para_dicionario(v))
+        anuncios_lista.append(anuncio_para_dicionario(v, "anunciante"))
     ############# Não sei se funciona
     transacoes = Transacao.query.filter_by(interessado = id).all()
     for v in transacoes:
         a = Anuncio.query.filter_by(id=v.anuncio).first()
         if transacao_valida(v):
-            anuncios_lista.append(anuncio_para_dicionario(a))
+            anuncios_lista.append(anuncio_para_dicionario(a, "interessado"))
         else:
             if a.ativo:
                 db.session.delete(v)  # possível fonte de erro
@@ -235,7 +235,7 @@ def get_anuncio():
     dados = request.get_json()
     id = dados.get("anuncio_id")
     a = Anuncio.query.filter_by(id=id).first()
-    anuncio = anuncio_para_dicionario(a)
+    anuncio = anuncio_para_dicionario(a, "anunciante")
     dados = {}
     dados["dados"] = anuncio
     return jsonify(dados)
@@ -350,10 +350,10 @@ def transacao_valida(transacao):
     diff = datetime.datetime.utcnow() - transacao.data_inicio
     return (diff.days < 1)
 
-def anuncio_para_dicionario(a):
+def anuncio_para_dicionario(a, anunciante_or_interessado):
     c = Categoria.query.filter_by(id=a.categoria).first()
     t = Tipo.query.filter_by(id=a.tipo).first()
-    anuncio = {"id": a.id, "titulo": a.titulo, "anunciante_id": a.anunciante, "descricao": a.descricao, "telefone": a.telefone, "local": a.local, "categoria": c.categoria, "tipo": t.tipo, "nota": a.nota, "ativo": a.ativo, "preco": a.preco, "anunciante/interessado": "interessado", "imagem": a.imagem}
+    anuncio = {"id": a.id, "titulo": a.titulo, "anunciante_id": a.anunciante, "descricao": a.descricao, "telefone": a.telefone, "local": a.local, "categoria": c.categoria, "tipo": t.tipo, "nota": a.nota, "ativo": a.ativo, "preco": a.preco, "anunciante/interessado": anunciante_or_interessado, "imagem": a.imagem}
     return anuncio
 
 def sort_by_date(objs):
