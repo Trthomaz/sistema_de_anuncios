@@ -63,8 +63,46 @@ def tipo_model():
 
 
 @pytest.fixture()
+def tipo_model2():
+    atr_tipo = "Teste com Pytest em tipo 2"
+
+    tipo = Tipo(atr_tipo)
+
+    with app.app_context():
+        db.session.add(tipo)
+        db.session.commit()
+
+        tipo_atual = Tipo.query.filter_by(tipo= atr_tipo).first()
+    
+    yield tipo_atual
+
+    with app.app_context():
+        db.session.delete(tipo)
+        db.session.commit()
+
+
+@pytest.fixture()
 def categoria_model():
     atr_categoria = "Teste com PyTest em categoria"
+
+    categoria = Categoria(atr_categoria)
+
+    with app.app_context():
+        db.session.add(categoria)
+        db.session.commit()
+
+        categoria_atual = Categoria.query.filter_by(categoria= atr_categoria).first()
+    
+    yield categoria_atual
+
+    with app.app_context():
+        db.session.delete(categoria)
+        db.session.commit()
+
+
+@pytest.fixture()
+def categoria_model2():
+    atr_categoria = "Teste com PyTest em categoria 2"
 
     categoria = Categoria(atr_categoria)
 
@@ -199,7 +237,7 @@ def conversa_model_unmount(conversa_model_mount):
 
 
 @pytest.fixture()
-def mensagem_model(conversa_model):
+def mensagem_model_mount(conversa_model):
     from datetime import datetime
 
     user = conversa_model.anunciante
@@ -208,18 +246,40 @@ def mensagem_model(conversa_model):
     conversa = conversa_model.id
 
     mensagem = Mensagem(user, txt, date, conversa)
+    
+    yield mensagem
+
+
+@pytest.fixture()
+def mensagem_model(mensagem_model_mount):
+    
+
+    mensagem = mensagem_model_mount
 
     with app.app_context():
         db.session.add(mensagem)
         db.session.commit()
 
-        mensagem_atual = Mensagem.query.filter_by(user= user).first()
+        mensagem_atual = Mensagem.query.filter_by(user= mensagem.user).first()
     
     yield mensagem_atual
 
     with app.app_context():
         db.session.delete(mensagem)
         db.session.commit()
+
+
+@pytest.fixture()
+def mensagem_model_unmount(mensagem_model_mount):
+    mensagem = mensagem_model_mount
+
+    yield mensagem
+
+    with app.app_context():
+        mensagem = Mensagem.query.filter_by(user=mensagem.user).first()
+        if mensagem:
+            db.session.delete(mensagem)
+            db.session.commit()
 
 
 @pytest.fixture()

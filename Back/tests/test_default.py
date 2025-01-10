@@ -81,10 +81,11 @@ def test_criar_anuncio_fail(client, anuncio_model_unmount):
 
 
 
-def test_get_meus_anuncios_success(client, perfil_model, anuncio_model, categoria_model, tipo_model):
+def test_get_meus_anuncios_success(client, perfil_model, anuncio_model, categoria_model, tipo_model, transacao_model):
     anunciante_id = perfil_model.id
     
-    response = client.get("/get_meus_anuncios", json={"user_id":anunciante_id})
+    data = transacao_model.data_inicio.strftime('%Y-%m-%d %H:%M:%S')
+    response = client.get("/get_meus_anuncios", json={"user_id":anunciante_id, "data":data})
     assert response.status_code == 200
 
     json = response.get_json()
@@ -277,21 +278,25 @@ def test_get_mensagens_success(client, mensagem_model):
     assert date_obj == mensagem_model.date
     
 
-@pytest.mark.skip(reason="Arrumar implementacao de data/hora.")
-@pytest.mark.skip(reason="Talvez nao faca sentido este teste, ja que qualquer forma se retorna 'a mesma estrutura'.")
 def test_get_mensagens_fail(client):
-    pass
+    response = client.get("/get_mensagens", json={"id":-1})
+    assert response.status_code == 200
+
+    json = response.get_json()
+
+    assert len(json["dados"]) == 0
 
 
 
-@pytest.mark.skip(reason="Arrumar implementacao de data/hora.")
-def test_add_mensagem_success(client):
-    pass
+def test_add_mensagem_success(client, mensagem_model_unmount):
+    response = client.get("/add_mensagem", json={"user_id":mensagem_model_unmount.user, "txt":mensagem_model_unmount.txt, "conversa_id":mensagem_model_unmount.conversa, "data":mensagem_model_unmount.date.strftime('%Y-%m-%d %H:%M:%S')})
+    assert response.status_code == 200
 
+    json = response.get_json()
 
-@pytest.mark.skip(reason="Arrumar implementacao de data/hora.")
-def test_add_mensagem_fail(client):
-    pass
+    json = json["dados"]
+    
+    assert json["msg"] == "ok"
 
 
 
@@ -317,31 +322,53 @@ def test_get_anuncio_success(client, anuncio_model, categoria_model, tipo_model)
     assert json["imagem"] == anuncio_model.imagem
 
 
-# @pytest.mark.skip(reason="Nao ha tratamento de erro nesta rota (anuncio nao existe).")
-# def test_get_anuncio_fail(client):
-#     pass
+
+def test_excluir_anuncio_success(client, anuncio_model_mount):
+    from app.models.anuncio import Anuncio
+    from app import app, db
+
+    with app.app_context():
+        db.session.add(anuncio_model_mount)
+        db.session.commit()
+        id = Anuncio.query.filter_by(titulo=anuncio_model_mount.titulo).first().id
+
+    response = client.get("/excluir_anuncio", json={"user_id":anuncio_model_mount.anunciante,"anuncio_id":id})
+    assert response.status_code == 200
+
+    json = response.get_json()
+    json = json["dados"]
+
+    assert json["msg"] == "Anúncio deletado."
+
+
+def test_excluir_anuncio_fail(client, perfil_model2, anuncio_model):
+    response = client.get("/excluir_anuncio", json={"user_id":perfil_model2.id, "anuncio_id":anuncio_model.id})
+    assert response.status_code == 200
+
+    json = response.get_json()
+    json = json["dados"]
+
+    assert json["msg"] == "O usuário não é o proprietário deste anúncio."
 
 
 
-@pytest.mark.skip(reason="Nao finalizado rota.")
-def test_excluir_anuncio_success(client, anuncio_model):
-    pass
+def test_editar_anuncio_success(client, anuncio_model, tipo_model2, categoria_model2):
+    titulo = "titulo"
+    descricao = "descricao"
+    tipo_anuncio = tipo_model2.tipo#exista
+    categoria = categoria_model2.categoria#exista
+    preco = "23,23"
+    celular = "celular"
+    cep = "cep"
+    imagem = "imagem"
+    
+    response = client.get("/editar_anuncio", json={"anuncio_id":anuncio_model.id,"titulo":titulo, "descricao":descricao, "tipo_anuncio":tipo_anuncio, "categoria":categoria, "preco":preco, "celular":celular, "cep":cep, "imagem":imagem})
+    assert response.status_code == 200
 
+    json = response.get_json()
+    json = json["dados"]
 
-@pytest.mark.skip(reason="Nao finalizado rota.")
-def test_excluir_anuncio_fail(client):
-    pass
-
-
-
-@pytest.mark.skip(reason="Nao finalizado rota.")
-def test_editar_anuncio_success(client):
-    pass
-
-
-@pytest.mark.skip(reason="Nao finalizado rota.")
-def test_editar_anuncio_fail(client):
-    pass
+    assert json["msg"] == "ok"
 
 
 
@@ -372,18 +399,23 @@ def test_avaliar_fail():
 
 def test_transacao_valida(transacao_model):
     from app.controllers.default import transacao_valida
-    
-    response = transacao_valida(transacao_model)
+    from datetime import datetime
+
+    data = datetime.utcnow()
+    response = transacao_valida(transacao_model, data)
 
     assert response == False
 
 
-@pytest.mark.skip()
+
 def test_anuncio_para_dicionario(anuncio_model, categoria_model, tipo_model):
     from app.controllers.default import anuncio_para_dicionario
+    from app import app
 
     anunciante_or_interessado = "anunciante"
-    response = anuncio_para_dicionario(anuncio_model, anunciante_or_interessado)
+    
+    with app.app_context():#Para nao violar o contexto de persistencia.
+        response = anuncio_para_dicionario(anuncio_model, anunciante_or_interessado)
 
     assert response["id"] == anuncio_model.id
     assert response["titulo"] == anuncio_model.titulo
@@ -400,6 +432,7 @@ def test_anuncio_para_dicionario(anuncio_model, categoria_model, tipo_model):
     assert response["imagem"] == anuncio_model.imagem
 
 
+
 def test_sort_by_date(mensagem_model, mensagem_model2):
     from app.controllers.default import sort_by_date
 
@@ -411,14 +444,14 @@ def test_sort_by_date(mensagem_model, mensagem_model2):
     assert response[1] == mensagem_model2
 
 
-@pytest.mark.skip()
-def test_quick_sort(mensagem_model, mensagem_model2):
-    from app.controllers.default import quick_sort
+# @pytest.mark.skip()
+# def test_quick_sort(mensagem_model, mensagem_model2):
+#     from app.controllers.default import quick_sort
 
-    response = response = [mensagem_model2, mensagem_model]
+#     response = response = [mensagem_model2, mensagem_model]
 
-    quick_sort(response)
+#     quick_sort(response)
 
-    assert response[0] == mensagem_model
-    assert response[1] == mensagem_model2
+#     assert response[0] == mensagem_model
+#     assert response[1] == mensagem_model2
 #Implementar fixture de response que repete varias vezes, eliminando redundancia
