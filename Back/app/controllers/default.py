@@ -210,7 +210,7 @@ def get_mensagens():
     dados = request.get_json()
     id = dados.get("id")
     mensagens = Mensagem.query.filter_by(conversa=id).all()
-    sort_by_date(mensagens)
+    mensagens = sort_by_date(mensagens, "bubble")
     m = []
     for v in mensagens:
         m.append({"msg_id": v.id, "user_id": v.user, "txt": v.txt, "date": v.date})
@@ -228,7 +228,7 @@ def add_mensagem():
     cvv_id = dados.get("conversa_id")
     db.session.add(Mensagem(user_id, txt, date, cvv_id))
     db.session.commit()
-    return "ok"
+    return jsonify({"dados": {"msg": "ok"}})
 
 @app.route("/get_anuncio", methods = ["POST", "GET"])
 def get_anuncio():
@@ -249,8 +249,8 @@ def excluir_anuncio():
     if anuncio.anunciante == user_id:
         db.session.delete(anuncio)
         db.session.commit()
-        return "Anúncio deletado."
-    return "O usuário não é o proprietário deste anúncio."
+        return jsonify({"dados": {"msg": "Anúncio deletado."}})
+    return jsonify({"dados": {"msg": "O usuário não é o proprietário deste anúncio."}})
 
 @app.route("/editar_anuncio", methods = ["POST", "GET"])
 def editar_anuncio():
@@ -279,7 +279,7 @@ def editar_anuncio():
 
     db.session.commit()
 
-    return "ok"
+    return jsonify({"dados": {"msg": "ok"}})
 
 @app.route("/finalizar_transação", methods = ["POST", "GET"])
 def finalizar_transação():
@@ -317,7 +317,7 @@ def finalizar_transação():
                 else:
                     resposta = "O anunciante não pode iniciar a transação!"
                 db.session.commit()
-    return resposta
+    return jsonify({"dados": {"msg": resposta}})
 
 @app.route("/avaliar", methods = ["POST", "GET"])
 def avaliar():
@@ -326,10 +326,12 @@ def avaliar():
     a_id = dados.get("anuncio_id")
     nota = dados.get("nota")
     if not (0 < nota < 5):
-        return "Nota fora do escopo."
+        return jsonify({"dados": {"msg": "Nota fora do escopo."}})
     anuncio = Anuncio.query.filter_by(id = a_id)
     if anuncio.ativo:
-        return "Transação não encerrada"
+        return jsonify({"dados": {"msg": "Transação não encerrada"}})
+    if anuncio.nota:
+        return jsonify({"dados": {"msg": "Notas já foram dadas"}})
     transacao = Transacao.query.filter_by(anuncio = a_id)
     perfil = Perfil.query.filter_by(id=id)
     if id == transacao.interessado:
@@ -337,11 +339,13 @@ def avaliar():
     elif id == anuncio.anunciante:
         transacao.add_nota_anunciante(nota)
     else:
-        return "vixe mano kkk de quem que é esse id aí vei...."
-    #atualizar reputação do perfil
+        return jsonify({"dados": {"msg": "vixe mano kkk de quem que é esse id aí vei...."}})
+    perfil.att_reputacao()
+    if (transacao.nota_interessado is not None) and (transacao.nota_anunciante is not None):
+        anuncio.nota = True
     #ver confusão com a nota do anuncio e dar um jeito de saber se a nota já foi dada
     db.session.commit()
-    return "Nota dada com sucesso!"
+    return jsonify({"dados": {"msg": "Nota dada com sucesso!"}})
     
         
 # Funções auxiliares
@@ -356,14 +360,32 @@ def anuncio_para_dicionario(a, anunciante_or_interessado):
     anuncio = {"id": a.id, "titulo": a.titulo, "anunciante_id": a.anunciante, "descricao": a.descricao, "telefone": a.telefone, "local": a.local, "categoria": c.categoria, "tipo": t.tipo, "nota": a.nota, "ativo": a.ativo, "preco": a.preco, "anunciante/interessado": anunciante_or_interessado, "imagem": a.imagem}
     return anuncio
 
-def sort_by_date(objs):
-    n = len(objs)
-    for i in range (n):
-        for j in range (n - 1):
-            if objs[j].date > objs[j + 1].date:
-                aux = objs[j]
-                objs[j] = objs[j+1]
-                objs[j+1] = aux
+def sort_by_date(objs, type):
+    if type == "bubble":
+        n = len(objs)
+        for i in range (n):
+            for j in range (n - 1):
+                if objs[j].date > objs[j + 1].date:
+                    aux = objs[j]
+                    objs[j] = objs[j+1]
+                    objs[j+1] = aux
+        return objs
+    elif type == "quick":
+        return quick_sort(objs)
+
+def quick_sort(lista):
+    if len(lista) <= 1:
+        return lista
+
+    pivo = lista[0]
+    lista1 = []
+    lista2 = []
+    for v in lista[1::]:
+        if v.date > pivo.date:
+            lista2.append(v)
+        else:
+            lista1.append(v)
+    return quick_sort(lista1) + [pivo] + quick_sort(lista2)
 
 
 # Testes e mexidas diretas no bd
@@ -374,19 +396,23 @@ def sort_by_date(objs):
 #     db.session.add(Tipo("procura"))
 #     db.session.add(Categoria("serviço"))
 #     db.session.add(Categoria("produto"))
+#     db.session.add(Perfil("a", "a", "A", "AA", 5))
+#     db.session.add(Perfil("b", "b", "B", "BB", 5))
+#     db.session.add(Anuncio(2, "bili jin is not mai louver xis jast a gral det cleims det ai em de uan", "1111-1111", "Grags", 1, True, 1, 15))
+#     db.session.add(Conversa(1, 2))
+#     db.session.add(Mensagem(1, "oi", datetime.datetime.utcnow(), 1))
 #     db.session.commit()
 #     return "ok"
 
 # @app.route("/inicializar2")
 # def inicializar2():
-#     db.session.add(Anuncio(2, "bili jin is not mai louver xis jast a gral det cleims det ai em de uan", "1111-1111", "Grags", 1, True, 1, 5, 15))
+#     db.session.add(Anuncio(2, "bili jin is not mai louver xis jast a gral det cleims det ai em de uan", "1111-1111", "Grags", 1, True, 1, 15))
 #     db.session.commit()
 #     return "ok"
 
 # @app.route("/inicializar3")
 # def inicializar3():
 #     db.session.add(Conversa(1, 2))
-#     db.session.add(Conversa(2, 1))
 #     db.session.commit()
 #     return "ok"
 

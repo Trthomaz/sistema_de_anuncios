@@ -12,7 +12,7 @@ class Anuncio(db.Model):
     categoria = db.Column(db.Integer, db.ForeignKey('categorias.id'))
     tipo = db.Column(db.Integer, db.ForeignKey('tipos.id'))
 
-    nota = db.Column(db.Boolean)
+    nota = db.Column(db.Boolean)  # True apenas se ambas as notas foram dadas
     ativo = db.Column(db.Boolean, default=True)
     preco = db.Column(db.Float)
 
