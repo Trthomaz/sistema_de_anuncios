@@ -69,9 +69,9 @@ def test_criar_anuncio_success(client, anuncio_model_mount):
     assert json["status"] == True
 
 
-def test_criar_anuncio_fail(client, anuncio_model_mount):
-    preco = str(anuncio_model_mount.preco).replace(".", ",")
-    response = client.get("/criar_anuncio", json={"titulo":anuncio_model_mount.titulo, "descricao": anuncio_model_mount.descricao, "tipo_anuncio":anuncio_model_mount.tipo, "categoria":anuncio_model_mount.categoria, "preco":preco, "celular":anuncio_model_mount.telefone, "cep":anuncio_model_mount.local})
+def test_criar_anuncio_fail(client, anuncio_model_unmount):
+    preco = str(anuncio_model_unmount.preco).replace(".", ",")
+    response = client.get("/criar_anuncio", json={"titulo":anuncio_model_unmount.titulo, "descricao": anuncio_model_unmount.descricao, "tipo_anuncio":anuncio_model_unmount.tipo, "categoria":anuncio_model_unmount.categoria, "preco":preco, "celular":anuncio_model_unmount.telefone, "cep":anuncio_model_unmount.local})
 
     assert response.status_code == 200
 
@@ -192,7 +192,7 @@ def test_fazer_busca_success(client, anuncio_model, perfil_model2):
     assert json["anuncios"][0]["preco"] == anuncio_model.preco
 
 
-@pytest.mark.skip(reason="Tem que corrigir na rota, ou ver como funciona.")
+#@pytest.mark.skip(reason="Tem que corrigir na rota, ou ver como funciona.")
 def test_fazer_busca_fail(client, anuncio_model, perfil_model2):
     response = client.get("/fazer_busca", json={"user_id":perfil_model2.id, "txt":anuncio_model.titulo, "categoria":anuncio_model.categoria, "tipo":anuncio_model.tipo, "local":anuncio_model.local, "preco_inicial":anuncio_model.preco +1, "preco_final":anuncio_model.preco -1})
     assert response.status_code == 200
@@ -201,8 +201,8 @@ def test_fazer_busca_fail(client, anuncio_model, perfil_model2):
 
     json = json["dados"]
 
-    assert len(json["anuncios"]) == 1
-    assert len(json["anuncios"][0]) == 0
+    assert len(json["anuncios"]) == 0
+    #assert len(json["anuncios"][0]) == 0
 
 
 

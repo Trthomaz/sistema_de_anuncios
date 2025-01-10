@@ -127,8 +127,9 @@ def anuncio_model_unmount(anuncio_model_mount):
 
     with app.app_context():
         anuncio = Anuncio.query.filter_by(anunciante= anuncio_model_mount.anunciante).first()
-        db.session.delete(anuncio)
-        db.session.commit()
+        if anuncio:
+            db.session.delete(anuncio)
+            db.session.commit()
 
 
 @pytest.fixture()
@@ -191,8 +192,9 @@ def conversa_model_unmount(conversa_model_mount):
 
     with app.app_context():
         conversa = Conversa.query.filter(Conversa.anunciante == conversa_model_mount.anunciante, Conversa.interessado == conversa_model_mount.interessado).first()
-        db.session.delete(conversa)
-        db.session.commit()
+        if conversa:
+            db.session.delete(conversa)
+            db.session.commit()
 
 
 
