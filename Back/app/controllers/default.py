@@ -96,8 +96,8 @@ def get_meus_anuncios():
     dados = request.get_json()
     id = dados.get("user_id")
     data = dados.get("data")
-    data = datetime.datetime.strptime(data, '%a, %d %b %Y %H:%M:%S GMT')
-    anuncios = Anuncio.query.filter_by(anunciante=id).all()
+    data = datetime.datetime.strptime(data, '%Y-%m-%d %H:%M:%S')
+    anuncios = Anuncio.query.filter_by(anunciante=id).all() 
     anuncios_lista = []
     for v in anuncios:
         anuncios_lista.append(anuncio_para_dicionario(v, "anunciante"))
@@ -226,7 +226,7 @@ def add_mensagem():
     user_id = dados.get("user_id")
     txt = dados.get("txt")
     data = dados.get("data")
-    data = datetime.datetime.strptime(data, '%a, %d %b %Y %H:%M:%S GMT')
+    data = datetime.datetime.strptime(data, '%Y-%m-%d %H:%M:%S')
     cvv_id = dados.get("conversa_id")
     db.session.add(Mensagem(user_id, txt, data, cvv_id))
     db.session.commit()
@@ -290,7 +290,7 @@ def finalizar_transação():
     user_id = dados.get("user_id")
     anuncio_id = dados.get("anuncio_id")
     data = dados.get("data")
-    data = datetime.datetime.strptime(data, '%a, %d %b %Y %H:%M:%S GMT')
+    data = datetime.datetime.strptime(data, '%Y-%m-%d %H:%M:%S')
     anuncio = Anuncio.query.filter_by(id=anuncio_id).first()
     transacoes = Transacao.query.filter_by(anuncio = anuncio_id).all()
     resposta = ""
@@ -404,7 +404,7 @@ def inicializar1():
     db.session.add(Perfil("b", "b", "B", "BB", 5))
     db.session.add(Anuncio(2, "bili jin is not mai louver xis jast a gral det cleims det ai em de uan", "1111-1111", "Grags", 1, True, 1, 15))
     db.session.add(Conversa(1, 2))
-    db.session.add(Mensagem(1, "oi", datetime.datetime.utcnow(), 1))
+    #db.session.add(Mensagem(1, "oi", datetime.datetime.utcnow(), 1))
     db.session.commit()
     return "ok"
 

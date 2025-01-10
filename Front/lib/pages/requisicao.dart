@@ -43,7 +43,7 @@ class _JsonScreenState extends State<JsonScreen> {
 
   Future<Map<String, dynamic>?> _perfil() async {
     final url = Uri.parse('http://${ip}:5000/get_perfil'); // URL de exemplo
-    
+
     final dados = {
       'user_id': 2,
     };
@@ -95,7 +95,9 @@ class _JsonScreenState extends State<JsonScreen> {
       if (response.statusCode == 200) {
         // Resposta da requisição
         final resposta = json.decode(response.body);
-        final anuncios = resposta['anuncios'].cast<Map<String, dynamic>>(); // List<dynamic> -> List<Map<String, dynamic>>
+        final anuncios = resposta['anuncios'].cast<
+            Map<String,
+                dynamic>>(); // List<dynamic> -> List<Map<String, dynamic>>
         print(resposta);
         print("-------------------------");
         return anuncios;
@@ -107,7 +109,6 @@ class _JsonScreenState extends State<JsonScreen> {
     }
     return null;
   }
-
 
   Future<void> _carregarDados() async {
     // Simula a busca de dados (substitua pela sua lógica real)
@@ -136,13 +137,13 @@ class _JsonScreenState extends State<JsonScreen> {
         title: const Text('Exibindo JSON'),
       ),
       body: _isLoading
-      ? const Center(child: CircularProgressIndicator())
-      : Column(
-        children: [
-          Text(perfil.toString()),
-          Text(anuncios.toString()),
-        ],
-      ),
+          ? const Center(child: CircularProgressIndicator())
+          : Column(
+              children: [
+                Text(perfil.toString()),
+                Text(anuncios.toString()),
+              ],
+            ),
     );
   }
 }

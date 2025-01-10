@@ -66,11 +66,11 @@ class _PerfilState extends State<Perfil> {
 
   Future<List<Map<String, dynamic>>?> _meusAnuncios() async {
     final url = Uri.parse('http://${ip}:5000/get_meus_anuncios');
+    final now = DateTime.now().toLocal();
+    final data = now.toString().substring(0, 19);
 
     // Dados enviados
-    final dados = {
-      'user_id': id,
-    };
+    final dados = {'user_id': id, 'data': data};
 
     // Enviar requisição
     try {
