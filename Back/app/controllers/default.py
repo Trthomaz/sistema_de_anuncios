@@ -394,19 +394,19 @@ def quick_sort(lista):
 
 # Testes e mexidas diretas no bd
 
-# @app.route("/inicializar1")
-# def inicializar1():
-#     db.session.add(Tipo("venda"))
-#     db.session.add(Tipo("procura"))
-#     db.session.add(Categoria("serviço"))
-#     db.session.add(Categoria("produto"))
-#     db.session.add(Perfil("a", "a", "A", "AA", 5))
-#     db.session.add(Perfil("b", "b", "B", "BB", 5))
-#     db.session.add(Anuncio(2, "bili jin is not mai louver xis jast a gral det cleims det ai em de uan", "1111-1111", "Grags", 1, True, 1, 15))
-#     db.session.add(Conversa(1, 2))
-#     db.session.add(Mensagem(1, "oi", datetime.datetime.utcnow(), 1))
-#     db.session.commit()
-#     return "ok"
+@app.route("/inicializar1")
+def inicializar1():
+    db.session.add(Tipo("venda"))
+    db.session.add(Tipo("procura"))
+    db.session.add(Categoria("serviço"))
+    db.session.add(Categoria("produto"))
+    db.session.add(Perfil("a", "a", "A", "AA", 5))
+    db.session.add(Perfil("b", "b", "B", "BB", 5))
+    db.session.add(Anuncio(2, "bili jin is not mai louver xis jast a gral det cleims det ai em de uan", "1111-1111", "Grags", 1, True, 1, 15))
+    db.session.add(Conversa(1, 2))
+    db.session.add(Mensagem(1, "oi", datetime.datetime.utcnow(), 1))
+    db.session.commit()
+    return "ok"
 
 # @app.route("/inicializar2")
 # def inicializar2():
