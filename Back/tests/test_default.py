@@ -202,7 +202,6 @@ def test_fazer_busca_fail(client, anuncio_model, perfil_model2):
     json = json["dados"]
 
     assert len(json["anuncios"]) == 0
-    #assert len(json["anuncios"][0]) == 0
 
 
 
