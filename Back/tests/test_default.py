@@ -134,19 +134,19 @@ def test_get_perfil_success(client, perfil_model):
     assert json["reputacao"] == perfil_model.reputacao
 
 
-@pytest.mark.skip(reason="Nao tem tratamento de excessao nesta rota, exemplo de possivel tratamento.")
-@pytest.mark.smoke
-def test_get_perfil_fail(client):
-    response = client.get("/get_perfil", json={"user_id":-1})
-    assert response.status_code == 200
+# @pytest.mark.skip(reason="Nao tem tratamento de excessao nesta rota, exemplo de possivel tratamento.")
+# @pytest.mark.smoke
+# def test_get_perfil_fail(client):
+#     response = client.get("/get_perfil", json={"user_id":-1})
+#     assert response.status_code == 200
 
-    json = response.get_json()
+#     json = response.get_json()
 
-    json = json["dados"]
+#     json = json["dados"]
     
-    assert json["nome"] == None
-    assert json["curso"] == None
-    assert json["reputacao"] == None
+#     assert json["nome"] == None
+#     assert json["curso"] == None
+#     assert json["reputacao"] == None
 
 
 
@@ -171,13 +171,7 @@ def test_get_feed_success(client, perfil_model):#Tem 2 tipos de anuncios
         assert type(busca["preco"]) == float
 
 
-@pytest.mark.skip(reason="Talvez nao faca sentido este teste, ja que qualquer forma se retorna 'a mesma estrutura'.")
-def test_get_feed_fail(client, perfil_model):
-    pass
 
-
-
-#@pytest.mark.skip(reason="Tem que corrigir na rota, ou ver como funciona.")
 def test_fazer_busca_success(client, anuncio_model, perfil_model2):
     response = client.get("/fazer_busca", json={"user_id":perfil_model2.id, "txt":anuncio_model.titulo, "categoria":anuncio_model.categoria, "tipo":anuncio_model.tipo, "local":anuncio_model.local, "preco_inicial":anuncio_model.preco -1, "preco_final":anuncio_model.preco +1})
     assert response.status_code == 200
@@ -192,7 +186,6 @@ def test_fazer_busca_success(client, anuncio_model, perfil_model2):
     assert json["anuncios"][0]["preco"] == anuncio_model.preco
 
 
-#@pytest.mark.skip(reason="Tem que corrigir na rota, ou ver como funciona.")
 def test_fazer_busca_fail(client, anuncio_model, perfil_model2):
     response = client.get("/fazer_busca", json={"user_id":perfil_model2.id, "txt":anuncio_model.titulo, "categoria":anuncio_model.categoria, "tipo":anuncio_model.tipo, "local":anuncio_model.local, "preco_inicial":anuncio_model.preco +1, "preco_final":anuncio_model.preco -1})
     assert response.status_code == 200
@@ -263,7 +256,6 @@ def test_iniciar_conversa_fail(client, conversa_model):
 
 
 
-@pytest.mark.skip(reason="Arrumar implementacao de data/hora.")
 def test_get_mensagens_success(client, mensagem_model):
     from datetime import datetime
 
@@ -282,7 +274,7 @@ def test_get_mensagens_success(client, mensagem_model):
     date = json[0]["date"]
     date_obj = datetime.strptime(date, '%a, %d %b %Y %H:%M:%S GMT')
     
-    assert date_obj == mensagem_model.date.replace(microsecond=0)
+    assert date_obj == mensagem_model.date
     
 
 @pytest.mark.skip(reason="Arrumar implementacao de data/hora.")
@@ -325,14 +317,14 @@ def test_get_anuncio_success(client, anuncio_model, categoria_model, tipo_model)
     assert json["imagem"] == anuncio_model.imagem
 
 
-@pytest.mark.skip(reason="Nao ha tratamento de erro nesta rota (anuncio nao existe).")
-def test_get_anuncio_fail(client):
-    pass
+# @pytest.mark.skip(reason="Nao ha tratamento de erro nesta rota (anuncio nao existe).")
+# def test_get_anuncio_fail(client):
+#     pass
 
 
 
 @pytest.mark.skip(reason="Nao finalizado rota.")
-def test_excluir_anuncio_success(client):
+def test_excluir_anuncio_success(client, anuncio_model):
     pass
 
 
@@ -353,19 +345,23 @@ def test_editar_anuncio_fail(client):
 
 
 
+@pytest.mark.skip()
 def test_finalizar_transação_success():
     pass
 
 
+@pytest.mark.skip()
 def test_finalizar_transação_fail():
     pass
 
 
 
+@pytest.mark.skip()
 def test_avaliar_success():
     pass
 
 
+@pytest.mark.skip()
 def test_avaliar_fail():
     pass
 
@@ -373,15 +369,56 @@ def test_avaliar_fail():
 
 #Testes funcoes  auxiliares
 
-def test_transacao_valida():
-    pass
+
+def test_transacao_valida(transacao_model):
+    from app.controllers.default import transacao_valida
+    
+    response = transacao_valida(transacao_model)
+
+    assert response == False
 
 
-def test_anuncio_para_dicionario():
-    pass
+@pytest.mark.skip()
+def test_anuncio_para_dicionario(anuncio_model, categoria_model, tipo_model):
+    from app.controllers.default import anuncio_para_dicionario
+
+    anunciante_or_interessado = "anunciante"
+    response = anuncio_para_dicionario(anuncio_model, anunciante_or_interessado)
+
+    assert response["id"] == anuncio_model.id
+    assert response["titulo"] == anuncio_model.titulo
+    assert response["anunciante_id"] == anuncio_model.anunciante
+    assert response["descricao"] == anuncio_model.descricao
+    assert response["telefone"] == anuncio_model.telefone
+    assert response["local"] == anuncio_model.local
+    assert response["categoria"] == categoria_model.categoria
+    assert response["tipo"] == tipo_model.tipo
+    assert response["nota"] == anuncio_model.nota
+    assert response["ativo"] == anuncio_model.ativo
+    assert response["preco"] == anuncio_model.preco
+    assert response["anunciante/interessado"] == anunciante_or_interessado
+    assert response["imagem"] == anuncio_model.imagem
 
 
+def test_sort_by_date(mensagem_model, mensagem_model2):
+    from app.controllers.default import sort_by_date
 
-def test_sort_by_date():
-    pass
+    response = [mensagem_model2, mensagem_model]
+
+    sort_by_date(response, "bubble")
+
+    assert response[0] == mensagem_model
+    assert response[1] == mensagem_model2
+
+
+@pytest.mark.skip()
+def test_quick_sort(mensagem_model, mensagem_model2):
+    from app.controllers.default import quick_sort
+
+    response = response = [mensagem_model2, mensagem_model]
+
+    quick_sort(response)
+
+    assert response[0] == mensagem_model
+    assert response[1] == mensagem_model2
 #Implementar fixture de response que repete varias vezes, eliminando redundancia

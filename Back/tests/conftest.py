@@ -204,7 +204,7 @@ def mensagem_model(conversa_model):
 
     user = conversa_model.anunciante
     txt = "Esta camisa é original, autografada por ele proprio."
-    date = datetime.strptime("2025-01-01 03:25:42.591522", '%Y-%m-%d %H:%M:%S.%f')
+    date = datetime.strptime("2025-01-01 03:25:42", '%Y-%m-%d %H:%M:%S')
     conversa = conversa_model.id
 
     mensagem = Mensagem(user, txt, date, conversa)
@@ -223,9 +223,35 @@ def mensagem_model(conversa_model):
 
 
 @pytest.fixture()
+def mensagem_model2(conversa_model):
+    from datetime import datetime
+
+    user = conversa_model.interessado
+    txt = "Ta muito cara, tem como dar um desconto?"
+    date = datetime.strptime("2025-01-02 04:45:34", '%Y-%m-%d %H:%M:%S')
+    conversa = conversa_model.id
+
+    mensagem = Mensagem(user, txt, date, conversa)
+
+    with app.app_context():
+        db.session.add(mensagem)
+        db.session.commit()
+
+        mensagem_atual = Mensagem.query.filter_by(user= user).first()
+    
+    yield mensagem_atual
+
+    with app.app_context():
+        db.session.delete(mensagem)
+        db.session.commit()
+
+
+
+@pytest.fixture()
 def transacao_model(perfil_model2, anuncio_model):
     from datetime import datetime
-    data_inicio = datetime.strptime("2025-01-01 03:25:42.591522", '%Y-%m-%d %H:%M:%S.%f')
+
+    data_inicio = datetime.strptime("2025-01-01 03:25:42", '%Y-%m-%d %H:%M:%S')
     anuncio = anuncio_model.id
     interessado = perfil_model2.id
     nota_interessado = 10
