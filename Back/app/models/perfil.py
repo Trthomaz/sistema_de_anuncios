@@ -20,7 +20,8 @@ class Perfil(db.Model):
 
     def att_reputacao(self):
 
-            n = 0, total = 0
+            n = 0
+            total = 0
 
             q1 = Anuncio.query.filter_by(anunciante=self.id).all()
             for a in q1:
