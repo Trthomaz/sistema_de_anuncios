@@ -216,3 +216,27 @@ def mensagem_model(conversa_model):
     with app.app_context():
         db.session.delete(mensagem)
         db.session.commit()
+
+
+@pytest.fixture()
+def transacao_model(perfil_model2, anuncio_model):
+    from datetime import datetime
+    data_inicio = datetime.strptime("2025-01-01 03:25:42.591522", '%Y-%m-%d %H:%M:%S.%f')
+    anuncio = anuncio_model.id
+    interessado = perfil_model2.id
+    nota_interessado = 10
+    nota_anunciante = 9
+    
+    transacao = Transacao(data_inicio, anuncio, interessado, nota_interessado, nota_anunciante)
+
+    with app.app_context():
+        db.session.add(transacao)
+        db.session.commit()
+
+        transacao_atual = Transacao.query.filter_by(interessado= interessado).first()
+    
+    yield transacao_atual
+
+    with app.app_context():
+        db.session.delete(transacao)
+        db.session.commit()
