@@ -383,14 +383,67 @@ def test_finalizar_transação_fail():
 
 
 
-@pytest.mark.skip()
-def test_avaliar_success():
-    pass
+def test_avaliar_success_maior_que_5(client, anuncio_model):
+    nota = 7
+
+    response = client.get("/avaliar", json={"user_id":anuncio_model.anunciante, "anuncio_id":anuncio_model.id, "nota":nota})
+    assert response.status_code == 200
+
+    json = response.get_json()
+    json = json["dados"]
+
+    assert json["msg"] == "Nota fora do escopo."
+
+
+def test_avaliar_ativa_invalido(client, anuncio_model):
+    nota = 4.5
+
+    response = client.get("/avaliar", json={"user_id":anuncio_model.anunciante, "anuncio_id":anuncio_model.id, "nota":nota})
+    assert response.status_code == 200
+
+    json = response.get_json()
+    json = json["dados"]
+
+    assert json["msg"] == "Transação não encerrada"
+
+
+def test_avaliar_notas_dadas(client, anuncio_model_T_nota):
+    nota = 4.5
+
+    response = client.get("/avaliar", json={"user_id":anuncio_model_T_nota.anunciante, "anuncio_id":anuncio_model_T_nota.id, "nota":nota})
+    assert response.status_code == 200
+
+    json = response.get_json()
+    json = json["dados"]
+
+    assert json["msg"] == "Notas já foram dadas"
+
+
+
+def test_avaliar_success(client, anuncio_model_T_final, transacao_model_from_Anuncio_T_final):
+    nota = 4
+    
+    response = client.get("/avaliar", json={"user_id":anuncio_model_T_final.anunciante, "anuncio_id":anuncio_model_T_final.id, "nota":nota})
+    assert response.status_code == 200
+
+    json = response.get_json()
+    json = json["dados"]
+
+    assert json["msg"] == "Nota dada com sucesso!"
 
 
 @pytest.mark.skip()
-def test_avaliar_fail():
-    pass
+def test_avaliar_fail(client, anuncio_model_T_final):
+    nota = 4
+
+    response = client.get("/avaliar", json={"user_id":anuncio_model_T_final.anunciante, "anuncio_id":anuncio_model_T_final.id, "nota":nota})
+    assert response.status_code == 200
+
+    json = response.get_json()
+    json = json["dados"]
+
+    assert json["msg"] == "vixe mano kkk de quem que é esse id aí vei...."
+
 
 
 
@@ -444,14 +497,16 @@ def test_sort_by_date(mensagem_model, mensagem_model2):
     assert response[1] == mensagem_model2
 
 
-# @pytest.mark.skip()
-# def test_quick_sort(mensagem_model, mensagem_model2):
-#     from app.controllers.default import quick_sort
+@pytest.mark.skip()
+def test_quick_sort(mensagem_model, mensagem_model2):
+    from app.controllers.default import quick_sort
 
-#     response = response = [mensagem_model2, mensagem_model]
+    response = response = [mensagem_model2, mensagem_model]
 
-#     quick_sort(response)
+    quick_sort(response)
 
-#     assert response[0] == mensagem_model
-#     assert response[1] == mensagem_model2
-#Implementar fixture de response que repete varias vezes, eliminando redundancia
+    assert response[0] == mensagem_model
+    assert response[1] == mensagem_model2
+
+
+# Implementar fixture de response que repete varias vezes, eliminando redundancia

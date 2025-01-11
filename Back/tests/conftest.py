@@ -155,6 +155,43 @@ def anuncio_model(anuncio_model_mount):
         db.session.delete(anuncio)
         db.session.commit()
 
+@pytest.fixture()
+def anuncio_model_T_nota(anuncio_model_mount):
+
+    anuncio = anuncio_model_mount
+    anuncio.ativo = False
+    anuncio.nota = True
+
+    with app.app_context():
+        db.session.add(anuncio)
+        db.session.commit()
+
+        anuncio_atual = Anuncio.query.filter_by(anunciante= anuncio.anunciante).first()
+    
+    yield anuncio_atual
+
+    with app.app_context():
+        db.session.delete(anuncio)
+        db.session.commit()
+
+@pytest.fixture()
+def anuncio_model_T_final(anuncio_model_mount):
+    anuncio = anuncio_model_mount
+    anuncio.ativo = False
+    anuncio.nota = False
+
+    with app.app_context():
+        db.session.add(anuncio)
+        db.session.commit()
+
+        anuncio_atual = Anuncio.query.filter_by(anunciante= anuncio.anunciante).first()
+    
+    yield anuncio_atual
+
+    with app.app_context():
+        db.session.delete(anuncio)
+        db.session.commit()
+
 
 @pytest.fixture()
 def anuncio_model_unmount(anuncio_model_mount):
@@ -315,6 +352,31 @@ def transacao_model(perfil_model2, anuncio_model):
     anuncio = anuncio_model.id
     interessado = perfil_model2.id
     nota_interessado = 10
+    nota_anunciante = 9
+    
+    transacao = Transacao(data_inicio, anuncio, interessado, nota_interessado, nota_anunciante)
+
+    with app.app_context():
+        db.session.add(transacao)
+        db.session.commit()
+
+        transacao_atual = Transacao.query.filter_by(interessado= interessado).first()
+    
+    yield transacao_atual
+
+    with app.app_context():
+        db.session.delete(transacao)
+        db.session.commit()
+
+
+@pytest.fixture()
+def transacao_model_from_Anuncio_T_final(perfil_model2, anuncio_model_T_final):
+    from datetime import datetime
+
+    data_inicio = datetime.strptime("2025-01-02 03:25:42", '%Y-%m-%d %H:%M:%S')
+    anuncio = anuncio_model_T_final.id
+    interessado = perfil_model2.id
+    nota_interessado = 4
     nota_anunciante = 9
     
     transacao = Transacao(data_inicio, anuncio, interessado, nota_interessado, nota_anunciante)
