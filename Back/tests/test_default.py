@@ -60,7 +60,7 @@ def test_logout_fail(client, perfil_model):
 def test_criar_anuncio_success(client, anuncio_model_mount):
 
     preco = str(anuncio_model_mount.preco).replace(".", ",")
-    response = client.get("/criar_anuncio", json={"user_id":anuncio_model_mount.anunciante,"titulo":anuncio_model_mount.titulo, "descricao": anuncio_model_mount.descricao, "tipo_anuncio":anuncio_model_mount.tipo, "categoria":anuncio_model_mount.categoria, "preco":preco, "celular":anuncio_model_mount.telefone, "cep":anuncio_model_mount.local})
+    response = client.get("/criar_anuncio", json={"user_id":anuncio_model_mount.anunciante,"titulo":anuncio_model_mount.titulo, "descricao": anuncio_model_mount.descricao, "tipo_anuncio":anuncio_model_mount.tipo, "categoria":anuncio_model_mount.categoria, "preco":preco, "celular":anuncio_model_mount.telefone, "cep":anuncio_model_mount.local, "imagem":anuncio_model_mount.imagem})
 
     assert response.status_code == 200
 
@@ -71,7 +71,7 @@ def test_criar_anuncio_success(client, anuncio_model_mount):
 
 def test_criar_anuncio_fail(client, anuncio_model_unmount):
     preco = str(anuncio_model_unmount.preco).replace(".", ",")
-    response = client.get("/criar_anuncio", json={"titulo":anuncio_model_unmount.titulo, "descricao": anuncio_model_unmount.descricao, "tipo_anuncio":anuncio_model_unmount.tipo, "categoria":anuncio_model_unmount.categoria, "preco":preco, "celular":anuncio_model_unmount.telefone, "cep":anuncio_model_unmount.local})
+    response = client.get("/criar_anuncio", json={"titulo":anuncio_model_unmount.titulo, "descricao": anuncio_model_unmount.descricao, "tipo_anuncio":anuncio_model_unmount.tipo, "categoria":anuncio_model_unmount.categoria, "preco":preco, "celular":anuncio_model_unmount.telefone, "cep":anuncio_model_unmount.local, "imagem":anuncio_model_unmount.imagem})
 
     assert response.status_code == 200
 
