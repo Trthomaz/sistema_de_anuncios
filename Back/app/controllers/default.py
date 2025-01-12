@@ -73,6 +73,8 @@ def criar_anuncio():
     preco = float(preco.replace(',', '.'))
     celular = dados.get("celular")
     cep = dados.get("cep")
+    imagem = dados.get("imagem")
+    print(imagem)
     
     user_id = dados.get("user_id")
     anuncio = Anuncio(user_id,titulo,descricao,celular,cep,categoria,ativo=ativo,tipo=tipo_anuncio, preco=preco)

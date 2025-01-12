@@ -34,13 +34,13 @@ class _AnunciarState extends State<Anunciar> {
     id = widget.id;
   }
 
-  final PageStorageBucket _bucket = PageStorageBucket();
   // TextEditingControllers
   TextEditingController _tituloController = TextEditingController();
   TextEditingController _descricaoController = TextEditingController();
   TextEditingController _precoController = TextEditingController();
   TextEditingController _celularController = TextEditingController();
   TextEditingController _cepController = TextEditingController();
+  String imagem = "";
 
   // Imagem
   File? _selectedImage;
@@ -56,6 +56,22 @@ class _AnunciarState extends State<Anunciar> {
   // Requisição de login
   Future<bool> _anunciar() async {
     final url = Uri.parse('http://$ip:5000/criar_anuncio');
+    String base64Image;
+
+    if (_selectedImage == null){
+      base64Image = "";
+    } 
+
+    else{
+      // Ler os bytes da imagem
+      final bytes = await _selectedImage!.readAsBytes();
+
+      // Codificar em Base64
+      base64Image = base64Encode(bytes);
+    }
+
+    print(base64Image);
+    
 
     // Dados enviados
     final dados = {
@@ -66,7 +82,8 @@ class _AnunciarState extends State<Anunciar> {
       'categoria': categorias.indexOf(categoria!) + 1,
       'preco': _precoController.text,
       'celular': _celularController.text,
-      'cep': _cepController.text
+      'cep': _cepController.text,
+      'imagem': base64Image
     };
 
     print(tipos.indexOf(tipo!) + 1);
@@ -131,7 +148,7 @@ class _AnunciarState extends State<Anunciar> {
     }
     return false;
   }
-
+  
   Future<void> _pickImage() async {
     // Exibe um diálogo para escolher entre câmera ou galeria
     final pickedSource = await showModalBottomSheet<int>(
