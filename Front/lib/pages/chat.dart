@@ -13,6 +13,11 @@ class Chat extends StatefulWidget {
 
 class _ChatState extends State<Chat> {
   TextEditingController _mensagemController = TextEditingController();
+  ScrollController _listViewController = ScrollController();
+
+  void _scrollDown() {
+    _listViewController.jumpTo(_listViewController.position.maxScrollExtent);
+  }
 
   // ------------------------------------------------------ Funções para REQUISIÇÕES -----------------------------------------------------
 
@@ -146,12 +151,14 @@ class _ChatState extends State<Chat> {
         body: json.encode(dados),
       );
       print(response.statusCode);
+      Map<String, dynamic> resposta = json.decode(response.body);
+      _scrollDown();
       if (response.statusCode == 200) {
         // Resposta da requisição
-        if (response.body == "ok") {
-          return response.body;
+        if (resposta["dados"]["msg"] == "ok") {
+          print("Mensagem Adicionada com Sucesso!");
         } else {
-          print("oi");
+          print("Falha na inserção da mensagem");
         }
       } else {
         mensagemErrorMessage("Erro na comunicação, tente novamente mais tarde");
@@ -252,6 +259,7 @@ class _ChatState extends State<Chat> {
                                             width: containerWidth,
                                             height: containerHeight,
                                             child: ListView.builder(
+                                              controller: _listViewController,
                                               itemCount: snapshot.data!.length,
                                               itemBuilder: (context, index) {
                                                 return Padding(
@@ -263,31 +271,14 @@ class _ChatState extends State<Chat> {
                                                       : const EdgeInsets.only(
                                                           right: 200,
                                                           bottom: 20),
-                                                  child: FilledButton(
-                                                    style:
-                                                        FilledButton.styleFrom(
-                                                      padding:
-                                                          EdgeInsets.all(6),
-                                                      backgroundColor: snapshot
-                                                                          .data![
-                                                                      index]
-                                                                  ["user_id"] ==
-                                                              id
-                                                          ? Theme.of(context)
-                                                              .cardColor
-                                                          : Theme.of(context)
-                                                              .highlightColor,
-                                                      fixedSize: Size(122, 122),
-                                                      shape:
-                                                          RoundedRectangleBorder(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(10),
-                                                      ),
-                                                    ),
-                                                    onPressed: () {
-                                                      // TODO: Requisição
-                                                    },
+                                                  child: Card(
+                                                    color: snapshot.data![index]
+                                                                ["user_id"] ==
+                                                            id
+                                                        ? Theme.of(context)
+                                                            .cardColor
+                                                        : Theme.of(context)
+                                                            .highlightColor,
                                                     child: Row(
                                                       mainAxisAlignment:
                                                           MainAxisAlignment
@@ -296,7 +287,8 @@ class _ChatState extends State<Chat> {
                                                         Padding(
                                                             padding:
                                                                 const EdgeInsets
-                                                                    .all(5)),
+                                                                    .only(
+                                                                    left: 5)),
                                                         Expanded(
                                                           child: Column(
                                                             mainAxisAlignment:
@@ -306,23 +298,59 @@ class _ChatState extends State<Chat> {
                                                                 CrossAxisAlignment
                                                                     .start,
                                                             children: [
-                                                              Text(
-                                                                snapshot.data![
-                                                                        index]
-                                                                    ["txt"],
-                                                                softWrap: true,
-                                                                maxLines: 2,
-                                                                overflow:
-                                                                    TextOverflow
-                                                                        .ellipsis,
-                                                                style:
-                                                                    TextStyle(
-                                                                  color: Theme.of(
-                                                                          context)
-                                                                      .primaryColorLight,
-                                                                  fontSize: 16,
+                                                              Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                        .only(
+                                                                        left: 8,
+                                                                        right:
+                                                                            12,
+                                                                        top: 8),
+                                                                child: Text(
+                                                                  snapshot.data![
+                                                                          index]
+                                                                      ["txt"],
+                                                                  softWrap:
+                                                                      true,
+                                                                  maxLines: 100,
+                                                                  overflow:
+                                                                      TextOverflow
+                                                                          .ellipsis,
+                                                                  style:
+                                                                      TextStyle(
+                                                                    color: Theme.of(
+                                                                            context)
+                                                                        .primaryColorLight,
+                                                                    fontSize:
+                                                                        20,
+                                                                  ),
                                                                 ),
-                                                              )
+                                                              ),
+                                                              Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                        .only(
+                                                                        left:
+                                                                            8.0,
+                                                                        bottom:
+                                                                            4),
+                                                                child: Text(
+                                                                    snapshot
+                                                                        .data![
+                                                                            index][
+                                                                            "date"]
+                                                                        .toString()
+                                                                        .substring(
+                                                                            5, 22),
+                                                                    softWrap:
+                                                                        true,
+                                                                    maxLines: 2,
+                                                                    style: TextStyle(
+                                                                        color: Theme.of(context)
+                                                                            .primaryColorLight,
+                                                                        fontSize:
+                                                                            12)),
+                                                              ),
                                                             ],
                                                           ),
                                                         ),
@@ -345,36 +373,40 @@ class _ChatState extends State<Chat> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: SizedBox(
-                                width: constraints.maxWidth * 0.85,
-                                height: 60,
-                                child: Padding(
-                                  padding: const EdgeInsets.only(top: 10.0),
-                                  child: TextField(
-                                    controller: _mensagemController,
-                                    autofocus: false,
-                                    autocorrect: false,
-                                    style: TextStyle(
-                                      color:
-                                          Theme.of(context).primaryColorLight,
-                                      fontSize: 16,
-                                    ),
-                                    decoration: InputDecoration(
-                                      border: OutlineInputBorder(
-                                        borderSide: BorderSide.none,
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      filled: true,
-                                      fillColor: Theme.of(context).cardColor,
-                                      contentPadding: EdgeInsets.symmetric(
-                                          vertical: 14, horizontal: 14),
-                                      hintText: "Mensagem",
-                                      hintStyle: TextStyle(
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 25.0, right: 13),
+                                child: SizedBox(
+                                  width: constraints.maxWidth - 128,
+                                  height: 60,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(top: 10.0),
+                                    child: TextField(
+                                      controller: _mensagemController,
+                                      autofocus: false,
+                                      autocorrect: false,
+                                      style: TextStyle(
                                         color:
                                             Theme.of(context).primaryColorLight,
                                         fontSize: 16,
+                                      ),
+                                      decoration: InputDecoration(
+                                        border: OutlineInputBorder(
+                                          borderSide: BorderSide.none,
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        filled: true,
+                                        fillColor: Theme.of(context).cardColor,
+                                        contentPadding: EdgeInsets.symmetric(
+                                            vertical: 14, horizontal: 14),
+                                        hintText: "Mensagem",
+                                        hintStyle: TextStyle(
+                                          color: Theme.of(context)
+                                              .primaryColorLight,
+                                          fontSize: 16,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -382,7 +414,7 @@ class _ChatState extends State<Chat> {
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.only(right: 8),
+                              padding: const EdgeInsets.only(right: 25),
                               child: SizedBox(
                                 width: 90,
                                 height: 40,
