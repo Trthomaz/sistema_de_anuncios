@@ -63,8 +63,46 @@ def tipo_model():
 
 
 @pytest.fixture()
+def tipo_model2():
+    atr_tipo = "Teste com Pytest em tipo 2"
+
+    tipo = Tipo(atr_tipo)
+
+    with app.app_context():
+        db.session.add(tipo)
+        db.session.commit()
+
+        tipo_atual = Tipo.query.filter_by(tipo= atr_tipo).first()
+    
+    yield tipo_atual
+
+    with app.app_context():
+        db.session.delete(tipo)
+        db.session.commit()
+
+
+@pytest.fixture()
 def categoria_model():
     atr_categoria = "Teste com PyTest em categoria"
+
+    categoria = Categoria(atr_categoria)
+
+    with app.app_context():
+        db.session.add(categoria)
+        db.session.commit()
+
+        categoria_atual = Categoria.query.filter_by(categoria= atr_categoria).first()
+    
+    yield categoria_atual
+
+    with app.app_context():
+        db.session.delete(categoria)
+        db.session.commit()
+
+
+@pytest.fixture()
+def categoria_model2():
+    atr_categoria = "Teste com PyTest em categoria 2"
 
     categoria = Categoria(atr_categoria)
 
@@ -104,6 +142,43 @@ def anuncio_model_mount(perfil_model, categoria_model, tipo_model):
 def anuncio_model(anuncio_model_mount):
 
     anuncio = anuncio_model_mount
+
+    with app.app_context():
+        db.session.add(anuncio)
+        db.session.commit()
+
+        anuncio_atual = Anuncio.query.filter_by(anunciante= anuncio.anunciante).first()
+    
+    yield anuncio_atual
+
+    with app.app_context():
+        db.session.delete(anuncio)
+        db.session.commit()
+
+@pytest.fixture()
+def anuncio_model_T_nota(anuncio_model_mount):
+
+    anuncio = anuncio_model_mount
+    anuncio.ativo = False
+    anuncio.nota = True
+
+    with app.app_context():
+        db.session.add(anuncio)
+        db.session.commit()
+
+        anuncio_atual = Anuncio.query.filter_by(anunciante= anuncio.anunciante).first()
+    
+    yield anuncio_atual
+
+    with app.app_context():
+        db.session.delete(anuncio)
+        db.session.commit()
+
+@pytest.fixture()
+def anuncio_model_T_final(anuncio_model_mount):
+    anuncio = anuncio_model_mount
+    anuncio.ativo = False
+    anuncio.nota = False
 
     with app.app_context():
         db.session.add(anuncio)
@@ -199,7 +274,7 @@ def conversa_model_unmount(conversa_model_mount):
 
 
 @pytest.fixture()
-def mensagem_model(conversa_model):
+def mensagem_model_mount(conversa_model):
     from datetime import datetime
 
     user = conversa_model.anunciante
@@ -208,18 +283,40 @@ def mensagem_model(conversa_model):
     conversa = conversa_model.id
 
     mensagem = Mensagem(user, txt, date, conversa)
+    
+    yield mensagem
+
+
+@pytest.fixture()
+def mensagem_model(mensagem_model_mount):
+    
+
+    mensagem = mensagem_model_mount
 
     with app.app_context():
         db.session.add(mensagem)
         db.session.commit()
 
-        mensagem_atual = Mensagem.query.filter_by(user= user).first()
+        mensagem_atual = Mensagem.query.filter_by(user= mensagem.user).first()
     
     yield mensagem_atual
 
     with app.app_context():
         db.session.delete(mensagem)
         db.session.commit()
+
+
+@pytest.fixture()
+def mensagem_model_unmount(mensagem_model_mount):
+    mensagem = mensagem_model_mount
+
+    yield mensagem
+
+    with app.app_context():
+        mensagem = Mensagem.query.filter_by(user=mensagem.user).first()
+        if mensagem:
+            db.session.delete(mensagem)
+            db.session.commit()
 
 
 @pytest.fixture()
@@ -255,6 +352,31 @@ def transacao_model(perfil_model2, anuncio_model):
     anuncio = anuncio_model.id
     interessado = perfil_model2.id
     nota_interessado = 10
+    nota_anunciante = 9
+    
+    transacao = Transacao(data_inicio, anuncio, interessado, nota_interessado, nota_anunciante)
+
+    with app.app_context():
+        db.session.add(transacao)
+        db.session.commit()
+
+        transacao_atual = Transacao.query.filter_by(interessado= interessado).first()
+    
+    yield transacao_atual
+
+    with app.app_context():
+        db.session.delete(transacao)
+        db.session.commit()
+
+
+@pytest.fixture()
+def transacao_model_from_Anuncio_T_final(perfil_model2, anuncio_model_T_final):
+    from datetime import datetime
+
+    data_inicio = datetime.strptime("2025-01-02 03:25:42", '%Y-%m-%d %H:%M:%S')
+    anuncio = anuncio_model_T_final.id
+    interessado = perfil_model2.id
+    nota_interessado = 4
     nota_anunciante = 9
     
     transacao = Transacao(data_inicio, anuncio, interessado, nota_interessado, nota_anunciante)

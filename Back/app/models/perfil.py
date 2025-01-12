@@ -1,4 +1,5 @@
 from app.models import *
+from app.models.transacao import Transacao
 
 class Perfil(db.Model):
     __tablename__ = "perfis"

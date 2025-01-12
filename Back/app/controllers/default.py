@@ -73,6 +73,8 @@ def criar_anuncio():
     preco = float(preco.replace(',', '.'))
     celular = dados.get("celular")
     cep = dados.get("cep")
+    imagem = dados.get("imagem")
+    print(imagem)
     
     user_id = dados.get("user_id")
     anuncio = Anuncio(user_id,titulo,descricao,celular,cep,categoria,ativo=ativo,tipo=tipo_anuncio, preco=preco)
@@ -331,13 +333,13 @@ def avaliar():
     nota = dados.get("nota")
     if not (0 < nota < 5):
         return jsonify({"dados": {"msg": "Nota fora do escopo."}})
-    anuncio = Anuncio.query.filter_by(id = a_id)
+    anuncio = Anuncio.query.filter_by(id = a_id).first()
     if anuncio.ativo:
         return jsonify({"dados": {"msg": "Transação não encerrada"}})
     if anuncio.nota:
         return jsonify({"dados": {"msg": "Notas já foram dadas"}})
-    transacao = Transacao.query.filter_by(anuncio = a_id)
-    perfil = Perfil.query.filter_by(id=id)
+    transacao = Transacao.query.filter_by(anuncio = a_id).first()
+    perfil = Perfil.query.filter_by(id=id).first()
     if id == transacao.interessado:
         transacao.add_nota_interessado(nota)
     elif id == anuncio.anunciante:

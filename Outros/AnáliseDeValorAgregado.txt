@@ -67,8 +67,8 @@ Análise de Valor Agregado:
     Semana 10-12:
 
         PV: Anterior + 0.4 + 0.6 + 6 + 3 + 15 + 4 = 270.5 + 29 = 299.5
-        EV: Anterior + 3 + 3 + 3 + 3 + 
-        AC: Anterior + 7 + 6 + 3 + 0.4        ## AC: Anterior + 7 + 6 + 3 + 3 + 7.5
+        EV: Anterior + 3 + 3 + 3 + 3 + 6 + 50 = 173.9 + 68 = 241.9
+        AC: Anterior + 7 + 6 + 3 + 3 + 7.5 + 0.4 + 9 + 6 = 168.3 + 41.9 = 210.2
 
-        SPI = 
-        CPI = 
+        SPI = 241.9 / 299.5 = 0.808
+        CPI = 241.9 / 210.2 = 1.151

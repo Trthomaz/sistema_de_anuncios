@@ -22,9 +22,9 @@ class Transacao(db.Model):
     def add_nota_interessado(self, nota):
         
         self.nota_interessado = nota
-        db.commit()
+        #db.commit()
 
     def add_nota_anunciante(self, nota):
 
         self.nota_anunciante = nota
-        db.commit()
+        #db.commit()
