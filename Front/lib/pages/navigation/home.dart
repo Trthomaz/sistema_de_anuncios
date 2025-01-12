@@ -3,6 +3,7 @@ import 'package:sistema_de_anuncios/pages/anuncio.dart';
 import 'package:sistema_de_anuncios/pages/navigation/mensagens.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'dart:typed_data';
 
 class Home extends StatefulWidget {
   final String ip;
@@ -21,6 +22,18 @@ class _HomeState extends State<Home> {
 
   late List<Map<String, dynamic>> venda;
   late List<Map<String, dynamic>> busca;
+
+Uint8List? decodificar(String base64Image) {
+  // Verifica se a string Base64 começa com o prefixo 'data:image'
+  if (base64Image.startsWith("data:image")) {
+    // Remove o prefixo 'data:image/...;base64,' (se presente)
+    base64Image = base64Image.split(",")[1];
+  }
+
+  // Decodifica a string Base64 para bytes (Uint8List)
+  return base64Decode(base64Image);
+}
+
 
   Future<void> _carregarAnuncios() async {
     // Simula a busca de dados (substitua pela sua lógica real)
@@ -338,8 +351,7 @@ class _HomeState extends State<Home> {
                                                   preco: venda[index]
                                                           ["preco"] ??
                                                       0.0,
-                                                  imagem: venda[index]
-                                                      ["imagem"],
+                                                  imagem: venda[index]["imagem"]
                                                 )),
                                       );
                                     },
@@ -351,12 +363,13 @@ class _HomeState extends State<Home> {
                                             ? ClipRRect(
                                                 borderRadius:
                                                     BorderRadius.circular(10),
-                                                child: Image.asset(
-                                                  venda[index]["imagem"],
+                                                child: Image.memory(
+                                                  decodificar(venda[index]["imagem"])!,
                                                   fit: BoxFit.contain,
                                                   height: imageSize,
                                                   width: imageSize,
-                                                ))
+                                                )
+                                                )
                                             : Padding(
                                                 padding:
                                                     const EdgeInsets.all(10),
@@ -494,12 +507,13 @@ class _HomeState extends State<Home> {
                                             ? ClipRRect(
                                                 borderRadius:
                                                     BorderRadius.circular(10),
-                                                child: Image.asset(
-                                                  busca[index]["imagem"],
+                                                child: Image.memory(
+                                                  decodificar(busca[index]["imagem"])!,
                                                   fit: BoxFit.contain,
                                                   height: imageSize,
                                                   width: imageSize,
-                                                ))
+                                                )
+                                            )
                                             : Padding(
                                                 padding:
                                                     const EdgeInsets.all(10),
