@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:http/http.dart' as http;
 import 'package:sistema_de_anuncios/pages/chat.dart';
 import 'package:sistema_de_anuncios/pages/navigation/perfil.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class Anuncio extends StatefulWidget {
   final String ip;
@@ -20,7 +21,7 @@ class Anuncio extends StatefulWidget {
   State<Anuncio> createState() => _AnuncioState();
 }
 
-Future<String> _getNomebyID(String ip, int user_id) async {
+Future<Map<String, dynamic>?> _getPerfil(String ip, int user_id) async {
   final url = Uri.parse('http://$ip:5000/get_perfil');
 
   // Dados enviados
@@ -36,10 +37,10 @@ Future<String> _getNomebyID(String ip, int user_id) async {
       body: json.encode(dados),
     );
     Map<String, dynamic> resposta = json.decode(response.body);
-    return resposta["dados"]["nome"];
+    return resposta["dados"];
   } catch (e) {
     print(e);
-    return "Erro";
+    return null;
   }
 }
 
@@ -275,90 +276,167 @@ class _AnuncioState extends State<Anuncio> {
                 ),
                 body: LayoutBuilder(builder: (context, constraints) {
                   double containerWidth = constraints.maxWidth - 20;
-                  double containerHeight = constraints.maxHeight - 384;
-                  return Column(
-                    children: [
-                      SizedBox(height: 10),
-                      Center(
-                        child: snapshot_anuncio.data!["imagem"] != null
-                            ? ClipRRect(
-                                borderRadius: BorderRadius.circular(10),
-                                child: Image.memory(
-                                  decodificar(
-                                      snapshot_anuncio.data!["imagem"])!,
-                                  fit: BoxFit.contain,
-                                  height: containerHeight,
-                                  width: containerWidth,
-                                ))
-                            : Container(
-                                height: containerHeight,
-                                width: containerWidth,
-                                decoration: BoxDecoration(
-                                  color: Theme.of(context).cardColor,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    "Sem imagem",
-                                    style: TextStyle(
-                                      color: Theme.of(context).primaryColorDark,
-                                      fontSize: 20,
+                  double containerHeight = constraints.maxHeight - 123;
+                  double imagem = constraints.maxHeight - 500;
+                  return LayoutBuilder(builder: (context, constraints) {
+                      return Column(
+                        children: [
+                          SizedBox(
+                            height: containerHeight,
+                            child: SingleChildScrollView(
+                            child: Column(
+                          children: [
+                            SizedBox(height: 10),
+                            Center(
+                              child: snapshot_anuncio.data!["imagem"] != null
+                                  ? ClipRRect(
+                                      borderRadius: BorderRadius.circular(10),
+                                      child: Image.memory(
+                                        decodificar(
+                                            snapshot_anuncio.data!["imagem"])!,
+                                        fit: BoxFit.contain,
+                                        height: imagem,
+                                        width: imagem,
+                                      ))
+                                  : Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Image.asset(
+                                        'assets/images/image.png',
+                                        fit: BoxFit.contain,
+                                        height: imagem - 50,
+                                        width: imagem - 50,
+                                      ),
+                                  )
+                            ),
+                            Divider(
+                                    color: Theme.of(context).primaryColorLight,
+                                    thickness: 1,
+                                    height: 10,
+                                    indent: 10,
+                                    endIndent: 10,
+                                  ),
+                            Column(
+                              children: [
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 4, horizontal: 10),
+                                    child: Text(
+                                      snapshot_anuncio.data!["titulo"],
+                                      style: TextStyle(
+                                        color: Theme.of(context).primaryColorLight,
+                                        fontSize: 30,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                      ),
-                      SizedBox(height: 10),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10),
-                        child: Column(
-                          children: [
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 4, horizontal: 10),
-                                child: Text(
-                                  snapshot_anuncio.data!["titulo"],
-                                  style: TextStyle(
-                                    color: Theme.of(context).primaryColorLight,
-                                    fontSize: 30,
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 4, horizontal: 10),
+                                    child: Text(
+                                      "R\$ ${snapshot_anuncio.data!["preco"].toStringAsFixed(2)}",
+                                      style: TextStyle(
+                                        color: Theme.of(context).primaryColorLight,
+                                        fontSize: 30,
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ),
+                                Divider(
+                                  color: Theme.of(context).primaryColorLight,
+                                  thickness: 1,
+                                  height: 10,
+                                ),
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 4, horizontal: 10),
+                                    child: Text(
+                                      "Descrição",
+                                      style: TextStyle(
+                                        color: Theme.of(context).primaryColorLight,
+                                        fontSize: 30,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 4, horizontal: 10),
+                                    child: Text(
+                                      snapshot_anuncio.data!["descricao"],
+                                      style: TextStyle(
+                                        color: Theme.of(context).primaryColorLight,
+                                        fontSize: 20,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 4, horizontal: 10),
-                                child: Text(
-                                  "R\$ ${snapshot_anuncio.data!["preco"].toStringAsFixed(2)}",
-                                  style: TextStyle(
-                                    color: Theme.of(context).primaryColorLight,
-                                    fontSize: 30,
-                                  ),
-                                ),
-                              ),
+                          ],
+                                            ),
+                                              )
+                          ),
+                          Divider(
+                              color: Theme.of(context).primaryColorLight,
+                              thickness: 1,
+                              height: 1,
                             ),
                             FutureBuilder(
-                                future: _getNomebyID(widget.ip,
+                                future: _getPerfil(widget.ip,
                                     snapshot_anuncio.data!["anunciante_id"]),
                                 builder: (context, snapshot3) {
                                   if (snapshot3.hasData) {
                                     return Align(
-                                      alignment: Alignment.centerLeft,
+                                      alignment: Alignment.center,
                                       child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 4, horizontal: 10),
+                                        padding: const EdgeInsets.only(
+                                            top: 4, left: 10, right: 10),
                                         child: Text(
-                                          snapshot3.data!,
+                                          "${snapshot3.data!["nome"]}",
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
                                           style: TextStyle(
                                             color: Theme.of(context)
                                                 .primaryColorLight,
                                             fontSize: 23,
                                           ),
                                         ),
+                                      ),
+                                    );
+                                  } else {
+                                    return Center(
+                                      child: CircularProgressIndicator(),
+                                    );
+                                  }
+                                }),
+                            FutureBuilder(
+                                future: _getPerfil(widget.ip,
+                                    snapshot_anuncio.data!["anunciante_id"]),
+                                builder: (context, snapshot3) {
+                                  if (snapshot3.hasData) {
+                                    return Align(
+                                      alignment: Alignment.center,
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                            bottom: 8, left: 10, right: 10),
+                                        child: RatingBarIndicator(
+                                          rating: snapshot3.data!["reputacao"],
+                                          itemBuilder: (context, index) => Icon(
+                                            Icons.star,
+                                            color: Colors.yellow,
+                                          ),
+                                          itemCount: 5,
+                                          itemSize: 24,
+                                          direction: Axis.horizontal,
+                                        ), 
                                       ),
                                     );
                                   } else {
@@ -379,8 +457,8 @@ class _AnuncioState extends State<Anuncio> {
                                       builder: (context, snapshot_conversa) {
                                         if (snapshot_conversa.hasData) {
                                           return Container(
-                                            height: 30,
-                                            width: 200,
+                                            height: 40,
+                                            width: constraints.maxWidth / 2 - 20,
                                             child: ElevatedButton(
                                               onPressed: () => {
                                                 setState(() {
@@ -428,10 +506,10 @@ class _AnuncioState extends State<Anuncio> {
                                         }
                                       }),
                                   Padding(
-                                    padding: const EdgeInsets.only(left: 30.0),
+                                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
                                     child: Container(
-                                      height: 30,
-                                      width: 200,
+                                      height: 40,
+                                      width: constraints.maxWidth / 2 - 20,
                                       child: ElevatedButton(
                                         onPressed: () => {
                                           setState(() {
@@ -458,13 +536,11 @@ class _AnuncioState extends State<Anuncio> {
                                       ),
                                     ),
                                   )
-                                ])
-                          ],
-                        ),
-                      ),
-                    ],
-                  );
-                }));
+                                ]),
+                                SizedBox(height: 10,)
+                        ],
+                      );
+                });}));
           } else {
             return Center(
               child: CircularProgressIndicator(),

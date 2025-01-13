@@ -239,7 +239,7 @@ class _ChatState extends State<Chat> {
                 body: LayoutBuilder(
                   builder: (context, constraints) {
                     double containerWidth = constraints.maxWidth * 0.9;
-                    double containerHeight = constraints.maxHeight - 184;
+                    double containerHeight = constraints.maxHeight - 90;
                     return Center(
                         child: Column(
                       children: [
@@ -374,37 +374,34 @@ class _ChatState extends State<Chat> {
                             Expanded(
                               child: Padding(
                                 padding: const EdgeInsets.only(
-                                    left: 25.0, right: 13),
+                                    left: 10.0, right: 10),
                                 child: SizedBox(
                                   width: constraints.maxWidth - 128,
-                                  height: 60,
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(top: 10.0),
-                                    child: TextField(
-                                      controller: _mensagemController,
-                                      autofocus: false,
-                                      autocorrect: false,
-                                      style: TextStyle(
-                                        color:
-                                            Theme.of(context).primaryColorLight,
-                                        fontSize: 16,
+                                  height: 50,
+                                  child: TextField(
+                                    controller: _mensagemController,
+                                    autofocus: false,
+                                    autocorrect: false,
+                                    style: TextStyle(
+                                      color:
+                                          Theme.of(context).primaryColorLight,
+                                      fontSize: 14,
+                                    ),
+                                    decoration: InputDecoration(
+                                      border: OutlineInputBorder(
+                                        borderSide: BorderSide.none,
+                                        borderRadius:
+                                            BorderRadius.circular(10),
                                       ),
-                                      decoration: InputDecoration(
-                                        border: OutlineInputBorder(
-                                          borderSide: BorderSide.none,
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                        ),
-                                        filled: true,
-                                        fillColor: Theme.of(context).cardColor,
-                                        contentPadding: EdgeInsets.symmetric(
-                                            vertical: 14, horizontal: 14),
-                                        hintText: "Mensagem",
-                                        hintStyle: TextStyle(
-                                          color: Theme.of(context)
-                                              .primaryColorLight,
-                                          fontSize: 16,
-                                        ),
+                                      filled: true,
+                                      fillColor: Theme.of(context).cardColor,
+                                      contentPadding: EdgeInsets.symmetric(
+                                          vertical: 14, horizontal: 14),
+                                      hintText: "Mensagem",
+                                      hintStyle: TextStyle(
+                                        color: Theme.of(context)
+                                            .primaryColorLight,
+                                        fontSize: 14,
                                       ),
                                     ),
                                   ),
@@ -412,7 +409,7 @@ class _ChatState extends State<Chat> {
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.only(right: 25),
+                              padding: const EdgeInsets.only(right: 10),
                               child: SizedBox(
                                 width: 90,
                                 height: 40,
@@ -428,7 +425,7 @@ class _ChatState extends State<Chat> {
                                     child: Text(
                                       "Enviar",
                                       style: TextStyle(
-                                          fontSize: 15,
+                                          fontSize: 14,
                                           color: Theme.of(context)
                                               .primaryColorDark),
                                     )),

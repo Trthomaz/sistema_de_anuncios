@@ -193,7 +193,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     double cardWidth = 150;
-    double cardHeight = 251;
+    double cardHeight = 267;
     double cardSpacing = 5;
     double imageSize = cardWidth;
     return PopScope(
