@@ -284,23 +284,19 @@ class _LoginState extends State<Login> {
                   width: 200,
                   height: 60,
                   child: ElevatedButton(
-                    onLongPress: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                const Navigation(ip: "0", id: -1)),
-                      );
-                    },
                     onPressed: () async {
                       var entrar = await _login();
                       print(entrar);
                       print(_ipController.text);
                       if (entrar != -1) {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) {
-                          return Navigation(ip: ip, id: entrar);
-                        }));
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return Navigation(ip: ip, id: entrar);
+                            },
+                          ),
+                        );
                       }
                     },
                     style: ButtonStyle(

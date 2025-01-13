@@ -627,10 +627,9 @@ class _AnunciarState extends State<Anunciar> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 10),
                   Padding(
                     // Botão
-                    padding: const EdgeInsets.all(20.0),
+                    padding: const EdgeInsets.all(16.0),
                     child: SizedBox(
                       width: 200,
                       height: 60,

@@ -92,6 +92,16 @@ Future<Map<String, dynamic>> _getAnunciobyID(String ip, int anuncio_id) async {
   }
 }
 
+void _editarAnuncio(String ip, int anuncio_id){
+  // Implementar
+  // Redirecionar pra página de criar anuncio mas com os campos preenchidos podendo ser editados
+}
+
+void _excluirAnuncio(String ip, int anuncio_id){
+  // Implementar
+  return;
+}
+
 class _AnuncioState extends State<Anuncio> {
   void _showMultiSelectDialog() {
     showDialog(
@@ -198,8 +208,11 @@ class _AnuncioState extends State<Anuncio> {
   // Estado de seleção para cada opção
   late Map<String, bool> selectedOptions;
 
+  late int userId;
+
   @override
   void initState() {
+    userId = widget.userId;
     super.initState();
     // Inicializa o estado de seleção (todas como não selecionadas)
     selectedOptions = {for (var option in options) option: false};
@@ -384,160 +397,258 @@ class _AnuncioState extends State<Anuncio> {
                                             ),
                                               )
                           ),
-                          Divider(
-                              color: Theme.of(context).primaryColorLight,
-                              thickness: 1,
-                              height: 1,
-                            ),
-                            FutureBuilder(
-                                future: _getPerfil(widget.ip,
-                                    snapshot_anuncio.data!["anunciante_id"]),
-                                builder: (context, snapshot3) {
-                                  if (snapshot3.hasData) {
-                                    return Align(
-                                      alignment: Alignment.center,
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(
-                                            top: 4, left: 10, right: 10),
-                                        child: Text(
-                                          "${snapshot3.data!["nome"]}",
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                            color: Theme.of(context)
-                                                .primaryColorLight,
-                                            fontSize: 23,
+                          userId == snapshot_anuncio.data!["anunciante_id"]
+                              ? Column(
+                            children: [
+                              Divider(
+                                  color: Theme.of(context).primaryColorLight,
+                                  thickness: 1,
+                                  height: 1,
+                                ),
+                              SizedBox(height: 20,),  
+                              Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      FutureBuilder(
+                                          future: _criarConversa(
+                                              widget.ip,
+                                              snapshot_anuncio
+                                                  .data!["anunciante_id"],
+                                              widget.userId),
+                                          builder: (context, snapshot_conversa) {
+                                            if (snapshot_conversa.hasData) {
+                                              return Container(
+                                                height: 40,
+                                                width: constraints.maxWidth / 2 - 20,
+                                                child: ElevatedButton(
+                                                  onPressed: () => {
+                                                    setState(() {
+                                                      Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder: (context) {
+                                                                return const Chat();
+                                                              },
+                                                              settings:
+                                                                  RouteSettings(
+                                                                      arguments: {
+                                                                    'id_conversa':
+                                                                        snapshot_conversa
+                                                                            .data!,
+                                                                    'ip': widget.ip,
+                                                                    'id': snapshot_anuncio.data![
+                                                                                "anunciante_id"] ==
+                                                                            widget
+                                                                                .userId
+                                                                        ? snapshot_anuncio
+                                                                                .data![
+                                                                            "interessado_id"]
+                                                                        : snapshot_anuncio
+                                                                                .data![
+                                                                            "anunciante_id"]
+                                                                  })));
+                                                    })
+                                                  },
+                                                  style: ElevatedButton.styleFrom(
+                                                      backgroundColor:
+                                                          Theme.of(context)
+                                                              .primaryColor
+                                                              .withOpacity(1)),
+                                                  child: Text("Editar Anúncio",
+                                                      style: TextStyle(
+                                                          color: Theme.of(context)
+                                                              .primaryColorLight)),
+                                                ),
+                                              );
+                                            } else {
+                                              return Center(
+                                                child: CircularProgressIndicator(),
+                                              );
+                                            }
+                                          }),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                                        child: Container(
+                                          height: 40,
+                                          width: constraints.maxWidth / 2 - 20,
+                                          child: ElevatedButton(
+                                            onPressed: () => {
+                                              _excluirAnuncio(widget.ip, snapshot_anuncio.data!["anuncio_id"]),
+                                              Navigator.of(context).pop()
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                                backgroundColor: Theme.of(context)
+                                                    .primaryColor
+                                                    .withOpacity(1)),
+                                            child: Text("Excluir Anúncio",
+                                                style: TextStyle(
+                                                    color: Theme.of(context)
+                                                        .primaryColorLight)),
                                           ),
                                         ),
-                                      ),
-                                    );
-                                  } else {
-                                    return Center(
-                                      child: CircularProgressIndicator(),
-                                    );
-                                  }
-                                }),
-                            FutureBuilder(
-                                future: _getPerfil(widget.ip,
-                                    snapshot_anuncio.data!["anunciante_id"]),
-                                builder: (context, snapshot3) {
-                                  if (snapshot3.hasData) {
-                                    return Align(
-                                      alignment: Alignment.center,
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(
-                                            bottom: 8, left: 10, right: 10),
-                                        child: RatingBarIndicator(
-                                          rating: snapshot3.data!["reputacao"],
-                                          itemBuilder: (context, index) => Icon(
-                                            Icons.star,
-                                            color: Colors.yellow,
-                                          ),
-                                          itemCount: 5,
-                                          itemSize: 24,
-                                          direction: Axis.horizontal,
-                                        ), 
-                                      ),
-                                    );
-                                  } else {
-                                    return Center(
-                                      child: CircularProgressIndicator(),
-                                    );
-                                  }
-                                }),
-                            Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  FutureBuilder(
-                                      future: _criarConversa(
-                                          widget.ip,
-                                          snapshot_anuncio
-                                              .data!["anunciante_id"],
-                                          widget.userId),
-                                      builder: (context, snapshot_conversa) {
-                                        if (snapshot_conversa.hasData) {
-                                          return Container(
-                                            height: 40,
-                                            width: constraints.maxWidth / 2 - 20,
-                                            child: ElevatedButton(
-                                              onPressed: () => {
-                                                setState(() {
-                                                  Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                          builder: (context) {
-                                                            return const Chat();
-                                                          },
-                                                          settings:
-                                                              RouteSettings(
-                                                                  arguments: {
-                                                                'id_conversa':
-                                                                    snapshot_conversa
-                                                                        .data!,
-                                                                'ip': widget.ip,
-                                                                'id': snapshot_anuncio.data![
-                                                                            "anunciante_id"] ==
-                                                                        widget
-                                                                            .userId
-                                                                    ? snapshot_anuncio
-                                                                            .data![
-                                                                        "interessado_id"]
-                                                                    : snapshot_anuncio
-                                                                            .data![
-                                                                        "anunciante_id"]
-                                                              })));
-                                                })
-                                              },
-                                              style: ElevatedButton.styleFrom(
-                                                  backgroundColor:
-                                                      Theme.of(context)
-                                                          .primaryColor
-                                                          .withOpacity(1)),
-                                              child: Text("Enviar Mensagem",
-                                                  style: TextStyle(
-                                                      color: Theme.of(context)
-                                                          .primaryColorLight)),
-                                            ),
-                                          );
-                                        } else {
-                                          return Center(
-                                            child: CircularProgressIndicator(),
-                                          );
-                                        }
-                                      }),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                                    child: Container(
-                                      height: 40,
-                                      width: constraints.maxWidth / 2 - 20,
-                                      child: ElevatedButton(
-                                        onPressed: () => {
-                                          setState(() {
-                                            Navigator.push(context,
-                                                MaterialPageRoute(
-                                                    builder: (context) {
-                                              return Perfil(
-                                                ip: widget.ip,
-                                                id: snapshot_anuncio
-                                                    .data!["anunciante_id"],
-                                                ondeEntrou: "Anuncio",
-                                              );
-                                            }));
-                                          })
-                                        },
-                                        style: ElevatedButton.styleFrom(
-                                            backgroundColor: Theme.of(context)
-                                                .primaryColor
-                                                .withOpacity(1)),
-                                        child: Text("Visitar Perfil",
-                                            style: TextStyle(
+                                      )
+                                    ]),
+                                    SizedBox(height: 10,),
+                            ],
+                          )
+                              : Column(
+                            children: [
+                              Divider(
+                                  color: Theme.of(context).primaryColorLight,
+                                  thickness: 1,
+                                  height: 1,
+                                ),
+                                FutureBuilder(
+                                    future: _getPerfil(widget.ip,
+                                        snapshot_anuncio.data!["anunciante_id"]),
+                                    builder: (context, snapshot3) {
+                                      if (snapshot3.hasData) {
+                                        return Align(
+                                          alignment: Alignment.center,
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                                top: 4, left: 10, right: 10),
+                                            child: Text(
+                                              "${snapshot3.data!["nome"]}",
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(
                                                 color: Theme.of(context)
-                                                    .primaryColorLight)),
-                                      ),
-                                    ),
-                                  )
-                                ]),
-                                SizedBox(height: 10,)
+                                                    .primaryColorLight,
+                                                fontSize: 23,
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      } else {
+                                        return Center(
+                                          child: CircularProgressIndicator(),
+                                        );
+                                      }
+                                    }),
+                                FutureBuilder(
+                                    future: _getPerfil(widget.ip,
+                                        snapshot_anuncio.data!["anunciante_id"]),
+                                    builder: (context, snapshot3) {
+                                      if (snapshot3.hasData) {
+                                        return Align(
+                                          alignment: Alignment.center,
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                                bottom: 8, left: 10, right: 10),
+                                            child: RatingBarIndicator(
+                                              rating: snapshot3.data!["reputacao"],
+                                              itemBuilder: (context, index) => Icon(
+                                                Icons.star,
+                                                color: Colors.yellow,
+                                              ),
+                                              itemCount: 5,
+                                              itemSize: 24,
+                                              direction: Axis.horizontal,
+                                            ), 
+                                          ),
+                                        );
+                                      } else {
+                                        return Center(
+                                          child: CircularProgressIndicator(),
+                                        );
+                                      }
+                                    }),
+                                Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      FutureBuilder(
+                                          future: _criarConversa(
+                                              widget.ip,
+                                              snapshot_anuncio
+                                                  .data!["anunciante_id"],
+                                              widget.userId),
+                                          builder: (context, snapshot_conversa) {
+                                            if (snapshot_conversa.hasData) {
+                                              return Container(
+                                                height: 40,
+                                                width: constraints.maxWidth / 2 - 20,
+                                                child: ElevatedButton(
+                                                  onPressed: () => {
+                                                    setState(() {
+                                                      Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder: (context) {
+                                                                return const Chat();
+                                                              },
+                                                              settings:
+                                                                  RouteSettings(
+                                                                      arguments: {
+                                                                    'id_conversa':
+                                                                        snapshot_conversa
+                                                                            .data!,
+                                                                    'ip': widget.ip,
+                                                                    'id': snapshot_anuncio.data![
+                                                                                "anunciante_id"] ==
+                                                                            widget
+                                                                                .userId
+                                                                        ? snapshot_anuncio
+                                                                                .data![
+                                                                            "interessado_id"]
+                                                                        : snapshot_anuncio
+                                                                                .data![
+                                                                            "anunciante_id"]
+                                                                  })));
+                                                    })
+                                                  },
+                                                  style: ElevatedButton.styleFrom(
+                                                      backgroundColor:
+                                                          Theme.of(context)
+                                                              .primaryColor
+                                                              .withOpacity(1)),
+                                                  child: Text("Enviar Mensagem",
+                                                      style: TextStyle(
+                                                          color: Theme.of(context)
+                                                              .primaryColorLight)),
+                                                ),
+                                              );
+                                            } else {
+                                              return Center(
+                                                child: CircularProgressIndicator(),
+                                              );
+                                            }
+                                          }),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                                        child: Container(
+                                          height: 40,
+                                          width: constraints.maxWidth / 2 - 20,
+                                          child: ElevatedButton(
+                                            onPressed: () => {
+                                              setState(() {
+                                                Navigator.push(context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) {
+                                                  return Perfil(
+                                                    ip: widget.ip,
+                                                    id: snapshot_anuncio
+                                                        .data!["anunciante_id"],
+                                                    ondeEntrou: "Anuncio",
+                                                  );
+                                                }));
+                                              })
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                                backgroundColor: Theme.of(context)
+                                                    .primaryColor
+                                                    .withOpacity(1)),
+                                            child: Text("Visitar Perfil",
+                                                style: TextStyle(
+                                                    color: Theme.of(context)
+                                                        .primaryColorLight)),
+                                          ),
+                                        ),
+                                      )
+                                    ]),
+                                    SizedBox(height: 10,),
+                            ],
+                          )
                         ],
                       );
                 });}));
