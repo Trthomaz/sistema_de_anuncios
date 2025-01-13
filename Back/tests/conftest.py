@@ -345,28 +345,54 @@ def mensagem_model2(conversa_model):
 
 
 @pytest.fixture()
-def transacao_model(perfil_model2, anuncio_model):
+def transacao_model_mount(perfil_model2, anuncio_model):
     from datetime import datetime
 
-    data_inicio = datetime.strptime("2025-01-01 03:25:42", '%Y-%m-%d %H:%M:%S')
+    data_atual = datetime.now()
+    data_formatada = data_atual.strftime('%Y-%m-%d %H:%M:%S')#"2025-01-01 03:25:42"
+    data_inicio = datetime.strptime(data_formatada, '%Y-%m-%d %H:%M:%S')
+    
     anuncio = anuncio_model.id
     interessado = perfil_model2.id
     nota_interessado = 10
     nota_anunciante = 9
-    
+
     transacao = Transacao(data_inicio, anuncio, interessado, nota_interessado, nota_anunciante)
+
+    yield  transacao
+
+
+@pytest.fixture()
+def transacao_model(transacao_model_mount):
+    
+    
+    transacao = transacao_model_mount
 
     with app.app_context():
         db.session.add(transacao)
         db.session.commit()
 
-        transacao_atual = Transacao.query.filter_by(interessado= interessado).first()
+        transacao_atual = Transacao.query.filter_by(interessado= transacao.interessado).first()
     
     yield transacao_atual
 
     with app.app_context():
         db.session.delete(transacao)
         db.session.commit()
+
+
+@pytest.fixture()
+def transacao_model_unmount(transacao_model_mount):
+
+    transacao = transacao_model_mount
+
+    yield transacao
+
+    with app.app_context():
+        transacao = Transacao.query.filter_by(interessado= transacao_model_mount.interessado).first()
+        if transacao:
+            db.session.delete(transacao)
+            db.session.commit()
 
 
 @pytest.fixture()
@@ -392,3 +418,66 @@ def transacao_model_from_Anuncio_T_final(perfil_model2, anuncio_model_T_final):
     with app.app_context():
         db.session.delete(transacao)
         db.session.commit()
+
+
+@pytest.fixture()
+def transacao_model_invalida_mount(perfil_model2, anuncio_model):
+    from datetime import datetime
+
+    data_inicio = datetime.strptime("2025-01-02 03:25:42", '%Y-%m-%d %H:%M:%S')
+    
+    anuncio = anuncio_model.id
+    interessado = perfil_model2.id
+    nota_interessado = 10
+    nota_anunciante = 9
+
+    transacao = Transacao(data_inicio, anuncio, interessado, nota_interessado, nota_anunciante)
+
+    yield  transacao
+
+
+# @pytest.fixture()
+# def transacao_model_mount_inst(transacao_model_mount):
+
+#     transacao = transacao_model_mount
+
+#     with app.app_context():
+#         db.session.add(transacao)
+#         db.session.commit()
+
+#         transacao_atual = Transacao.query.filter_by(interessado= transacao.interessado).first()
+    
+#     yield transacao_atual
+
+
+@pytest.fixture()
+def transacao_model_invalida(transacao_model_mount):
+    
+    
+    transacao = transacao_model_mount
+
+    with app.app_context():
+        db.session.add(transacao)
+        db.session.commit()
+
+        transacao_atual = Transacao.query.filter_by(interessado= transacao.interessado).first()
+    
+    yield transacao_atual
+
+    with app.app_context():
+        db.session.delete(transacao)
+        db.session.commit()
+
+
+@pytest.fixture()
+def transacao_model_invalida_unmount(transacao_model_mount):
+
+    transacao = transacao_model_mount
+
+    yield transacao
+
+    with app.app_context():
+        transacao = Transacao.query.filter_by(interessado= transacao_model_mount.interessado).first()
+        if transacao:
+            db.session.delete(transacao)
+            db.session.commit()

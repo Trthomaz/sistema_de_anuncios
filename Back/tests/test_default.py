@@ -2,7 +2,7 @@
 
 import pytest
 
-
+#------------------------------------------------------------------------------------------------------------------------------------------------------
 @pytest.mark.smoke
 def test_login_success(client, perfil_model):
     response = client.get("/login", json={"cpf":perfil_model.email, "senha": perfil_model.senha})
@@ -29,7 +29,7 @@ def test_login_fail(client, perfil_model):
     assert json["login"] == False
 
 
-
+#------------------------------------------------------------------------------------------------------------------------------------------------------
 @pytest.mark.smoke
 def test_logout_success(client, perfil_model):
     response = client.get("/login", json={"cpf": perfil_model.email, "senha": perfil_model.senha})
@@ -47,7 +47,6 @@ def test_logout_fail(client, perfil_model):
     senha_errada = "atletico"
 
     response = client.get("/login", json={"cpf": perfil_model.email, "senha": senha_errada})
-
     response = client.get("/logout")
     assert response.status_code == 200
 
@@ -56,7 +55,7 @@ def test_logout_fail(client, perfil_model):
     assert json["status"] == False
 
 
-
+#------------------------------------------------------------------------------------------------------------------------------------------------------
 def test_criar_anuncio_success(client, anuncio_model_mount):
 
     preco = str(anuncio_model_mount.preco).replace(".", ",")
@@ -80,7 +79,7 @@ def test_criar_anuncio_fail(client, anuncio_model_unmount):
     assert json["status"] == False
 
 
-
+#------------------------------------------------------------------------------------------------------------------------------------------------------
 def test_get_meus_anuncios_success(client, perfil_model, anuncio_model, categoria_model, tipo_model, transacao_model):
     anunciante_id = perfil_model.id
     
@@ -107,12 +106,20 @@ def test_get_meus_anuncios_success(client, perfil_model, anuncio_model, categori
     assert json["preco"] == anuncio_model.preco
     assert json["anunciante/interessado"] == 'anunciante'
     assert json["imagem"] == anuncio_model.imagem
-    
+
+
+@pytest.mark.skip()
+def test_get_meus_anuncios_with_from_transacoes(client, perfil_model, anuncio_model, categoria_model, tipo_model, transacao_model):
+    pass
+
 
 @pytest.mark.xfail()#Falhara propositalmente
 def test_get_meus_anuncios_fail(client):
+    from datetime import datetime
     anunciante_id = -1
-    response = client.get("/get_meus_anuncios", json={"user_id":anunciante_id})
+    data = datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')
+
+    response = client.get("/get_meus_anuncios", json={"user_id":anunciante_id, "data":data})
     assert response.status_code == 200
     
     json = response.get_json()
@@ -120,14 +127,13 @@ def test_get_meus_anuncios_fail(client):
     assert len(json["anuncios"]) > 0 #Nao tem nenhum anuncio
 
 
-
+#------------------------------------------------------------------------------------------------------------------------------------------------------
 @pytest.mark.smoke
 def test_get_perfil_success(client, perfil_model):
     response = client.get("/get_perfil", json={"user_id":perfil_model.id})
     assert response.status_code == 200
 
     json = response.get_json()
-
     json = json["dados"]
     
     assert json["nome"] == perfil_model.nome
@@ -135,28 +141,12 @@ def test_get_perfil_success(client, perfil_model):
     assert json["reputacao"] == perfil_model.reputacao
 
 
-# @pytest.mark.skip(reason="Nao tem tratamento de excessao nesta rota, exemplo de possivel tratamento.")
-# @pytest.mark.smoke
-# def test_get_perfil_fail(client):
-#     response = client.get("/get_perfil", json={"user_id":-1})
-#     assert response.status_code == 200
-
-#     json = response.get_json()
-
-#     json = json["dados"]
-    
-#     assert json["nome"] == None
-#     assert json["curso"] == None
-#     assert json["reputacao"] == None
-
-
-
+#------------------------------------------------------------------------------------------------------------------------------------------------------
 def test_get_feed_success(client, perfil_model):#Tem 2 tipos de anuncios
     response = client.get("/get_feed", json={"user_id":perfil_model.id})
     assert response.status_code == 200
 
     json = response.get_json()
-
     json = json["dados"]
 
     assert len(json) == 2
@@ -172,13 +162,12 @@ def test_get_feed_success(client, perfil_model):#Tem 2 tipos de anuncios
         assert type(busca["preco"]) == float
 
 
-
+#------------------------------------------------------------------------------------------------------------------------------------------------------
 def test_fazer_busca_success(client, anuncio_model, perfil_model2):
     response = client.get("/fazer_busca", json={"user_id":perfil_model2.id, "txt":anuncio_model.titulo, "categoria":anuncio_model.categoria, "tipo":anuncio_model.tipo, "local":anuncio_model.local, "preco_inicial":anuncio_model.preco -1, "preco_final":anuncio_model.preco +1})
     assert response.status_code == 200
 
     json = response.get_json()
-
     json = json["dados"]
 
     assert len(json["anuncios"]) == 1
@@ -192,19 +181,17 @@ def test_fazer_busca_fail(client, anuncio_model, perfil_model2):
     assert response.status_code == 200
 
     json = response.get_json()
-
     json = json["dados"]
 
     assert len(json["anuncios"]) == 0
 
 
-
+#------------------------------------------------------------------------------------------------------------------------------------------------------
 def test_get_conversas_success(client, perfil_model, perfil_model2 ,conversa_model):
     response = client.get("/get_conversas", json={"user_id":perfil_model.id})
     assert response.status_code == 200
 
     json = response.get_json()
-
     json = json["dados"]["conversas"]
 
     assert json[0]["conversa_id"] == conversa_model.id
@@ -219,13 +206,12 @@ def test_get_conversas_fail(client):
     assert response.status_code == 200
 
     json = response.get_json()
-
     json = json["dados"]
 
     assert len(json["conversas"]) == 0
 
 
-
+#------------------------------------------------------------------------------------------------------------------------------------------------------
 def test_iniciar_conversa_success(client, conversa_model_unmount):
     from app import app
     from app.models.conversa import Conversa
@@ -234,7 +220,6 @@ def test_iniciar_conversa_success(client, conversa_model_unmount):
     assert response.status_code == 200
 
     json = response.get_json()
-
     json = json["dados"]
 
     with app.app_context():
@@ -249,14 +234,13 @@ def test_iniciar_conversa_fail(client, conversa_model):
     assert response.status_code == 200
 
     json = response.get_json()
-
     json = json["dados"]
 
     assert json["conversa_id"] == conversa_model.id
     assert json["erro"] == "Conversa já existe!"
 
 
-
+#------------------------------------------------------------------------------------------------------------------------------------------------------
 def test_get_mensagens_success(client, mensagem_model):
     from datetime import datetime
 
@@ -264,7 +248,6 @@ def test_get_mensagens_success(client, mensagem_model):
     assert response.status_code == 200
 
     json = response.get_json()
-
     json = json["dados"]
 
     assert len(json) == 1
@@ -287,25 +270,23 @@ def test_get_mensagens_fail(client):
     assert len(json["dados"]) == 0
 
 
-
+#------------------------------------------------------------------------------------------------------------------------------------------------------
 def test_add_mensagem_success(client, mensagem_model_unmount):
     response = client.get("/add_mensagem", json={"user_id":mensagem_model_unmount.user, "txt":mensagem_model_unmount.txt, "conversa_id":mensagem_model_unmount.conversa, "data":mensagem_model_unmount.date.strftime('%Y-%m-%d %H:%M:%S')})
     assert response.status_code == 200
 
     json = response.get_json()
-
     json = json["dados"]
     
     assert json["msg"] == "ok"
 
 
-
+#------------------------------------------------------------------------------------------------------------------------------------------------------
 def test_get_anuncio_success(client, anuncio_model, categoria_model, tipo_model):
     response = client.get("/get_anuncio", json={"anuncio_id":anuncio_model.id})
     assert response.status_code == 200
 
     json = response.get_json()
-
     json = json["dados"]
 
     assert json["id"] == anuncio_model.id
@@ -322,7 +303,7 @@ def test_get_anuncio_success(client, anuncio_model, categoria_model, tipo_model)
     assert json["imagem"] == anuncio_model.imagem
 
 
-
+#------------------------------------------------------------------------------------------------------------------------------------------------------
 def test_excluir_anuncio_success(client, anuncio_model_mount):
     from app.models.anuncio import Anuncio
     from app import app, db
@@ -351,7 +332,7 @@ def test_excluir_anuncio_fail(client, perfil_model2, anuncio_model):
     assert json["msg"] == "O usuário não é o proprietário deste anúncio."
 
 
-
+#------------------------------------------------------------------------------------------------------------------------------------------------------
 def test_editar_anuncio_success(client, anuncio_model, tipo_model2, categoria_model2):
     titulo = "titulo"
     descricao = "descricao"
@@ -371,18 +352,81 @@ def test_editar_anuncio_success(client, anuncio_model, tipo_model2, categoria_mo
     assert json["msg"] == "ok"
 
 
+#------------------------------------------------------------------------------------------------------------------------------------------------------
+def test_finalizar_transação_condicao_1(client, transacao_model_unmount):
+    data = str(transacao_model_unmount.data_inicio).replace(' GMT', '')
+    #data = datetime.strptime(data, '%Y-%m-%d %H:%M:%S')
 
-@pytest.mark.skip()
-def test_finalizar_transação_success(client, transacao_model):
-    pass
+    response = client.get("/finalizar_transação", json={"user_id":transacao_model_unmount.interessado, "anuncio_id":transacao_model_unmount.anuncio, "data":data})
+    assert response.status_code == 200
+    
+    json = response.get_json()
+    json = json["dados"]
+
+    assert json["msg"] == "Transação criada com sucesso!"
 
 
-@pytest.mark.skip()
-def test_finalizar_transação_fail():
-    pass
+def test_finalizar_transação_condicao_2(client, perfil_model, transacao_model_unmount):
+    data = str(transacao_model_unmount.data_inicio).replace(' GMT', '')
+
+    response = client.get("/finalizar_transação", json={"user_id":perfil_model.id, "anuncio_id":transacao_model_unmount.anuncio, "data":data})
+    assert response.status_code == 200
+    
+    json = response.get_json()
+    json = json["dados"]
+
+    assert json["msg"] == "O anunciante não pode iniciar a transação!"
 
 
+def test_finalizar_transação_condicao_3(client, transacao_model):
+    data = str(transacao_model.data_inicio).replace(' GMT', '')
 
+    response = client.get("/finalizar_transação", json={"user_id":transacao_model.interessado, "anuncio_id":transacao_model.anuncio, "data":data})
+    assert response.status_code == 200
+    
+    json = response.get_json()
+    json = json["dados"]
+
+    assert json["msg"] == "Outro usuário já está interessado em fechar negócio."
+
+
+def test_finalizar_transação_condicao_4(client, perfil_model, transacao_model):
+    data = str(transacao_model.data_inicio).replace(' GMT', '')
+
+    response = client.get("/finalizar_transação", json={"user_id":perfil_model.id, "anuncio_id":transacao_model.anuncio, "data":data})
+    assert response.status_code == 200
+    
+    json = response.get_json()
+    json = json["dados"]
+
+    assert json["msg"] == "Transação finalizada com sucesso!"
+
+
+def test_finalizar_transação_condicao_5(client, transacao_model_invalida_unmount):
+    data = str(transacao_model_invalida_unmount.data_inicio).replace(' GMT', '')
+
+    response = client.get("/finalizar_transação", json={"user_id":transacao_model_invalida_unmount.interessado, "anuncio_id":transacao_model_invalida_unmount.anuncio, "data":data})
+    assert response.status_code == 200
+    
+    json = response.get_json()
+    json = json["dados"]
+
+    assert json["msg"] == "Transação criada com sucesso!"
+
+
+def test_finalizar_transação_condicao_6(client, perfil_model, transacao_model_invalida_unmount):
+    data = str(transacao_model_invalida_unmount.data_inicio).replace(' GMT', '')
+
+    response = client.get("/finalizar_transação", json={"user_id":perfil_model.id, "anuncio_id":transacao_model_invalida_unmount.anuncio, "data":data})
+    assert response.status_code == 200
+    
+    json = response.get_json()
+    json = json["dados"]
+
+    assert json["msg"] == "O anunciante não pode iniciar a transação!"
+
+
+#------------------------------------------------------------------------------------------------------------------------------------------------------
 def test_avaliar_success_maior_que_5(client, anuncio_model):
     nota = 7
 
@@ -419,7 +463,6 @@ def test_avaliar_notas_dadas(client, anuncio_model_T_nota):
     assert json["msg"] == "Notas já foram dadas"
 
 
-
 def test_avaliar_success(client, anuncio_model_T_final, transacao_model_from_Anuncio_T_final):
     nota = 4
     
@@ -432,35 +475,37 @@ def test_avaliar_success(client, anuncio_model_T_final, transacao_model_from_Anu
     assert json["msg"] == "Nota dada com sucesso!"
 
 
-# @pytest.mark.skip()
-# def test_avaliar_fail(client, anuncio_model_T_final):
-#     nota = 4
+@pytest.mark.skip()
+def test_avaliar_fail(client, anuncio_model_T_final):
+    nota = 4
 
-#     response = client.get("/avaliar", json={"user_id":anuncio_model_T_final.anunciante, "anuncio_id":anuncio_model_T_final.id, "nota":nota})
-#     assert response.status_code == 200
+    response = client.get("/avaliar", json={"user_id":anuncio_model_T_final.anunciante, "anuncio_id":anuncio_model_T_final.id, "nota":nota})
+    assert response.status_code == 200
 
-#     json = response.get_json()
-#     json = json["dados"]
+    json = response.get_json()
+    json = json["dados"]
 
-#     assert json["msg"] == "vixe mano kkk de quem que é esse id aí vei...."
+    assert json["msg"] == "vixe mano kkk de quem que é esse id aí vei...."
 
 
-
+#------------------------------------------------------------------------------------------------------------------------------------------------------
 
 #Testes funcoes  auxiliares
 
 
 def test_transacao_valida(transacao_model):
     from app.controllers.default import transacao_valida
-    from datetime import datetime
+    from datetime import datetime, timedelta
 
     data = datetime.utcnow()
+    transacao_model.data_inicio -= timedelta(days=1)
+
     response = transacao_valida(transacao_model, data)
 
     assert response == False
 
 
-
+#------------------------------------------------------------------------------------------------------------------------------------------------------
 def test_anuncio_para_dicionario(anuncio_model, categoria_model, tipo_model):
     from app.controllers.default import anuncio_para_dicionario
     from app import app
@@ -485,7 +530,7 @@ def test_anuncio_para_dicionario(anuncio_model, categoria_model, tipo_model):
     assert response["imagem"] == anuncio_model.imagem
 
 
-
+#------------------------------------------------------------------------------------------------------------------------------------------------------
 def test_sort_by_date(mensagem_model, mensagem_model2):
     from app.controllers.default import sort_by_date
 
@@ -497,16 +542,29 @@ def test_sort_by_date(mensagem_model, mensagem_model2):
     assert response[1] == mensagem_model2
 
 
-@pytest.mark.skip()
+#------------------------------------------------------------------------------------------------------------------------------------------------------
 def test_quick_sort(mensagem_model, mensagem_model2):
     from app.controllers.default import quick_sort
 
-    response = response = [mensagem_model2, mensagem_model]
+    response = [mensagem_model2, mensagem_model]
 
-    quick_sort(response)
+    response = quick_sort(response)
 
     assert response[0] == mensagem_model
     assert response[1] == mensagem_model2
 
 
-# Implementar fixture de response que repete varias vezes, eliminando redundancia
+#------------------------------------------------------------------------------------------------------------------------------------------------------
+@pytest.mark.skip(reason="Nao tem tratamento de excessao nesta rota, exemplo de possivel tratamento.")
+@pytest.mark.smoke
+def test_get_perfil_fail(client):
+    response = client.get("/get_perfil", json={"user_id":-1})
+    assert response.status_code == 200
+
+    json = response.get_json()
+
+    json = json["dados"]
+    
+    assert json["nome"] == None
+    assert json["curso"] == None
+    assert json["reputacao"] == None
