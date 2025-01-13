@@ -178,63 +178,18 @@ class _PerfilState extends State<Perfil> {
                         color: Theme.of(context).primaryColorLight,
                       )),
                 ),
-                title: Padding(
-                  padding: const EdgeInsets.all(1),
-                  child: TextField(
-                    onTap: () {
-                      setState(() {
-                        // TODO: Mudar animação de transição
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => Pesquisa()),
-                        );
-                      });
-                    },
-                    readOnly: true,
-                    autocorrect: false,
-                    style: TextStyle(
-                      color: Theme.of(context).primaryColorLight,
-                      fontSize: 16,
-                    ),
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide.none,
-                      ),
-                      filled: true,
-                      fillColor: Theme.of(context).cardColor.withOpacity(0.1),
-                      prefixIcon: Icon(
-                        Icons.search,
-                        size: 22,
+                title: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(1),
+                    child: Text(
+                      "Perfil",
+                      style: TextStyle(
                         color: Theme.of(context).primaryColorLight,
-                      ),
-                      contentPadding: EdgeInsets.symmetric(vertical: 14),
-                      hintText: "Pesquisar",
-                      hintStyle: TextStyle(
-                        color: Theme.of(context).primaryColorLight,
-                        fontSize: 16,
+                        fontSize: 30,
                       ),
                     ),
                   ),
                 ),
-                actions: [
-                  // Actions é o ícone à direita do AppBar
-                  Padding(
-                    padding: const EdgeInsets.only(
-                        left: 1, top: 10, bottom: 10, right: 10),
-                    child: IconButton(
-                      padding: EdgeInsets.only(bottom: 1),
-                      icon: Icon(
-                        Icons.message_rounded,
-                        color: Theme.of(context).primaryColorLight,
-                        size: 30,
-                      ),
-                      onPressed: () {
-                        // TODO
-                      },
-                    ),
-                  ),
-                ],
               ),
             ),
             body: LayoutBuilder(builder: (context, constraints) {
@@ -269,15 +224,13 @@ class _PerfilState extends State<Perfil> {
                               Text(perfil["nome"],
                                   style: TextStyle(
                                     fontSize: 24,
-                                    color:
-                                        Theme.of(context).primaryColorLight,
+                                    color: Theme.of(context).primaryColorLight,
                                   )),
                               SizedBox(height: 5),
                               Text(perfil["curso"],
                                   style: TextStyle(
                                     fontSize: 18,
-                                    color:
-                                        Theme.of(context).primaryColorLight,
+                                    color: Theme.of(context).primaryColorLight,
                                   )),
                               Row(
                                 children: [
@@ -286,8 +239,8 @@ class _PerfilState extends State<Perfil> {
                                     child: Text(
                                       "${perfil["reputacao"]}",
                                       style: TextStyle(
-                                        color: Theme.of(context)
-                                            .primaryColorLight,
+                                        color:
+                                            Theme.of(context).primaryColorLight,
                                         fontSize: 20,
                                       ),
                                     ),
@@ -348,7 +301,7 @@ class _PerfilState extends State<Perfil> {
                                 ),
                               ),
                               onPressed: () {
-                                print(constraints.maxHeight);
+                                /* print(constraints.maxHeight);
                                 Navigator.push(
                                         context,
                                         MaterialPageRoute(
@@ -357,7 +310,7 @@ class _PerfilState extends State<Perfil> {
                                             anuncioId: anuncios[index]["id"],
                                             userId: id,
                                           ),
-                                        ));
+                                        )); */
                               },
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
