@@ -304,10 +304,10 @@ def finalizar_transação():
         else:
             resposta = "O anunciante não pode iniciar a transação!"
     else:
-        if len(transacoes) > 1:
-            # Não deveria acontecer em hipótese alguma. Se acontecer, tratar aqui.
-            pass
-        else:
+        # if len(transacoes) > 1:
+        #     # Não deveria acontecer em hipótese alguma. Se acontecer, tratar aqui.
+        #     pass
+        # else:
             transacao = transacoes[0]
             if transacao_valida(transacao, data):
                 if user_id != anuncio.anunciante:

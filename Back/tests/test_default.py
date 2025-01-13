@@ -373,7 +373,7 @@ def test_editar_anuncio_success(client, anuncio_model, tipo_model2, categoria_mo
 
 
 @pytest.mark.skip()
-def test_finalizar_transação_success():
+def test_finalizar_transação_success(client, transacao_model):
     pass
 
 
@@ -432,17 +432,17 @@ def test_avaliar_success(client, anuncio_model_T_final, transacao_model_from_Anu
     assert json["msg"] == "Nota dada com sucesso!"
 
 
-@pytest.mark.skip()
-def test_avaliar_fail(client, anuncio_model_T_final):
-    nota = 4
+# @pytest.mark.skip()
+# def test_avaliar_fail(client, anuncio_model_T_final):
+#     nota = 4
 
-    response = client.get("/avaliar", json={"user_id":anuncio_model_T_final.anunciante, "anuncio_id":anuncio_model_T_final.id, "nota":nota})
-    assert response.status_code == 200
+#     response = client.get("/avaliar", json={"user_id":anuncio_model_T_final.anunciante, "anuncio_id":anuncio_model_T_final.id, "nota":nota})
+#     assert response.status_code == 200
 
-    json = response.get_json()
-    json = json["dados"]
+#     json = response.get_json()
+#     json = json["dados"]
 
-    assert json["msg"] == "vixe mano kkk de quem que é esse id aí vei...."
+#     assert json["msg"] == "vixe mano kkk de quem que é esse id aí vei...."
 
 
 
