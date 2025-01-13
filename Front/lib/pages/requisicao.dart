@@ -62,8 +62,6 @@ class _JsonScreenState extends State<JsonScreen> {
         // Resposta da requisição
         final resposta = json.decode(response.body);
         final perfil = resposta['dados'];
-        print(perfil);
-        print("-------------------------");
         return perfil;
       } else {
         print("Erro na comunicação, tente novamente mais tarde");
@@ -98,7 +96,6 @@ class _JsonScreenState extends State<JsonScreen> {
         final anuncios = resposta['anuncios'].cast<
             Map<String,
                 dynamic>>(); // List<dynamic> -> List<Map<String, dynamic>>
-        print(resposta);
         print("-------------------------");
         return anuncios;
       } else {

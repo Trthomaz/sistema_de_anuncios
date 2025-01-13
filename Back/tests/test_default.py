@@ -252,7 +252,7 @@ def test_iniciar_conversa_fail(client, conversa_model):
 
     json = json["dados"]
 
-    assert json["conversa_id"] == -1
+    assert json["conversa_id"] == conversa_model.id
     assert json["erro"] == "Conversa já existe!"
 
 

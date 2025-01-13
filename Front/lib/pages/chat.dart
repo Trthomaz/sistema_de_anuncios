@@ -76,7 +76,6 @@ class _ChatState extends State<Chat> {
         // Resposta da requisição
 
         Map<String, dynamic> resposta = json.decode(response.body);
-        print(resposta["dados"]);
         if (!resposta["dados"].isEmpty) {
           return resposta["dados"];
         }
@@ -185,7 +184,6 @@ class _ChatState extends State<Chat> {
         },
         body: json.encode(dados),
       );
-      print(response.body);
       Map<String, dynamic> resposta = json.decode(response.body);
       return resposta["dados"]["nome"];
     } catch (e) {

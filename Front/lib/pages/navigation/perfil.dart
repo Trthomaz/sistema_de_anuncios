@@ -1,14 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:sistema_de_anuncios/pages/navigation/navigation.dart';
 import 'package:sistema_de_anuncios/pages/pesquisa.dart';
+import 'package:sistema_de_anuncios/pages/navigation/home.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'dart:typed_data';
 
 class Perfil extends StatefulWidget {
   final String ip;
   final int id;
+  final String ondeEntrou;
 
-  const Perfil({super.key, required this.ip, required this.id});
+  const Perfil(
+      {super.key,
+      required this.ip,
+      required this.id,
+      required this.ondeEntrou});
 
   @override
   State<Perfil> createState() => _PerfilState();
@@ -52,8 +60,6 @@ class _PerfilState extends State<Perfil> {
         // Resposta da requisição
         final resposta = json.decode(response.body);
         final perfil = resposta['dados'];
-        print(perfil);
-        print("-------------------------");
         return perfil;
       } else {
         print("Erro na comunicação, tente novamente mais tarde");
@@ -62,6 +68,17 @@ class _PerfilState extends State<Perfil> {
       print(e);
     }
     return null;
+  }
+
+  Uint8List? decodificar(String base64Image) {
+    // Verifica se a string Base64 começa com o prefixo 'data:image'
+    if (base64Image.startsWith("data:image")) {
+      // Remove o prefixo 'data:image/...;base64,' (se presente)
+      base64Image = base64Image.split(",")[1];
+    }
+
+    // Decodifica a string Base64 para bytes (Uint8List)
+    return base64Decode(base64Image);
   }
 
   Future<List<Map<String, dynamic>>?> _meusAnuncios() async {
@@ -88,8 +105,6 @@ class _PerfilState extends State<Perfil> {
         final anuncios = resposta['anuncios'].cast<
             Map<String,
                 dynamic>>(); // List<dynamic> -> List<Map<String, dynamic>>
-        print(resposta);
-        print("-------------------------");
         return anuncios;
       } else {
         print("Erro na comunicação, tente novamente mais tarde");
@@ -103,7 +118,6 @@ class _PerfilState extends State<Perfil> {
   Future<void> _carregarPerfil() async {
     // Simula a busca de dados (substitua pela sua lógica real)
     Map<String, dynamic>? dados = await _perfil();
-    print(dados);
 
     setState(() {
       if (dados == null) {
@@ -111,15 +125,12 @@ class _PerfilState extends State<Perfil> {
         return;
       }
       perfil = dados;
-      print("----------AQUI---------------");
-      print(perfil);
     });
   }
 
   Future<void> _carregarAnuncios() async {
     // Simula a busca de dados (substitua pela sua lógica real)
     List<Map<String, dynamic>>? anunciosBuscados = await _meusAnuncios();
-    print(anunciosBuscados);
 
     setState(() {
       if (anunciosBuscados == null) {
@@ -152,13 +163,22 @@ class _PerfilState extends State<Perfil> {
                     // Leading é o ícone à esquerda do AppBar
                     padding: const EdgeInsets.only(
                         left: 10, top: 10, bottom: 10, right: 1),
-                    child: Image.asset(
-                      // Imagem do ícone do app
-                      'assets/images/andaime.png',
-                      fit: BoxFit.contain,
-                      width: 0.5,
-                      height: 0.5,
-                    ),
+                    child: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            widget.ondeEntrou == "Anuncio"
+                                ? Navigator.pop(context)
+                                : Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                    return Navigation(
+                                        ip: widget.ip, id: widget.id);
+                                  }));
+                          });
+                        },
+                        icon: Icon(
+                          Icons.arrow_back,
+                          color: Theme.of(context).primaryColorLight,
+                        )),
                   ),
                   title: Padding(
                     padding: const EdgeInsets.all(1),
@@ -339,8 +359,9 @@ class _PerfilState extends State<Perfil> {
                                     ClipRRect(
                                       borderRadius: BorderRadius.circular(10),
                                       child: anuncios[index]["imagem"] != null
-                                          ? Image.asset(
-                                              anuncios[index]["imagem"],
+                                          ? Image.memory(
+                                              decodificar(
+                                                  anuncios[index]["imagem"])!,
                                               fit: BoxFit.contain,
                                               height: imageSize,
                                               width: imageSize,

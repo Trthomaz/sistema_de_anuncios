@@ -32,7 +32,11 @@ class _NavigationState extends State<Navigation> {
   Widget build(BuildContext context) {
     final List<Widget> _pages = <Widget>[
       Home(ip: ip, id: id),
-      Perfil(ip: ip, id: id),
+      Perfil(
+        ip: ip,
+        id: id,
+        ondeEntrou: "Navigation",
+      ),
       Anunciar(ip: ip, id: id),
       MeusAnuncios(ip: ip, id: id),
       Configs(),

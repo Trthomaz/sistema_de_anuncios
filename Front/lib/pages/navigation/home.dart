@@ -23,17 +23,16 @@ class _HomeState extends State<Home> {
   late List<Map<String, dynamic>> venda;
   late List<Map<String, dynamic>> busca;
 
-Uint8List? decodificar(String base64Image) {
-  // Verifica se a string Base64 começa com o prefixo 'data:image'
-  if (base64Image.startsWith("data:image")) {
-    // Remove o prefixo 'data:image/...;base64,' (se presente)
-    base64Image = base64Image.split(",")[1];
+  Uint8List? decodificar(String base64Image) {
+    // Verifica se a string Base64 começa com o prefixo 'data:image'
+    if (base64Image.startsWith("data:image")) {
+      // Remove o prefixo 'data:image/...;base64,' (se presente)
+      base64Image = base64Image.split(",")[1];
+    }
+
+    // Decodifica a string Base64 para bytes (Uint8List)
+    return base64Decode(base64Image);
   }
-
-  // Decodifica a string Base64 para bytes (Uint8List)
-  return base64Decode(base64Image);
-}
-
 
   Future<void> _carregarAnuncios() async {
     // Simula a busca de dados (substitua pela sua lógica real)
@@ -74,15 +73,10 @@ Uint8List? decodificar(String base64Image) {
         final resposta = json.decode(response.body);
         final venda = resposta['dados']['venda'].cast<Map<String, dynamic>>();
         final busca = resposta['dados']['busca'].cast<Map<String, dynamic>>();
-        print(resposta);
-        print("-------------------------");
-        print(venda);
-        print(busca);
         Map<String, List<Map<String, dynamic>>>? anuncios = {
           'venda': venda,
           'busca': busca,
         };
-        print(anuncios);
         return anuncios;
       } else {
         print("Erro na comunicação, tente novamente mais tarde");
@@ -342,18 +336,17 @@ Uint8List? decodificar(String base64Image) {
                                       ),
                                     ),
                                     onPressed: () {
+                                      print(venda[index]["anuncio_id"]);
                                       Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
+                                          context,
+                                          MaterialPageRoute(
                                             builder: (context) => Anuncio(
-                                                  titulo: venda[index]
-                                                      ["titulo"],
-                                                  preco: venda[index]
-                                                          ["preco"] ??
-                                                      0.0,
-                                                  imagem: venda[index]["imagem"]
-                                                )),
-                                      );
+                                              ip: ip,
+                                              anuncioId: venda[index]
+                                                  ["anuncio_id"],
+                                              userId: id,
+                                            ),
+                                          ));
                                     },
                                     child: Column(
                                       crossAxisAlignment:
@@ -364,12 +357,12 @@ Uint8List? decodificar(String base64Image) {
                                                 borderRadius:
                                                     BorderRadius.circular(10),
                                                 child: Image.memory(
-                                                  decodificar(venda[index]["imagem"])!,
+                                                  decodificar(
+                                                      venda[index]["imagem"])!,
                                                   fit: BoxFit.contain,
                                                   height: imageSize,
                                                   width: imageSize,
-                                                )
-                                                )
+                                                ))
                                             : Padding(
                                                 padding:
                                                     const EdgeInsets.all(10),
@@ -486,18 +479,15 @@ Uint8List? decodificar(String base64Image) {
                                     ),
                                     onPressed: () {
                                       Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
+                                          context,
+                                          MaterialPageRoute(
                                             builder: (context) => Anuncio(
-                                                  titulo: busca[index]
-                                                      ["titulo"],
-                                                  preco: busca[index]
-                                                          ["preco"] ??
-                                                      0.0,
-                                                  imagem: busca[index]
-                                                      ["imagem"],
-                                                )),
-                                      );
+                                              ip: ip,
+                                              anuncioId: busca[index]
+                                                  ["anuncio_id"],
+                                              userId: id,
+                                            ),
+                                          ));
                                     },
                                     child: Column(
                                       crossAxisAlignment:
@@ -508,12 +498,12 @@ Uint8List? decodificar(String base64Image) {
                                                 borderRadius:
                                                     BorderRadius.circular(10),
                                                 child: Image.memory(
-                                                  decodificar(busca[index]["imagem"])!,
+                                                  decodificar(
+                                                      busca[index]["imagem"])!,
                                                   fit: BoxFit.contain,
                                                   height: imageSize,
                                                   width: imageSize,
-                                                )
-                                            )
+                                                ))
                                             : Padding(
                                                 padding:
                                                     const EdgeInsets.all(10),

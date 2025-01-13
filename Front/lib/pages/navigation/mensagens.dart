@@ -72,7 +72,6 @@ class _MensagensState extends State<Mensagens> {
       if (response.statusCode == 200) {
         // Resposta da requisição
         Map<String, dynamic> resposta = json.decode(response.body);
-        print(resposta["dados"]["conversas"]);
         if (!resposta["dados"]["conversas"].isEmpty) {
           return resposta["dados"]["conversas"];
         } else {
@@ -163,7 +162,7 @@ class _MensagensState extends State<Mensagens> {
                                               ),
                                             ),
                                             onPressed: () {
-                                              ;
+                                              print(snapshot.data!);
                                               setState(() {
                                                 Navigator.push(
                                                     context,
@@ -179,10 +178,20 @@ class _MensagensState extends State<Mensagens> {
                                                                       [
                                                                       "conversa_id"],
                                                               'ip': ip,
-                                                              'id': id
+                                                              'id': snapshot.data![
+                                                                              index][
+                                                                          "anunciante_id"] ==
+                                                                      id
+                                                                  ? snapshot.data![
+                                                                          index]
+                                                                      [
+                                                                      "interessado_id"]
+                                                                  : snapshot.data![
+                                                                          index]
+                                                                      [
+                                                                      "anunciante_id"]
                                                             })));
                                               });
-                                              // TODO: Requisição
                                             },
                                             child: Row(
                                               mainAxisAlignment:
@@ -235,7 +244,7 @@ class _MensagensState extends State<Mensagens> {
                                                                     .primaryColorLight,
                                                                 fontSize: 16,
                                                               ),
-                                                            )
+                                                            ),
                                                     ],
                                                   ),
                                                 ),

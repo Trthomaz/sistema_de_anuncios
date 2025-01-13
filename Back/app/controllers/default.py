@@ -74,7 +74,6 @@ def criar_anuncio():
     celular = dados.get("celular")
     cep = dados.get("cep")
     imagem = dados.get("imagem")
-    print(imagem)
     
     user_id = dados.get("user_id")
     anuncio = Anuncio(user_id,titulo,descricao,celular,cep,categoria,ativo=ativo,tipo=tipo_anuncio, preco=preco, imagem=imagem)
@@ -206,7 +205,8 @@ def iniciar_conversa():
         id = Conversa.query.filter(Conversa.anunciante == anunciante_id, Conversa.interessado == interessado_id).first().id
         dados["dados"] = {"conversa_id": id, "erro": "Tudo certo!"}
     else:
-        dados["dados"] = {"conversa_id": -1, "erro": "Conversa já existe!"}
+        id = conversas[0].id
+        dados["dados"] = {"conversa_id": id, "erro": "Conversa já existe!"}
     return jsonify(dados)
 
 @app.route("/get_mensagens", methods = ["POST", "GET"])

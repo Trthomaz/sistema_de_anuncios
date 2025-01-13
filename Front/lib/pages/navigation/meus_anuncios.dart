@@ -30,7 +30,6 @@ class _MeusAnunciosState extends State<MeusAnuncios> {
   Future<void> _carregarAnuncios() async {
     // Simula a busca de dados (substitua pela sua lógica real)
     List<Map<String, dynamic>>? anunciosBuscados = await _meusAnuncios();
-    print(anunciosBuscados);
 
     setState(() {
       if (anunciosBuscados == null) {
@@ -66,8 +65,6 @@ class _MeusAnunciosState extends State<MeusAnuncios> {
         final anuncios = resposta['anuncios'].cast<
             Map<String,
                 dynamic>>(); // List<dynamic> -> List<Map<String, dynamic>>
-        print(resposta);
-        print("-------------------------");
         return anuncios;
       } else {
         print("Erro na comunicação, tente novamente mais tarde");
@@ -170,7 +167,6 @@ class _MeusAnunciosState extends State<MeusAnuncios> {
                                   ),
                                   onPressed: () {
                                     print(constraints.maxHeight);
-                                    print(anuncios);
                                     // TODO: Implementar abrir anuncio
                                   },
                                   child: Row(

@@ -58,20 +58,15 @@ class _AnunciarState extends State<Anunciar> {
     final url = Uri.parse('http://$ip:5000/criar_anuncio');
     String base64Image;
 
-    if (_selectedImage == null){
+    if (_selectedImage == null) {
       base64Image = "";
-    } 
-
-    else{
+    } else {
       // Ler os bytes da imagem
       final bytes = await _selectedImage!.readAsBytes();
 
       // Codificar em Base64
       base64Image = base64Encode(bytes);
     }
-
-    print(base64Image);
-    
 
     // Dados enviados
     final dados = {
@@ -132,8 +127,6 @@ class _AnunciarState extends State<Anunciar> {
       if (response.statusCode == 200) {
         // Resposta da requisição
         Map<String, dynamic> resposta = json.decode(response.body);
-        print(response.statusCode);
-        print(url);
         if (resposta['status'] == true) {
           return true;
         } else {
@@ -143,12 +136,11 @@ class _AnunciarState extends State<Anunciar> {
         anunciarErrorMessage("Erro na comunicação, tente novamente mais tarde");
       }
     } catch (e) {
-      print(e);
       anunciarErrorMessage("Por favor, preencha todos os campos");
     }
     return false;
   }
-  
+
   Future<void> _pickImage() async {
     // Exibe um diálogo para escolher entre câmera ou galeria
     final pickedSource = await showModalBottomSheet<int>(
@@ -645,16 +637,6 @@ class _AnunciarState extends State<Anunciar> {
                       child: ElevatedButton(
                         onPressed: () async {
                           bool anunciar = await _anunciar();
-                          print(_tituloController.text);
-                          print(_descricaoController.text);
-                          print(_precoController.text);
-                          print(categoria);
-                          print(tipo);
-                          print(_cepController.text);
-                          print(_celularController.text);
-                          print(ip);
-                          print(id);
-                          print('http://$ip:5000/criar_anuncio');
                           if (anunciar) {
                             return showDialog(
                                 context: context,
