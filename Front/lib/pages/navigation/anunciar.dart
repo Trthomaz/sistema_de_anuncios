@@ -56,14 +56,11 @@ class _AnunciarState extends State<Anunciar> {
   // Requisição de login
   Future<bool> _anunciar() async {
     final url = Uri.parse('http://$ip:5000/criar_anuncio');
-    String base64Image;
+    String? base64Image = null;
 
-    if (_selectedImage == null) {
-      base64Image = "";
-    } else {
+    if (_selectedImage != null) {
       // Ler os bytes da imagem
       final bytes = await _selectedImage!.readAsBytes();
-
       // Codificar em Base64
       base64Image = base64Encode(bytes);
     }
@@ -535,7 +532,7 @@ class _AnunciarState extends State<Anunciar> {
                       keyboardType: TextInputType.number,
                       inputFormatters: [
                         FilteringTextInputFormatter.allow(
-                            RegExp(r'^\d+\,?\d{0,2}'))
+                            RegExp(r'^\d+\.?\d{0,2}'))
                       ],
                       controller: _precoController,
                       autofocus: false,

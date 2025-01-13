@@ -19,19 +19,19 @@ class _ConfigsState extends State<Configs> {
           child: AppBar(
             backgroundColor: Theme.of(context).primaryColor,
             elevation: 3,
-            leading: Icon(
-              Icons.settings,
-              color: Theme.of(context).primaryColorLight,
-              size: 30,
-            ),
-            title: Padding(
-                padding: const EdgeInsets.only(top: 3),
-                child: Text(
-                  "Configurações",
-                  style: TextStyle(
-                      color: Theme.of(context).primaryColorLight,
-                      fontSize: 26),
-                )),
+            automaticallyImplyLeading: false,
+            title: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(1),
+                    child: Text(
+                      "Configurações",
+                      style: TextStyle(
+                        color: Theme.of(context).primaryColorLight,
+                        fontSize: 30,
+                      ),
+                    ),
+                  ),
+                ),
           ),
         ),
         body: LayoutBuilder(builder: (context, constraints) {

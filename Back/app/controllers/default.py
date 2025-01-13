@@ -266,7 +266,6 @@ def editar_anuncio():
     tipo_anuncio = dados.get("tipo_anuncio")
     categoria = dados.get("categoria")
     preco = dados.get("preco")
-    preco = float(preco.replace(',', '.'))
     celular = dados.get("celular")
     cep = dados.get("cep")
     imagem = dados.get("imagem")

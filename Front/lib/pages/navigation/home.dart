@@ -86,63 +86,152 @@ class _HomeState extends State<Home> {
     return null;
   }
 
-  // Lista de opções
-  final List<String> options = [
+  final List<String> categorias = [
     'Opção 1',
     'Opção 2',
   ];
 
-  // Estado de seleção para cada opção
-  late Map<String, bool> selectedOptions;
+  final List<String> tipos = [
+    'Venda',
+    'Busca',
+  ];
+
+
+
+  String? categoria;
+  String? tipo;
 
   @override
   void initState() {
     super.initState();
     ip = widget.ip;
     id = widget.id;
-    // Inicializa o estado de seleção (todas como não selecionadas)
-    selectedOptions = {for (var option in options) option: false};
     _carregarAnuncios();
   }
 
-  void _showMultiSelectDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (context, setDialogState) {
-            return AlertDialog(
-              title: Text('Selecione as opções'),
-              content: SingleChildScrollView(
-                child: Column(
-                  children: options.map((String option) {
-                    return CheckboxListTile(
-                      title: Text(option),
-                      value: selectedOptions[option],
-                      onChanged: (bool? value) {
-                        setDialogState(() {
-                          selectedOptions[option] = value ?? false;
-                        });
-                      },
-                    );
-                  }).toList(),
+  void _categorias() {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return StatefulBuilder(
+        builder: (context, setDialogState) {
+          return AlertDialog(
+            title: SizedBox(
+              height: 60,
+              width: 270,
+              child: Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                color: Theme.of(context).primaryColor,
+                child: Center(
+                  child: Text("Categorias",
+                      style: TextStyle(
+                        fontSize: 24,
+                        color: Theme.of(context).primaryColorLight,
+                      )),
                 ),
               ),
-              actions: [
-                TextButton(
-                  child: Text('Fechar'),
-                  onPressed: () {
-                    setState(() {}); // Atualiza o estado principal
-                    Navigator.of(context).pop();
-                  },
+            ),
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            content: SingleChildScrollView(
+              child: Column(
+                children: categorias.map((String option) {
+                  return RadioListTile<String>(
+                    activeColor: Theme.of(context).primaryColor,
+                    title: Text(option),
+                    value: option,
+                    groupValue: categoria,
+                    onChanged: (String? value) {
+                      setDialogState(() {
+                        categoria = value; // Atualiza a opção selecionada
+                      });
+                    },
+                  );
+                }).toList(),
+              ),
+            ),
+            actions: [
+              ElevatedButton(
+                child: Text("Ok",
+                    style:
+                        TextStyle(color: Theme.of(context).primaryColorLight)),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                style: ElevatedButton.styleFrom(
+                    backgroundColor:
+                        Theme.of(context).primaryColor.withOpacity(1)),
+              )
+            ],
+          );
+        },
+      );
+    },
+  );
+}
+
+  void _tipos() {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return StatefulBuilder(
+        builder: (context, setDialogState) {
+          return AlertDialog(
+            title: SizedBox(
+              height: 60,
+              width: 270,
+              child: Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
                 ),
-              ],
-            );
-          },
-        );
-      },
-    );
-  }
+                color: Theme.of(context).primaryColor,
+                child: Center(
+                  child: Text("Tipos de Anúncio",
+                      style: TextStyle(
+                        fontSize: 24,
+                        color: Theme.of(context).primaryColorLight,
+                      )),
+                ),
+              ),
+            ),
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            content: SingleChildScrollView(
+              child: Column(
+                children: tipos.map((String option) {
+                  return RadioListTile<String>(
+                    activeColor: Theme.of(context).primaryColor,
+                    title: Text(option),
+                    value: option,
+                    groupValue: tipo,
+                    onChanged: (String? value) {
+                      setDialogState(() {
+                        tipo = value; // Atualiza a opção selecionada
+                      });
+                    },
+                  );
+                }).toList(),
+              ),
+            ),
+            actions: [
+              ElevatedButton(
+                child: Text("Ok",
+                    style:
+                        TextStyle(color: Theme.of(context).primaryColorLight)),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                style: ElevatedButton.styleFrom(
+                    backgroundColor:
+                        Theme.of(context).primaryColor.withOpacity(1)),
+              )
+            ],
+          );
+        },
+      );
+    },
+  );
+}
 
   void _filtroDialog() {
     showDialog(
@@ -150,7 +239,7 @@ class _HomeState extends State<Home> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: SizedBox(
-              height: 50,
+              height: 60,
               width: 150,
               child: Card(
                 shape: RoundedRectangleBorder(
@@ -166,11 +255,39 @@ class _HomeState extends State<Home> {
                 ),
               ),
             ),
-            content: FilledButton(
-                onPressed: () {
-                  _showMultiSelectDialog();
-                },
-                child: Text("Categorias")),
+            content: SizedBox(
+              height: 120,
+              child: Column(
+                children: [
+                  Container(
+                    height: 50,
+                    width: 250,
+                    child: FilledButton(
+                        onPressed: () {
+                          _categorias();
+                        },
+                        child: Text("Categorias", style: TextStyle(fontSize: 20),),
+                        style: FilledButton.styleFrom(
+                          backgroundColor: Theme.of(context).highlightColor,
+                        ),),
+                  ),
+                  SizedBox(height: 10,),
+                  Container(
+                    height: 50,
+                    width: 250,
+                    child: FilledButton(
+                    onPressed: () {
+                      _tipos();
+                    },
+                    child: Text("Tipos de Anúncio", style: TextStyle(fontSize: 20)),
+                    style: FilledButton.styleFrom(
+                          backgroundColor: Theme.of(context).highlightColor,
+                        ),),
+                  ),
+                ],
+              ),
+            ),
+                
             backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             actions: [
               ElevatedButton(
@@ -220,6 +337,10 @@ class _HomeState extends State<Home> {
                 title: Padding(
                   padding: const EdgeInsets.all(1),
                   child: TextField(
+                    onTap: (){
+                      print(tipos);
+                      print(categorias);
+                    },
                     autocorrect: false,
                     style: TextStyle(
                       color: Theme.of(context).primaryColorLight,
