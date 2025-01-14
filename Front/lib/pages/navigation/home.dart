@@ -19,9 +19,14 @@ class _HomeState extends State<Home> {
   late String ip;
   late int id;
   bool _isLoading = true;
+  bool pesquisa = false;
+  TextEditingController _pesquisaController = TextEditingController();
+  TextEditingController minPreco = TextEditingController();
+  TextEditingController maxPreco = TextEditingController();
 
   late List<Map<String, dynamic>> venda;
   late List<Map<String, dynamic>> busca;
+  late List<Map<String, dynamic>> anuncios;
 
   Uint8List? decodificar(String base64Image) {
     // Verifica se a string Base64 começa com o prefixo 'data:image'
@@ -35,6 +40,9 @@ class _HomeState extends State<Home> {
   }
 
   Future<void> _carregarAnuncios() async {
+    setState(() {
+      _isLoading = true;
+    });
     Map<String, List<Map<String, dynamic>>>? feed = await _feed();
 
     setState(() {
@@ -48,6 +56,23 @@ class _HomeState extends State<Home> {
       _isLoading = false;
     });
   }
+
+  Future<void> _carregarPesquisa(txt) async {
+    setState(() {
+      _isLoading = true;
+    });
+    List<Map<String, dynamic>>? feed = await _pesquisar(txt);
+
+    setState(() {
+      if (feed == null) {
+        anuncios = [];
+        return;
+      }
+      anuncios = feed;
+      _isLoading = false;
+    });
+  }
+
 
   Future<Map<String, List<Map<String, dynamic>>>?> _feed() async {
     final url = Uri.parse('http://${ip}:5000/get_feed');
@@ -76,6 +101,46 @@ class _HomeState extends State<Home> {
           'venda': venda,
           'busca': busca,
         };
+        return anuncios;
+      } else {
+        print("Erro na comunicação, tente novamente mais tarde");
+      }
+    } catch (e) {
+      print(e);
+    }
+    return null;
+  }
+
+  Future<List<Map<String, dynamic>>?> _pesquisar(txt) async{
+    final url = Uri.parse('http://${ip}:5000/fazer_busca');
+
+    // Dados enviados
+    final dados = {
+      'user_id': id,
+      'txt': txt,
+      'categoria': categoria,
+      'tipo': tipo,
+      'preco_inicial': minPreco.text,
+      'preco_final': maxPreco.text,
+    };
+
+    // Enviar requisição
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: json.encode(dados),
+      );
+      if (response.statusCode == 200) {
+        // Resposta da requisição
+        final resposta = json.decode(response.body);
+        print("RESPOSTA");
+        print(resposta);
+        final anuncios = resposta['dados']['anuncios'].cast<Map<String, dynamic>>();
+        print("ANUNCIOS");
+        print(anuncios);
         return anuncios;
       } else {
         print("Erro na comunicação, tente novamente mais tarde");
@@ -233,6 +298,109 @@ class _HomeState extends State<Home> {
   );
 }
 
+  void _precos() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return AlertDialog(
+              title: SizedBox(
+                height: 60,
+                width: 270,
+                child: Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  color: Theme.of(context).primaryColor,
+                  child: Center(
+                    child: Text("Preço",
+                        style: TextStyle(
+                          fontSize: 24,
+                          color: Theme.of(context).primaryColorLight,
+                        )),
+                  ),
+                ),
+              ),
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    controller: minPreco,
+                    autofocus: false,
+                    autocorrect: false,
+                    style: TextStyle(
+                      color: Theme.of(context).primaryColorLight,
+                      fontSize: 16,
+                    ),
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide.none,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      filled: true,
+                      fillColor:
+                          Theme.of(context).primaryColor.withOpacity(0.2),
+                      contentPadding:
+                          EdgeInsets.symmetric(vertical: 14, horizontal: 14),
+                      hintText: "Preço mínimo",
+                      hintStyle: TextStyle(
+                        color: Theme.of(context).primaryColorLight,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  TextField(
+                    controller: maxPreco,
+                    autofocus: false,
+                    autocorrect: false,
+                    style: TextStyle(
+                      color: Theme.of(context).primaryColorLight,
+                      fontSize: 16,
+                    ),
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide.none,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      filled: true,
+                      fillColor:
+                          Theme.of(context).primaryColor.withOpacity(0.2),
+                      contentPadding:
+                          EdgeInsets.symmetric(vertical: 14, horizontal: 14),
+                      hintText: "Preço máximo",
+                      hintStyle: TextStyle(
+                        color: Theme.of(context).primaryColorLight,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              actions: [
+                ElevatedButton(
+                  child: Text("Ok",
+                      style:
+                          TextStyle(color: Theme.of(context).primaryColorLight)),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor:
+                          Theme.of(context).primaryColor.withOpacity(1)),
+                )
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
   void _filtroDialog() {
     showDialog(
         context: context,
@@ -256,7 +424,7 @@ class _HomeState extends State<Home> {
               ),
             ),
             content: SizedBox(
-              height: 120,
+              height: 170,
               child: Column(
                 children: [
                   Container(
@@ -280,6 +448,19 @@ class _HomeState extends State<Home> {
                       _tipos();
                     },
                     child: Text("Tipos de Anúncio", style: TextStyle(fontSize: 20)),
+                    style: FilledButton.styleFrom(
+                          backgroundColor: Theme.of(context).highlightColor,
+                        ),),
+                  ),
+                  SizedBox(height: 10,),
+                  Container(
+                    height: 50,
+                    width: 250,
+                    child: FilledButton(
+                    onPressed: () {
+                      _precos();
+                    },
+                    child: Text("Preço", style: TextStyle(fontSize: 20)),
                     style: FilledButton.styleFrom(
                           backgroundColor: Theme.of(context).highlightColor,
                         ),),
@@ -337,9 +518,12 @@ class _HomeState extends State<Home> {
                 title: Padding(
                   padding: const EdgeInsets.all(1),
                   child: TextField(
-                    onTap: (){
-                      print(tipos);
-                      print(categorias);
+                    controller: _pesquisaController,
+                    onSubmitted: (txt){
+                      _carregarPesquisa(txt);
+                      setState(() {
+                        pesquisa = true;
+                      });
                     },
                     autocorrect: false,
                     style: TextStyle(
