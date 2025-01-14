@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:http/http.dart' as http;
 import 'package:sistema_de_anuncios/pages/chat.dart';
+import 'package:sistema_de_anuncios/pages/navigation/navigation.dart';
 import 'package:sistema_de_anuncios/pages/navigation/perfil.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
@@ -104,19 +105,17 @@ class _AnuncioState extends State<Anuncio> {
     return base64Decode(base64Image);
   }
 
-  void _editarAnuncio(String ip, int anuncio_id) {
+void _editarAnuncio() {
   // Implementar
   // Redirecionar pra página de criar anuncio mas com os campos preenchidos podendo ser editados
 }
 
-void _excluirAnuncio(String ip, int anuncio_id) {
-  showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (context, setDialogState) {
-            return AlertDialog(
-              title: SizedBox(
+Future<int> _excluir() async {
+  return await showDialog<int>(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: SizedBox(
                 height: 60,
                 width: 270,
                 child: Card(
@@ -133,40 +132,74 @@ void _excluirAnuncio(String ip, int anuncio_id) {
                   ),
                 ),
               ),
-              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-              content: Text(
-                "Tem certeza que deseja excluir o anúncio?",
-                style: TextStyle(
-                  color: Colors.red,
-                  fontSize: 20,
-                ),
-              ),
-              actions: [
-                ElevatedButton(
-                  child: Text("Ok",
+        backgroundColor: Theme.of(context).cardColor,
+        content: Text("Tem certeza que deseja excluir o anúncio?", textAlign: TextAlign.center, style: TextStyle(color: const Color.fromARGB(255, 156, 43, 35)),),
+        actions: [
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop(1); // Retorna 1 para indicar "Sim"
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor:
+                  Theme.of(context).primaryColor.withOpacity(1)),
+            child: Text("Sim",
                       style: TextStyle(
                           color: Theme.of(context).primaryColorLight)),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor:
-                          Theme.of(context).primaryColor.withOpacity(1)),
-                )
-              ],
-            );
-          },
-        );
+          ),
+          SizedBox(width: 6),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop(0); // Retorna 0 para indicar "Não"
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor:
+                  Theme.of(context).primaryColor.withOpacity(1)),
+            child: Text("Não",
+                      style: TextStyle(
+                          color: Theme.of(context).primaryColorLight)),
+          ),
+          SizedBox(width: 46),
+        ],
+      );
+    },
+  ).then((value) => value ?? 0); // Garante que o valor nunca seja nulo
+}
+
+Future<void> _excluirAnuncio() async {
+  final url = Uri.parse('http://$ip:5000/excluir_anuncio');
+
+  // Dados enviados
+  final dados = {
+    'user_id': userId,
+    'anuncio_id': id
+    };
+
+  try {
+    final response = await http.post(
+      url,
+      headers: {
+        // Define o tipo de conteúdo como json
+        'Content-Type': 'application/json'
       },
+      body: json.encode(dados),
     );
-  return;
+
+    Map<String, dynamic> resposta = json.decode(response.body);
+    print(resposta["dados"]['msg']);
+  } catch (e) {
+    return;
+  }
 }
 
   late int userId;
+  late String ip;
+  late int id;
 
   @override
   void initState() {
     userId = widget.userId;
+    ip = widget.ip;
+    id = widget.anuncioId;
     super.initState();
   }
 
@@ -502,12 +535,19 @@ void _excluirAnuncio(String ip, int anuncio_id) {
                                             width:
                                                 constraints.maxWidth / 2 - 20,
                                             child: ElevatedButton(
-                                              onPressed: () => {
-                                                _excluirAnuncio(
-                                                    widget.ip,
-                                                    snapshot_anuncio
-                                                        .data!["anuncio_id"]),
-                                                Navigator.of(context).pop()
+                                              onPressed: () async {
+                                                int retorno = await _excluir();
+                                                if (retorno == 1){
+                                                  _excluirAnuncio();
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) {
+                                                        return Navigation(ip: ip, id: userId);
+                                                      },
+                                                    ),
+                                                  );
+                                                }
                                               },
                                               style: ElevatedButton.styleFrom(
                                                   backgroundColor:
