@@ -171,7 +171,7 @@ def fazer_busca():
     for v in anuncios:
         c = Categoria.query.filter_by(id=v.categoria).first()
         t = Tipo.query.filter_by(id=v.tipo).first()
-        anuncios_lista.append({"anuncio_id": v.id, "titulo": v.titulo, "imagem": v.imagem, "preco": v.preco})
+        anuncios_lista.append({"anuncio_id": v.id, "titulo": v.titulo, "imagem": v.imagem, "preco": v.preco, "tipo": v.tipo})
     dados = {}
     dados["dados"] = {"anuncios": anuncios_lista}
     return jsonify(dados)

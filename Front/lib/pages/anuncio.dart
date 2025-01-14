@@ -92,12 +92,12 @@ Future<Map<String, dynamic>> _getAnunciobyID(String ip, int anuncio_id) async {
   }
 }
 
-void _editarAnuncio(String ip, int anuncio_id){
+void _editarAnuncio(String ip, int anuncio_id) {
   // Implementar
   // Redirecionar pra página de criar anuncio mas com os campos preenchidos podendo ser editados
 }
 
-void _excluirAnuncio(String ip, int anuncio_id){
+void _excluirAnuncio(String ip, int anuncio_id) {
   // Implementar
   return;
 }
@@ -292,366 +292,454 @@ class _AnuncioState extends State<Anuncio> {
                   double containerHeight = constraints.maxHeight - 123;
                   double imagem = constraints.maxHeight - 500;
                   return LayoutBuilder(builder: (context, constraints) {
-                      return Column(
-                        children: [
-                          SizedBox(
+                    return Column(
+                      children: [
+                        SizedBox(
                             height: containerHeight,
                             child: SingleChildScrollView(
-                            child: Column(
-                          children: [
-                            SizedBox(height: 10),
-                            Center(
-                              child: snapshot_anuncio.data!["imagem"] != null
-                                  ? ClipRRect(
-                                      borderRadius: BorderRadius.circular(10),
-                                      child: Image.memory(
-                                        decodificar(
-                                            snapshot_anuncio.data!["imagem"])!,
-                                        fit: BoxFit.contain,
-                                        height: imagem,
-                                        width: imagem,
-                                      ))
-                                  : Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Image.asset(
-                                        'assets/images/image.png',
-                                        fit: BoxFit.contain,
-                                        height: imagem - 50,
-                                        width: imagem - 50,
-                                      ),
-                                  )
-                            ),
-                            Divider(
+                              child: Column(
+                                children: [
+                                  SizedBox(height: 10),
+                                  Center(
+                                      child: snapshot_anuncio.data!["imagem"] !=
+                                              null
+                                          ? ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              child: Image.memory(
+                                                decodificar(snapshot_anuncio
+                                                    .data!["imagem"])!,
+                                                fit: BoxFit.contain,
+                                                height: imagem,
+                                                width: imagem,
+                                              ))
+                                          : Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Image.asset(
+                                                'assets/images/image.png',
+                                                fit: BoxFit.contain,
+                                                height: imagem - 50,
+                                                width: imagem - 50,
+                                              ),
+                                            )),
+                                  Divider(
                                     color: Theme.of(context).primaryColorLight,
                                     thickness: 1,
                                     height: 10,
                                     indent: 10,
                                     endIndent: 10,
                                   ),
-                            Column(
-                              children: [
-                                Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 4, horizontal: 10),
-                                    child: Text(
-                                      snapshot_anuncio.data!["titulo"],
-                                      style: TextStyle(
-                                        color: Theme.of(context).primaryColorLight,
-                                        fontSize: 30,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 4, horizontal: 10),
-                                    child: Text(
-                                      "R\$ ${snapshot_anuncio.data!["preco"].toStringAsFixed(2)}",
-                                      style: TextStyle(
-                                        color: Theme.of(context).primaryColorLight,
-                                        fontSize: 30,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Divider(
-                                  color: Theme.of(context).primaryColorLight,
-                                  thickness: 1,
-                                  height: 10,
-                                ),
-                                Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 4, horizontal: 10),
-                                    child: Text(
-                                      "Descrição",
-                                      style: TextStyle(
-                                        color: Theme.of(context).primaryColorLight,
-                                        fontSize: 30,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 4, horizontal: 10),
-                                    child: Text(
-                                      snapshot_anuncio.data!["descricao"],
-                                      style: TextStyle(
-                                        color: Theme.of(context).primaryColorLight,
-                                        fontSize: 20,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                                            ),
-                                              )
-                          ),
-                          userId == snapshot_anuncio.data!["anunciante_id"]
-                              ? Column(
-                            children: [
-                              Divider(
-                                  color: Theme.of(context).primaryColorLight,
-                                  thickness: 1,
-                                  height: 1,
-                                ),
-                              SizedBox(height: 20,),  
-                              Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
+                                  Column(
                                     children: [
-                                      FutureBuilder(
-                                          future: _criarConversa(
-                                              widget.ip,
-                                              snapshot_anuncio
-                                                  .data!["anunciante_id"],
-                                              widget.userId),
-                                          builder: (context, snapshot_conversa) {
-                                            if (snapshot_conversa.hasData) {
-                                              return Container(
-                                                height: 40,
-                                                width: constraints.maxWidth / 2 - 20,
-                                                child: ElevatedButton(
-                                                  onPressed: () => {
-                                                    setState(() {
-                                                      Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                              builder: (context) {
-                                                                return const Chat();
-                                                              },
-                                                              settings:
-                                                                  RouteSettings(
-                                                                      arguments: {
-                                                                    'id_conversa':
-                                                                        snapshot_conversa
-                                                                            .data!,
-                                                                    'ip': widget.ip,
-                                                                    'id': snapshot_anuncio.data![
-                                                                                "anunciante_id"] ==
-                                                                            widget
-                                                                                .userId
-                                                                        ? snapshot_anuncio
-                                                                                .data![
-                                                                            "interessado_id"]
-                                                                        : snapshot_anuncio
-                                                                                .data![
-                                                                            "anunciante_id"]
-                                                                  })));
-                                                    })
-                                                  },
-                                                  style: ElevatedButton.styleFrom(
-                                                      backgroundColor:
-                                                          Theme.of(context)
-                                                              .primaryColor
-                                                              .withOpacity(1)),
-                                                  child: Text("Editar Anúncio",
-                                                      style: TextStyle(
-                                                          color: Theme.of(context)
-                                                              .primaryColorLight)),
-                                                ),
-                                              );
-                                            } else {
-                                              return Center(
-                                                child: CircularProgressIndicator(),
-                                              );
-                                            }
-                                          }),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                                        child: Container(
-                                          height: 40,
-                                          width: constraints.maxWidth / 2 - 20,
-                                          child: ElevatedButton(
-                                            onPressed: () => {
-                                              _excluirAnuncio(widget.ip, snapshot_anuncio.data!["anuncio_id"]),
-                                              Navigator.of(context).pop()
-                                            },
-                                            style: ElevatedButton.styleFrom(
-                                                backgroundColor: Theme.of(context)
-                                                    .primaryColor
-                                                    .withOpacity(1)),
-                                            child: Text("Excluir Anúncio",
-                                                style: TextStyle(
-                                                    color: Theme.of(context)
-                                                        .primaryColorLight)),
-                                          ),
-                                        ),
-                                      )
-                                    ]),
-                                    SizedBox(height: 10,),
-                            ],
-                          )
-                              : Column(
-                            children: [
-                              Divider(
-                                  color: Theme.of(context).primaryColorLight,
-                                  thickness: 1,
-                                  height: 1,
-                                ),
-                                FutureBuilder(
-                                    future: _getPerfil(widget.ip,
-                                        snapshot_anuncio.data!["anunciante_id"]),
-                                    builder: (context, snapshot3) {
-                                      if (snapshot3.hasData) {
-                                        return Align(
-                                          alignment: Alignment.center,
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                top: 4, left: 10, right: 10),
-                                            child: Text(
-                                              "${snapshot3.data!["nome"]}",
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: TextStyle(
-                                                color: Theme.of(context)
-                                                    .primaryColorLight,
-                                                fontSize: 23,
-                                              ),
+                                      Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 4, horizontal: 10),
+                                          child: Text(
+                                            snapshot_anuncio.data!["titulo"],
+                                            style: TextStyle(
+                                              color: Theme.of(context)
+                                                  .primaryColorLight,
+                                              fontSize: 30,
                                             ),
                                           ),
-                                        );
-                                      } else {
-                                        return Center(
-                                          child: CircularProgressIndicator(),
-                                        );
-                                      }
-                                    }),
-                                FutureBuilder(
-                                    future: _getPerfil(widget.ip,
-                                        snapshot_anuncio.data!["anunciante_id"]),
-                                    builder: (context, snapshot3) {
-                                      if (snapshot3.hasData) {
-                                        return Align(
-                                          alignment: Alignment.center,
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                bottom: 8, left: 10, right: 10),
-                                            child: RatingBarIndicator(
-                                              rating: snapshot3.data!["reputacao"],
-                                              itemBuilder: (context, index) => Icon(
-                                                Icons.star,
-                                                color: Colors.yellow,
-                                              ),
-                                              itemCount: 5,
-                                              itemSize: 24,
-                                              direction: Axis.horizontal,
-                                            ), 
-                                          ),
-                                        );
-                                      } else {
-                                        return Center(
-                                          child: CircularProgressIndicator(),
-                                        );
-                                      }
-                                    }),
-                                Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      FutureBuilder(
-                                          future: _criarConversa(
-                                              widget.ip,
-                                              snapshot_anuncio
-                                                  .data!["anunciante_id"],
-                                              widget.userId),
-                                          builder: (context, snapshot_conversa) {
-                                            if (snapshot_conversa.hasData) {
-                                              return Container(
-                                                height: 40,
-                                                width: constraints.maxWidth / 2 - 20,
-                                                child: ElevatedButton(
-                                                  onPressed: () => {
-                                                    setState(() {
-                                                      Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                              builder: (context) {
-                                                                return const Chat();
-                                                              },
-                                                              settings:
-                                                                  RouteSettings(
-                                                                      arguments: {
-                                                                    'id_conversa':
-                                                                        snapshot_conversa
-                                                                            .data!,
-                                                                    'ip': widget.ip,
-                                                                    'id': snapshot_anuncio.data![
-                                                                                "anunciante_id"] ==
-                                                                            widget
-                                                                                .userId
-                                                                        ? snapshot_anuncio
-                                                                                .data![
-                                                                            "interessado_id"]
-                                                                        : snapshot_anuncio
-                                                                                .data![
-                                                                            "anunciante_id"]
-                                                                  })));
-                                                    })
-                                                  },
-                                                  style: ElevatedButton.styleFrom(
-                                                      backgroundColor:
-                                                          Theme.of(context)
-                                                              .primaryColor
-                                                              .withOpacity(1)),
-                                                  child: Text("Enviar Mensagem",
-                                                      style: TextStyle(
-                                                          color: Theme.of(context)
-                                                              .primaryColorLight)),
-                                                ),
-                                              );
-                                            } else {
-                                              return Center(
-                                                child: CircularProgressIndicator(),
-                                              );
-                                            }
-                                          }),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                                        child: Container(
-                                          height: 40,
-                                          width: constraints.maxWidth / 2 - 20,
-                                          child: ElevatedButton(
-                                            onPressed: () => {
-                                              setState(() {
-                                                Navigator.push(context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) {
-                                                  return Perfil(
-                                                    ip: widget.ip,
-                                                    id: snapshot_anuncio
-                                                        .data!["anunciante_id"],
-                                                    ondeEntrou: "Anuncio",
-                                                  );
-                                                }));
-                                              })
-                                            },
-                                            style: ElevatedButton.styleFrom(
-                                                backgroundColor: Theme.of(context)
-                                                    .primaryColor
-                                                    .withOpacity(1)),
-                                            child: Text("Visitar Perfil",
-                                                style: TextStyle(
-                                                    color: Theme.of(context)
-                                                        .primaryColorLight)),
+                                        ),
+                                      ),
+                                      Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: SizedBox(
+                                            height: 30,
+                                            width: 70,
+                                            child: snapshot_anuncio
+                                                        .data!["tipo"] ==
+                                                    "venda"
+                                                ? Card(
+                                                    margin: EdgeInsets.only(
+                                                        left: 10),
+                                                    color: Color(0xFF134E6C),
+                                                    child: Center(
+                                                      child: Text(
+                                                        "Venda",
+                                                        style: TextStyle(
+                                                            fontSize: 15,
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .primaryColorLight),
+                                                      ),
+                                                    ),
+                                                  )
+                                                : Card(
+                                                    margin: EdgeInsets.only(
+                                                        left: 10),
+                                                    color: Color(0xFF38524A),
+                                                    child: Center(
+                                                      child: Text(
+                                                        "Busca",
+                                                        style: TextStyle(
+                                                            fontSize: 15,
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .primaryColorLight),
+                                                      ),
+                                                    ),
+                                                  )),
+                                      ),
+                                      Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 4, horizontal: 10),
+                                          child: Text(
+                                            "R\$ ${snapshot_anuncio.data!["preco"].toStringAsFixed(2)}",
+                                            style: TextStyle(
+                                              color: Theme.of(context)
+                                                  .primaryColorLight,
+                                              fontSize: 30,
+                                            ),
                                           ),
                                         ),
-                                      )
-                                    ]),
-                                    SizedBox(height: 10,),
-                            ],
-                          )
-                        ],
-                      );
-                });}));
+                                      ),
+                                      Divider(
+                                        color:
+                                            Theme.of(context).primaryColorLight,
+                                        thickness: 1,
+                                        height: 10,
+                                      ),
+                                      Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 4, horizontal: 10),
+                                          child: Text(
+                                            "Descrição",
+                                            style: TextStyle(
+                                              color: Theme.of(context)
+                                                  .primaryColorLight,
+                                              fontSize: 30,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 4, horizontal: 10),
+                                          child: Text(
+                                            snapshot_anuncio.data!["descricao"],
+                                            style: TextStyle(
+                                              color: Theme.of(context)
+                                                  .primaryColorLight,
+                                              fontSize: 20,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            )),
+                        userId == snapshot_anuncio.data!["anunciante_id"]
+                            ? Column(
+                                children: [
+                                  Divider(
+                                    color: Theme.of(context).primaryColorLight,
+                                    thickness: 1,
+                                    height: 1,
+                                  ),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        FutureBuilder(
+                                            future: _criarConversa(
+                                                widget.ip,
+                                                snapshot_anuncio
+                                                    .data!["anunciante_id"],
+                                                widget.userId),
+                                            builder:
+                                                (context, snapshot_conversa) {
+                                              if (snapshot_conversa.hasData) {
+                                                return Container(
+                                                  height: 40,
+                                                  width:
+                                                      constraints.maxWidth / 2 -
+                                                          20,
+                                                  child: ElevatedButton(
+                                                    onPressed: () => {
+                                                      setState(() {
+                                                        Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                                builder:
+                                                                    (context) {
+                                                                  return const Chat();
+                                                                },
+                                                                settings:
+                                                                    RouteSettings(
+                                                                        arguments: {
+                                                                      'id_conversa':
+                                                                          snapshot_conversa
+                                                                              .data!,
+                                                                      'ip': widget
+                                                                          .ip,
+                                                                      'id': snapshot_anuncio.data!["anunciante_id"] ==
+                                                                              widget
+                                                                                  .userId
+                                                                          ? snapshot_anuncio.data![
+                                                                              "interessado_id"]
+                                                                          : snapshot_anuncio
+                                                                              .data!["anunciante_id"]
+                                                                    })));
+                                                      })
+                                                    },
+                                                    style: ElevatedButton
+                                                        .styleFrom(
+                                                            backgroundColor:
+                                                                Theme.of(
+                                                                        context)
+                                                                    .primaryColor
+                                                                    .withOpacity(
+                                                                        1)),
+                                                    child: Text(
+                                                        "Editar Anúncio",
+                                                        style: TextStyle(
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .primaryColorLight)),
+                                                  ),
+                                                );
+                                              } else {
+                                                return Center(
+                                                  child:
+                                                      CircularProgressIndicator(),
+                                                );
+                                              }
+                                            }),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 10.0),
+                                          child: Container(
+                                            height: 40,
+                                            width:
+                                                constraints.maxWidth / 2 - 20,
+                                            child: ElevatedButton(
+                                              onPressed: () => {
+                                                _excluirAnuncio(
+                                                    widget.ip,
+                                                    snapshot_anuncio
+                                                        .data!["anuncio_id"]),
+                                                Navigator.of(context).pop()
+                                              },
+                                              style: ElevatedButton.styleFrom(
+                                                  backgroundColor:
+                                                      Theme.of(context)
+                                                          .primaryColor
+                                                          .withOpacity(1)),
+                                              child: Text("Excluir Anúncio",
+                                                  style: TextStyle(
+                                                      color: Theme.of(context)
+                                                          .primaryColorLight)),
+                                            ),
+                                          ),
+                                        )
+                                      ]),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                ],
+                              )
+                            : Column(
+                                children: [
+                                  Divider(
+                                    color: Theme.of(context).primaryColorLight,
+                                    thickness: 1,
+                                    height: 1,
+                                  ),
+                                  FutureBuilder(
+                                      future: _getPerfil(
+                                          widget.ip,
+                                          snapshot_anuncio
+                                              .data!["anunciante_id"]),
+                                      builder: (context, snapshot3) {
+                                        if (snapshot3.hasData) {
+                                          return Align(
+                                            alignment: Alignment.center,
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                  top: 4, left: 10, right: 10),
+                                              child: Text(
+                                                "${snapshot3.data!["nome"]}",
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                  color: Theme.of(context)
+                                                      .primaryColorLight,
+                                                  fontSize: 23,
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        } else {
+                                          return Center(
+                                            child: CircularProgressIndicator(),
+                                          );
+                                        }
+                                      }),
+                                  FutureBuilder(
+                                      future: _getPerfil(
+                                          widget.ip,
+                                          snapshot_anuncio
+                                              .data!["anunciante_id"]),
+                                      builder: (context, snapshot3) {
+                                        if (snapshot3.hasData) {
+                                          return Align(
+                                            alignment: Alignment.center,
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                  bottom: 8,
+                                                  left: 10,
+                                                  right: 10),
+                                              child: RatingBarIndicator(
+                                                rating: snapshot3
+                                                    .data!["reputacao"],
+                                                itemBuilder: (context, index) =>
+                                                    Icon(
+                                                  Icons.star,
+                                                  color: Colors.yellow,
+                                                ),
+                                                itemCount: 5,
+                                                itemSize: 24,
+                                                direction: Axis.horizontal,
+                                              ),
+                                            ),
+                                          );
+                                        } else {
+                                          return Center(
+                                            child: CircularProgressIndicator(),
+                                          );
+                                        }
+                                      }),
+                                  Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        FutureBuilder(
+                                            future: _criarConversa(
+                                                widget.ip,
+                                                snapshot_anuncio
+                                                    .data!["anunciante_id"],
+                                                widget.userId),
+                                            builder:
+                                                (context, snapshot_conversa) {
+                                              if (snapshot_conversa.hasData) {
+                                                return Container(
+                                                  height: 40,
+                                                  width:
+                                                      constraints.maxWidth / 2 -
+                                                          20,
+                                                  child: ElevatedButton(
+                                                    onPressed: () => {
+                                                      setState(() {
+                                                        Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                                builder:
+                                                                    (context) {
+                                                                  return const Chat();
+                                                                },
+                                                                settings:
+                                                                    RouteSettings(
+                                                                        arguments: {
+                                                                      'id_conversa':
+                                                                          snapshot_conversa
+                                                                              .data!,
+                                                                      'ip': widget
+                                                                          .ip,
+                                                                      'id': snapshot_anuncio.data!["anunciante_id"] ==
+                                                                              widget
+                                                                                  .userId
+                                                                          ? snapshot_anuncio.data![
+                                                                              "interessado_id"]
+                                                                          : snapshot_anuncio
+                                                                              .data!["anunciante_id"]
+                                                                    })));
+                                                      })
+                                                    },
+                                                    style: ElevatedButton
+                                                        .styleFrom(
+                                                            backgroundColor:
+                                                                Theme.of(
+                                                                        context)
+                                                                    .primaryColor
+                                                                    .withOpacity(
+                                                                        1)),
+                                                    child: Text(
+                                                        "Enviar Mensagem",
+                                                        style: TextStyle(
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .primaryColorLight)),
+                                                  ),
+                                                );
+                                              } else {
+                                                return Center(
+                                                  child:
+                                                      CircularProgressIndicator(),
+                                                );
+                                              }
+                                            }),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 10.0),
+                                          child: Container(
+                                            height: 40,
+                                            width:
+                                                constraints.maxWidth / 2 - 20,
+                                            child: ElevatedButton(
+                                              onPressed: () => {
+                                                setState(() {
+                                                  Navigator.push(context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) {
+                                                    return Perfil(
+                                                      ip: widget.ip,
+                                                      id: snapshot_anuncio
+                                                              .data![
+                                                          "anunciante_id"],
+                                                      ondeEntrou: "Anuncio",
+                                                    );
+                                                  }));
+                                                })
+                                              },
+                                              style: ElevatedButton.styleFrom(
+                                                  backgroundColor:
+                                                      Theme.of(context)
+                                                          .primaryColor
+                                                          .withOpacity(1)),
+                                              child: Text("Visitar Perfil",
+                                                  style: TextStyle(
+                                                      color: Theme.of(context)
+                                                          .primaryColorLight)),
+                                            ),
+                                          ),
+                                        )
+                                      ]),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                ],
+                              )
+                      ],
+                    );
+                  });
+                }));
           } else {
             return Center(
               child: CircularProgressIndicator(),
