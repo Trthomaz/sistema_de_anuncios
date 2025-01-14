@@ -203,11 +203,16 @@ class _MeusAnunciosState extends State<MeusAnuncios> {
                                                 height: imageSize,
                                                 width: imageSize,
                                               ))
-                                          : Icon(
-                                              Icons.image_rounded,
-                                              size: imageSize,
-                                              color: Theme.of(context)
-                                                  .primaryColorLight,
+                                          : Padding(
+                                              padding:
+                                                  const EdgeInsets.all(
+                                                      10),
+                                              child: Image.asset(
+                                                'assets/images/image.png',
+                                                fit: BoxFit.contain,
+                                                height: imageSize - 20,
+                                                width: imageSize - 20,
+                                              ),
                                             ),
                                     ),
                                     VerticalDivider(

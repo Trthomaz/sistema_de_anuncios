@@ -16,8 +16,8 @@ void main() async {
         primaryColor: Colors.blueGrey,
         highlightColor: const Color.fromARGB(255, 108, 126, 136),
         progressIndicatorTheme: ProgressIndicatorThemeData(
-          circularTrackColor: Colors.black,
-          color: Colors.black,
+          circularTrackColor: Colors.blueGrey,
+          color: Colors.white,
         ),
         buttonTheme: ButtonThemeData(
           buttonColor: const Color.fromRGBO(96, 125, 139, 1),

@@ -35,7 +35,7 @@ class _NavigationState extends State<Navigation> {
       Perfil(
         ip: ip,
         id: id,
-        ondeEntrou: "Navigation",
+        perfilId: id,
       ),
       Anunciar(ip: ip, id: id),
       MeusAnuncios(ip: ip, id: id),

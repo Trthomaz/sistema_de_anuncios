@@ -223,7 +223,6 @@ class _AnuncioState extends State<Anuncio> {
     return FutureBuilder(
         future: _getAnunciobyID(widget.ip, widget.anuncioId),
         builder: (context, snapshot_anuncio) {
-          if (snapshot_anuncio.hasData) {
             return Scaffold(
                 appBar: PreferredSize(
                   // Tamanho do AppBar
@@ -287,7 +286,7 @@ class _AnuncioState extends State<Anuncio> {
                     ),
                   ),
                 ),
-                body: LayoutBuilder(builder: (context, constraints) {
+                body: snapshot_anuncio.hasData ? LayoutBuilder(builder: (context, constraints) {
                   double containerWidth = constraints.maxWidth - 20;
                   double containerHeight = constraints.maxHeight - 123;
                   double imagem = constraints.maxHeight - 500;
@@ -349,45 +348,6 @@ class _AnuncioState extends State<Anuncio> {
                                       ),
                                       Align(
                                         alignment: Alignment.centerLeft,
-                                        child: SizedBox(
-                                            height: 30,
-                                            width: 70,
-                                            child: snapshot_anuncio
-                                                        .data!["tipo"] ==
-                                                    "venda"
-                                                ? Card(
-                                                    margin: EdgeInsets.only(
-                                                        left: 10),
-                                                    color: Color(0xFF134E6C),
-                                                    child: Center(
-                                                      child: Text(
-                                                        "Venda",
-                                                        style: TextStyle(
-                                                            fontSize: 15,
-                                                            color: Theme.of(
-                                                                    context)
-                                                                .primaryColorLight),
-                                                      ),
-                                                    ),
-                                                  )
-                                                : Card(
-                                                    margin: EdgeInsets.only(
-                                                        left: 10),
-                                                    color: Color(0xFF38524A),
-                                                    child: Center(
-                                                      child: Text(
-                                                        "Busca",
-                                                        style: TextStyle(
-                                                            fontSize: 15,
-                                                            color: Theme.of(
-                                                                    context)
-                                                                .primaryColorLight),
-                                                      ),
-                                                    ),
-                                                  )),
-                                      ),
-                                      Align(
-                                        alignment: Alignment.centerLeft,
                                         child: Padding(
                                           padding: const EdgeInsets.symmetric(
                                               vertical: 4, horizontal: 10),
@@ -412,13 +372,56 @@ class _AnuncioState extends State<Anuncio> {
                                         child: Padding(
                                           padding: const EdgeInsets.symmetric(
                                               vertical: 4, horizontal: 10),
-                                          child: Text(
-                                            "Descrição",
-                                            style: TextStyle(
-                                              color: Theme.of(context)
-                                                  .primaryColorLight,
-                                              fontSize: 30,
-                                            ),
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "Descrição",
+                                                style: TextStyle(
+                                                  color: Theme.of(context)
+                                                      .primaryColorLight,
+                                                  fontSize: 30,
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: 10,
+                                              ),
+                                              SizedBox(
+                                                  height: 30,
+                                                  width: 80,
+                                                  child: snapshot_anuncio
+                                                              .data!["tipo"] ==
+                                                          "venda"
+                                                      ? Card(
+                                                          margin: EdgeInsets.only(
+                                                              left: 10),
+                                                          color: Color(0xFF134E6C),
+                                                          child: Center(
+                                                            child: Text(
+                                                              "Venda",
+                                                              style: TextStyle(
+                                                                  fontSize: 15,
+                                                                  color: Theme.of(
+                                                                          context)
+                                                                      .primaryColorLight),
+                                                            ),
+                                                          ),
+                                                        )
+                                                      : Card(
+                                                          margin: EdgeInsets.only(
+                                                              left: 10),
+                                                          color: Color(0xFF38524A),
+                                                          child: Center(
+                                                            child: Text(
+                                                              "Busca",
+                                                              style: TextStyle(
+                                                                  fontSize: 15,
+                                                                  color: Theme.of(
+                                                                          context)
+                                                                      .primaryColorLight),
+                                                            ),
+                                                          ),
+                                                        )),
+                                            ],
                                           ),
                                         ),
                                       ),
@@ -710,10 +713,10 @@ class _AnuncioState extends State<Anuncio> {
                                                           builder: (context) {
                                                     return Perfil(
                                                       ip: widget.ip,
-                                                      id: snapshot_anuncio
+                                                      id: userId,
+                                                      perfilId: snapshot_anuncio
                                                               .data![
                                                           "anunciante_id"],
-                                                      ondeEntrou: "Anuncio",
                                                     );
                                                   }));
                                                 })
@@ -739,12 +742,10 @@ class _AnuncioState extends State<Anuncio> {
                       ],
                     );
                   });
-                }));
-          } else {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }
+                })
+                : Center(
+                    child: CircularProgressIndicator(),
+                  ));
         });
   }
 }

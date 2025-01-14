@@ -16,7 +16,11 @@ class _ChatState extends State<Chat> {
   ScrollController _listViewController = ScrollController();
 
   void _scrollDown() {
-    _listViewController.jumpTo(_listViewController.position.maxScrollExtent);
+    if (_listViewController.hasClients) {
+      _listViewController.jumpTo(
+        _listViewController.position.maxScrollExtent,
+      );
+    }
   }
 
   // ------------------------------------------------------ Funções para REQUISIÇÕES -----------------------------------------------------
@@ -151,7 +155,6 @@ class _ChatState extends State<Chat> {
       );
       print(response.statusCode);
       Map<String, dynamic> resposta = json.decode(response.body);
-      _scrollDown();
       if (response.statusCode == 200) {
         // Resposta da requisição
         if (resposta["dados"]["msg"] == "ok") {
@@ -248,6 +251,9 @@ class _ChatState extends State<Chat> {
                                 future: _getMensagens(ip, id_conversa),
                                 builder: (context, snapshot) {
                                   if (snapshot.hasData) {
+                                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                                      _scrollDown();
+                                    });
                                     return Center(
                                       child: Column(children: [
                                         SizedBox(height: 10),

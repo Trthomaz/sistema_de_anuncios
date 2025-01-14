@@ -10,13 +10,13 @@ import 'dart:typed_data';
 class Perfil extends StatefulWidget {
   final String ip;
   final int id;
-  final String ondeEntrou;
+  final int perfilId;
 
   const Perfil(
       {super.key,
       required this.ip,
       required this.id,
-      required this.ondeEntrou});
+      required this.perfilId});
 
   @override
   State<Perfil> createState() => _PerfilState();
@@ -25,6 +25,7 @@ class Perfil extends StatefulWidget {
 class _PerfilState extends State<Perfil> {
   late String ip;
   late int id;
+  late int perfilId;
   bool _isLoading = true;
 
   late Map<String, dynamic> perfil;
@@ -35,6 +36,7 @@ class _PerfilState extends State<Perfil> {
     super.initState();
     ip = widget.ip;
     id = widget.id;
+    perfilId = widget.perfilId;
     _carregarPerfil();
     _carregarAnuncios();
   }
@@ -43,7 +45,7 @@ class _PerfilState extends State<Perfil> {
     final url = Uri.parse('http://${ip}:5000/get_perfil'); // URL de exemplo
 
     final dados = {
-      'user_id': id,
+      'user_id': perfilId,
     };
 
     // Enviar requisição
@@ -87,7 +89,7 @@ class _PerfilState extends State<Perfil> {
     final data = now.toString().substring(0, 19);
 
     // Dados enviados
-    final dados = {'user_id': id, 'data': data};
+    final dados = {'user_id': perfilId, 'data': data};
 
     // Enviar requisição
     try {
@@ -148,22 +150,23 @@ class _PerfilState extends State<Perfil> {
     double cardHeight = 150;
     double imageSize = cardHeight - 10;
 
-    return _isLoading
-        ? const Center(child: CircularProgressIndicator())
-        : Scaffold(
+    return 
+        Scaffold(
             appBar: PreferredSize(
               // Tamanho do AppBar
               preferredSize: Size.fromHeight(60.0),
               child: AppBar(
                 backgroundColor: Theme.of(context).primaryColor,
-                leading: Padding(
+                automaticallyImplyLeading: false,
+                leading: id == perfilId ? Container()
+                : Padding(
                   // Leading é o ícone à esquerda do AppBar
                   padding: const EdgeInsets.only(
-                      left: 10, top: 10, bottom: 10, right: 1),
+                      left: 10, top: 10, bottom: 10, right: 0),
                   child: IconButton(
                       onPressed: () {
                         setState(() {
-                          widget.ondeEntrou == "Anuncio"
+                          id != perfilId
                               ? Navigator.pop(context)
                               : Navigator.push(context,
                                   MaterialPageRoute(builder: (context) {
@@ -179,7 +182,7 @@ class _PerfilState extends State<Perfil> {
                 ),
                 title: Center(
                   child: Padding(
-                    padding: const EdgeInsets.all(1),
+                    padding: const EdgeInsets.only(right: 50),
                     child: Text(
                       "Perfil",
                       style: TextStyle(
@@ -191,7 +194,8 @@ class _PerfilState extends State<Perfil> {
                 ),
               ),
             ),
-            body: LayoutBuilder(builder: (context, constraints) {
+            body: _isLoading ? Center(child: CircularProgressIndicator())
+            : LayoutBuilder(builder: (context, constraints) {
               double containerWidth = constraints.maxWidth * 0.9;
               double containerHeight = constraints.maxHeight - 206;
               return Column(
@@ -300,7 +304,7 @@ class _PerfilState extends State<Perfil> {
                                 ),
                               ),
                               onPressed: () {
-                                /* print(constraints.maxHeight);
+                                print(constraints.maxHeight);
                                 Navigator.push(
                                         context,
                                         MaterialPageRoute(
@@ -309,7 +313,7 @@ class _PerfilState extends State<Perfil> {
                                             anuncioId: anuncios[index]["id"],
                                             userId: id,
                                           ),
-                                        )); */
+                                        ));
                               },
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
@@ -324,12 +328,17 @@ class _PerfilState extends State<Perfil> {
                                             height: imageSize,
                                             width: imageSize,
                                           )
-                                        : Icon(
-                                            Icons.image_rounded,
-                                            size: imageSize,
-                                            color: Theme.of(context)
-                                                .primaryColorLight,
-                                          ),
+                                        : Padding(
+                                              padding:
+                                                  const EdgeInsets.all(
+                                                      10),
+                                              child: Image.asset(
+                                                'assets/images/image.png',
+                                                fit: BoxFit.contain,
+                                                height: imageSize - 20,
+                                                width: imageSize - 20,
+                                              ),
+                                            ),
                                   ),
                                   VerticalDivider(
                                     color: Theme.of(context)

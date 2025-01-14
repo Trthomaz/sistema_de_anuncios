@@ -508,10 +508,13 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    double cardWidth = 150;
-    double cardHeight = 273;
+    double verticalCardWidth = 150;
+    double verticalCardHeight = 273;
+    double horizontalCardWidth = 400;
+    double horizontalCardHeight = 150;
     double cardSpacing = 5;
-    double imageSize = cardWidth;
+    double verticalImageSize = verticalCardWidth;
+    double horizontalImageSize = horizontalCardHeight;
     return _isLoading
         ? Center(
             child: CircularProgressIndicator(),
@@ -635,7 +638,7 @@ class _HomeState extends State<Home> {
                           ),
                           LayoutBuilder(builder: (context, constraints) {
                             return SizedBox(
-                              height: cardHeight + 6,
+                              height: verticalCardHeight + 6,
                               child: ListView.builder(
                                   scrollDirection: Axis.horizontal,
                                   itemCount: venda.length,
@@ -651,7 +654,7 @@ class _HomeState extends State<Home> {
                                             backgroundColor:
                                                 Theme.of(context).cardColor,
                                             fixedSize:
-                                                Size(cardWidth, cardHeight),
+                                                Size(verticalCardWidth, verticalCardHeight),
                                             shape: RoundedRectangleBorder(
                                               borderRadius:
                                                   BorderRadius.circular(10),
@@ -683,8 +686,8 @@ class _HomeState extends State<Home> {
                                                         decodificar(venda[index]
                                                             ["imagem"])!,
                                                         fit: BoxFit.contain,
-                                                        height: imageSize,
-                                                        width: imageSize,
+                                                        height: verticalImageSize,
+                                                        width: verticalImageSize,
                                                       ))
                                                   : Padding(
                                                       padding:
@@ -693,8 +696,8 @@ class _HomeState extends State<Home> {
                                                       child: Image.asset(
                                                         'assets/images/image.png',
                                                         fit: BoxFit.contain,
-                                                        height: imageSize - 20,
-                                                        width: imageSize - 20,
+                                                        height: verticalImageSize - 20,
+                                                        width: verticalImageSize - 20,
                                                       ),
                                                     ),
                                               Divider(
@@ -785,7 +788,7 @@ class _HomeState extends State<Home> {
                           ),
                           LayoutBuilder(builder: (context, constraints) {
                             return SizedBox(
-                              height: cardHeight + 6,
+                              height: verticalCardHeight + 6,
                               child: ListView.builder(
                                   scrollDirection: Axis.horizontal,
                                   itemCount: busca.length,
@@ -801,7 +804,7 @@ class _HomeState extends State<Home> {
                                             backgroundColor:
                                                 Theme.of(context).cardColor,
                                             fixedSize:
-                                                Size(cardWidth, cardHeight),
+                                                Size(verticalCardWidth, verticalCardHeight),
                                             shape: RoundedRectangleBorder(
                                               borderRadius:
                                                   BorderRadius.circular(10),
@@ -832,8 +835,8 @@ class _HomeState extends State<Home> {
                                                         decodificar(busca[index]
                                                             ["imagem"])!,
                                                         fit: BoxFit.contain,
-                                                        height: imageSize,
-                                                        width: imageSize,
+                                                        height: verticalImageSize,
+                                                        width: verticalImageSize,
                                                       ))
                                                   : Padding(
                                                       padding:
@@ -842,8 +845,8 @@ class _HomeState extends State<Home> {
                                                       child: Image.asset(
                                                         'assets/images/image.png',
                                                         fit: BoxFit.contain,
-                                                        height: imageSize - 20,
-                                                        width: imageSize - 20,
+                                                        height: verticalImageSize - 20,
+                                                        width: verticalImageSize - 20,
                                                       ),
                                                     ),
                                               Divider(
@@ -926,42 +929,6 @@ class _HomeState extends State<Home> {
                           return Center(
                             child: Column(
                               children: [
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                SizedBox(
-                                  width: containerWidth,
-                                  child: TextField(
-                                    autocorrect: false,
-                                    style: TextStyle(
-                                      color:
-                                          Theme.of(context).primaryColorLight,
-                                      fontSize: 16,
-                                    ),
-                                    decoration: InputDecoration(
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                        borderSide: BorderSide.none,
-                                      ),
-                                      filled: true,
-                                      fillColor: Theme.of(context).cardColor,
-                                      prefixIcon: Icon(
-                                        Icons.search,
-                                        size: 22,
-                                        color:
-                                            Theme.of(context).primaryColorLight,
-                                      ),
-                                      contentPadding:
-                                          EdgeInsets.symmetric(vertical: 14),
-                                      hintText: "Pesquisar",
-                                      hintStyle: TextStyle(
-                                        color:
-                                            Theme.of(context).primaryColorLight,
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                  ),
-                                ),
                                 SizedBox(height: 10),
                                 LayoutBuilder(builder: (context, constraints) {
                                   return SizedBox(
@@ -979,7 +946,7 @@ class _HomeState extends State<Home> {
                                               backgroundColor:
                                                   Theme.of(context).cardColor,
                                               fixedSize:
-                                                  Size(cardWidth, cardHeight),
+                                                  Size(horizontalCardWidth, horizontalCardHeight),
                                               shape: RoundedRectangleBorder(
                                                 borderRadius:
                                                     BorderRadius.circular(10),
@@ -1017,12 +984,12 @@ class _HomeState extends State<Home> {
                                                                 anuncios[index][
                                                                     "imagem"])!,
                                                             fit: BoxFit.contain,
-                                                            height: imageSize,
-                                                            width: imageSize,
+                                                            height: horizontalImageSize,
+                                                            width: horizontalImageSize,
                                                           ))
                                                       : Icon(
                                                           Icons.image_rounded,
-                                                          size: imageSize,
+                                                          size: horizontalImageSize,
                                                           color: Theme.of(
                                                                   context)
                                                               .primaryColorLight,
