@@ -141,8 +141,6 @@ class _HomeState extends State<Home> {
       'local': "-1",
     };
 
-    
-
     // Enviar requisição
     try {
       final response = await http.post(
@@ -611,7 +609,8 @@ class _HomeState extends State<Home> {
               ),
             ),
             body: SingleChildScrollView(
-              child: Column(
+              child: !pesquisa
+              ? Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(
@@ -901,8 +900,10 @@ class _HomeState extends State<Home> {
                     );
                   }),
                 ],
+              )
+              : Text(anuncios.toString() // TODO: Implementar a exibição dos anúncios
               ),
-            ),
+            ),)
           );
   }
 }

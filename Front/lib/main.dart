@@ -15,6 +15,10 @@ void main() async {
         cardColor: Color(0xFFA4B7C2),
         primaryColor: Colors.blueGrey,
         highlightColor: const Color.fromARGB(255, 108, 126, 136),
+        progressIndicatorTheme: ProgressIndicatorThemeData(
+          circularTrackColor: Colors.black,
+          color: Colors.black,
+        ),
         buttonTheme: ButtonThemeData(
           buttonColor: const Color.fromRGBO(96, 125, 139, 1),
           textTheme: ButtonTextTheme.primary,
