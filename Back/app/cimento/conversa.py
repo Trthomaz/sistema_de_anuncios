@@ -1,27 +1,27 @@
-def Mensagem():
+# def Mensagem():
 
-        def __init__(self, user, txt, date):
+#         def __init__(self, user, txt, date):
 
-                self.user = user
-                self.txt = txt
-                self.date = date
+#                 self.user = user
+#                 self.txt = txt
+#                 self.date = date
 
 
-def Conversa():
+# def Conversa():
 
-        def __init__(self, interessado, anunciante, msgs = list()):
+#         def __init__(self, interessado, anunciante, msgs = list()):
                 
-                self.msgs = msgs
-                self.interessado = interessado
-                self.anunciante = anunciante
-                self.arquivada = False
+#                 self.msgs = msgs
+#                 self.interessado = interessado
+#                 self.anunciante = anunciante
+#                 self.arquivada = False
 
-        def add_msg(self, user, txt, date):
+#         # def add_msg(self, user, txt, date):
                 
-                if self.arquivada:
-                        return
-                self.msgs.append(Mensagem(user, txt, date))
+#         #         if self.arquivada:
+#         #                 return
+#         #         self.msgs.append(Mensagem(user, txt, date))
 
-        def arquivar(self):
+#         # def arquivar(self):
 
-                self.arquivada = True
+#         #         self.arquivada = True

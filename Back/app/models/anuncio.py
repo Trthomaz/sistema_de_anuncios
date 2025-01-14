@@ -34,5 +34,5 @@ class Anuncio(db.Model):
         
         self.imagem = imagem
 
-    def arquivar(self):
-        self.ativo = False
+    # def arquivar(self):
+    #     self.ativo = False

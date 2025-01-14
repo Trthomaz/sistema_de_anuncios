@@ -174,6 +174,7 @@ def test_fazer_busca_success(client, anuncio_model, perfil_model2):
     assert json["anuncios"][0]["anuncio_id"] == anuncio_model.id
     assert json["anuncios"][0]["titulo"] == anuncio_model.titulo
     assert json["anuncios"][0]["preco"] == anuncio_model.preco
+    assert json["anuncios"][0]["tipo"] == anuncio_model.tipo
 
 
 def test_fazer_busca_fail(client, anuncio_model, perfil_model2):
@@ -338,7 +339,7 @@ def test_editar_anuncio_success(client, anuncio_model, tipo_model2, categoria_mo
     descricao = "descricao"
     tipo_anuncio = tipo_model2.tipo#exista
     categoria = categoria_model2.categoria#exista
-    preco = "23,23"
+    preco = 23.23
     celular = "celular"
     cep = "cep"
     imagem = "imagem"

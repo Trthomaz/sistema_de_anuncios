@@ -44,6 +44,6 @@ class Perfil(db.Model):
         add(anuncio)
         commit()
 
-    def add_conversa(self, conversa):
-        add(conversa)
-        commit()
+    # def add_conversa(self, conversa):
+    #     add(conversa)
+    #     commit()

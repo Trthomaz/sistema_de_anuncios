@@ -14,12 +14,12 @@ class Conversa(db.Model):
             self.anunciante = anunciante
             self.arquivada = arquivada
 
-    def add_msg(self, user, txt, date):
+    # def add_msg(self, user, txt, date):
 
-        if not self.arquivada:
-            db.session.add(Mensagem(user, txt, date))
-            db.session.commit()
+    #     if not self.arquivada:
+    #         db.session.add(Mensagem(user, txt, date))
+    #         db.session.commit()
     
-    def arquivar(self):
+    # def arquivar(self):
 
-                self.arquivada = True
+    #             self.arquivada = True

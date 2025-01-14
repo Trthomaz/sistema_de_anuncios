@@ -15,11 +15,13 @@ def appl():
     yield istance
 
 
+#------------------------------------------------------------------------------------------------------------------------------------------------------
 @pytest.fixture()
 def client(appl):
     return appl.test_client()
 
 
+#------------------------------------------------------------------------------------------------------------------------------------------------------
 @pytest.fixture()
 def perfil_model():
     email = "fabio@gabriel"
@@ -43,6 +45,30 @@ def perfil_model():
         db.session.commit()
 
 
+@pytest.fixture()
+def perfil_model2():
+    email = "dario@chen"
+    senha = "pokemon"
+    nome = "Dario"
+    curso = "Computacao"
+    reputacao = 5.0
+
+    perfil = Perfil(email, senha, nome, curso, reputacao)
+
+    with app.app_context():
+        db.session.add(perfil)
+        db.session.commit()
+
+        perfil_atual = Perfil.query.filter_by(email= email).first()
+
+    yield perfil_atual
+
+    with app.app_context():
+        db.session.delete(perfil)
+        db.session.commit()
+
+
+#------------------------------------------------------------------------------------------------------------------------------------------------------
 @pytest.fixture()
 def tipo_model():
     atr_tipo = "Teste com Pytest em tipo"
@@ -81,6 +107,7 @@ def tipo_model2():
         db.session.commit()
 
 
+#------------------------------------------------------------------------------------------------------------------------------------------------------
 @pytest.fixture()
 def categoria_model():
     atr_categoria = "Teste com PyTest em categoria"
@@ -119,6 +146,7 @@ def categoria_model2():
         db.session.commit()
 
 
+#------------------------------------------------------------------------------------------------------------------------------------------------------
 @pytest.fixture()
 def anuncio_model_mount(perfil_model, categoria_model, tipo_model):
     titulo = "Camiseta Cruzeiro"
@@ -155,6 +183,7 @@ def anuncio_model(anuncio_model_mount):
         db.session.delete(anuncio)
         db.session.commit()
 
+
 @pytest.fixture()
 def anuncio_model_T_nota(anuncio_model_mount):
 
@@ -173,6 +202,7 @@ def anuncio_model_T_nota(anuncio_model_mount):
     with app.app_context():
         db.session.delete(anuncio)
         db.session.commit()
+
 
 @pytest.fixture()
 def anuncio_model_T_final(anuncio_model_mount):
@@ -207,29 +237,7 @@ def anuncio_model_unmount(anuncio_model_mount):
             db.session.commit()
 
 
-@pytest.fixture()
-def perfil_model2():
-    email = "dario@chen"
-    senha = "pokemon"
-    nome = "Dario"
-    curso = "Computacao"
-    reputacao = 5.0
-
-    perfil = Perfil(email, senha, nome, curso, reputacao)
-
-    with app.app_context():
-        db.session.add(perfil)
-        db.session.commit()
-
-        perfil_atual = Perfil.query.filter_by(email= email).first()
-
-    yield perfil_atual
-
-    with app.app_context():
-        db.session.delete(perfil)
-        db.session.commit()
-
-
+#------------------------------------------------------------------------------------------------------------------------------------------------------
 @pytest.fixture()
 def conversa_model_mount(perfil_model, perfil_model2):
     interessado = perfil_model2.id
@@ -258,6 +266,7 @@ def conversa_model(conversa_model_mount):
         db.session.delete(conversa)
         db.session.commit()
 
+
 @pytest.fixture()
 def conversa_model_unmount(conversa_model_mount):
     
@@ -272,7 +281,7 @@ def conversa_model_unmount(conversa_model_mount):
             db.session.commit()
 
 
-
+#------------------------------------------------------------------------------------------------------------------------------------------------------
 @pytest.fixture()
 def mensagem_model_mount(conversa_model):
     from datetime import datetime
@@ -343,7 +352,7 @@ def mensagem_model2(conversa_model):
         db.session.commit()
 
 
-
+#------------------------------------------------------------------------------------------------------------------------------------------------------
 @pytest.fixture()
 def transacao_model_mount(perfil_model2, anuncio_model):
     from datetime import datetime
@@ -420,25 +429,26 @@ def transacao_model_from_Anuncio_T_final(perfil_model2, anuncio_model_T_final):
         db.session.commit()
 
 
-@pytest.fixture()
-def transacao_model_invalida_mount(perfil_model2, anuncio_model):
-    from datetime import datetime
+# @pytest.fixture()
+# def transacao_model_invalida_mount(perfil_model2, anuncio_model):
+#     from datetime import datetime
 
-    data_inicio = datetime.strptime("2025-01-02 03:25:42", '%Y-%m-%d %H:%M:%S')
+#     data_inicio = datetime.strptime("2025-01-02 03:25:42", '%Y-%m-%d %H:%M:%S')
     
-    anuncio = anuncio_model.id
-    interessado = perfil_model2.id
-    nota_interessado = 10
-    nota_anunciante = 9
+#     anuncio = anuncio_model.id
+#     interessado = perfil_model2.id
+#     nota_interessado = 10
+#     nota_anunciante = 9
 
-    transacao = Transacao(data_inicio, anuncio, interessado, nota_interessado, nota_anunciante)
+#     transacao = Transacao(data_inicio, anuncio, interessado, nota_interessado, nota_anunciante)
 
-    yield  transacao
+#     yield  transacao
 
 
 # @pytest.fixture()
-# def transacao_model_mount_inst(transacao_model_mount):
-
+# def transacao_model_invalida(transacao_model_mount):
+    
+    
 #     transacao = transacao_model_mount
 
 #     with app.app_context():
@@ -449,24 +459,9 @@ def transacao_model_invalida_mount(perfil_model2, anuncio_model):
     
 #     yield transacao_atual
 
-
-@pytest.fixture()
-def transacao_model_invalida(transacao_model_mount):
-    
-    
-    transacao = transacao_model_mount
-
-    with app.app_context():
-        db.session.add(transacao)
-        db.session.commit()
-
-        transacao_atual = Transacao.query.filter_by(interessado= transacao.interessado).first()
-    
-    yield transacao_atual
-
-    with app.app_context():
-        db.session.delete(transacao)
-        db.session.commit()
+#     with app.app_context():
+#         db.session.delete(transacao)
+#         db.session.commit()
 
 
 @pytest.fixture()

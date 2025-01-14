@@ -1,17 +1,17 @@
-def Anuncio():
+# def Anuncio():
     
-    def __init__(self, anunciante, descricao, telefone, email, local, categoria, ativo, tipo = "Compra", nota = 5): #Ver como puxar imagem
+#     def __init__(self, anunciante, descricao, telefone, email, local, categoria, ativo, tipo = "Compra", nota = 5): #Ver como puxar imagem
 
-        self.anunciante = anunciante
-        self.descricao = descricao
-        self.telefone = telefone
-        self.email = email
-        self.local = local
-        self.categoria = categoria
+#         self.anunciante = anunciante
+#         self.descricao = descricao
+#         self.telefone = telefone
+#         self.email = email
+#         self.local = local
+#         self.categoria = categoria
 
-        self.nota = nota
-        self.ativo = ativo
+#         self.nota = nota
+#         self.ativo = ativo
 
-    def arquivar(self):
+#     # def arquivar(self):
 
-        self.ativo = False
+#     #     self.ativo = False
