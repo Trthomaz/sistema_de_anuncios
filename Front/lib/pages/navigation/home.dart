@@ -114,15 +114,34 @@ class _HomeState extends State<Home> {
   Future<List<Map<String, dynamic>>?> _pesquisar(txt) async{
     final url = Uri.parse('http://${ip}:5000/fazer_busca');
 
+    int cat = -1;
+    int tip = -1;
+
+    if (categoria != null) {
+      cat = categorias.indexOf(categoria!);
+    }
+    if (tipo != null) {
+      tip = tipos.indexOf(tipo!);
+    }
+    if (minPreco.text == "") {
+      minPreco.text = "0";
+    }
+    if (maxPreco.text == "") {
+      maxPreco.text = "999999";
+    }
+
     // Dados enviados
     final dados = {
       'user_id': id,
       'txt': txt,
-      'categoria': categoria,
-      'tipo': tipo,
-      'preco_inicial': minPreco.text,
-      'preco_final': maxPreco.text,
+      'categoria': cat,
+      'tipo': tip,
+      'preco_inicial': double.tryParse(minPreco.text),
+      'preco_final': double.tryParse(maxPreco.text),
+      'local': "-1",
     };
+
+    
 
     // Enviar requisição
     try {
