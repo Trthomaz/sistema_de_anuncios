@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:http/http.dart' as http;
 import 'package:sistema_de_anuncios/pages/chat.dart';
+import 'package:sistema_de_anuncios/pages/editar_anuncio.dart';
 import 'package:sistema_de_anuncios/pages/navigation/navigation.dart';
 import 'package:sistema_de_anuncios/pages/navigation/perfil.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -94,7 +95,8 @@ Future<Map<String, dynamic>> _getAnunciobyID(String ip, int anuncio_id) async {
 }
 
 class _AnuncioState extends State<Anuncio> {
-  Uint8List? decodificar(String base64Image) {
+
+Uint8List? decodificar(String base64Image) {
     // Verifica se a string Base64 começa com o prefixo 'data:image'
     if (base64Image.startsWith("data:image")) {
       // Remove o prefixo 'data:image/...;base64,' (se presente)
@@ -104,11 +106,6 @@ class _AnuncioState extends State<Anuncio> {
     // Decodifica a string Base64 para bytes (Uint8List)
     return base64Decode(base64Image);
   }
-
-void _editarAnuncio() {
-  // Implementar
-  // Redirecionar pra página de criar anuncio mas com os campos preenchidos podendo ser editados
-}
 
 Future<int> _excluir() async {
   return await showDialog<int>(
@@ -171,7 +168,7 @@ Future<void> _excluirAnuncio() async {
   // Dados enviados
   final dados = {
     'user_id': userId,
-    'anuncio_id': id
+    'anuncio_id': anuncioId
     };
 
   try {
@@ -193,13 +190,13 @@ Future<void> _excluirAnuncio() async {
 
   late int userId;
   late String ip;
-  late int id;
+  late int anuncioId;
 
   @override
   void initState() {
     userId = widget.userId;
     ip = widget.ip;
-    id = widget.anuncioId;
+    anuncioId = widget.anuncioId;
     super.initState();
   }
 
@@ -461,71 +458,36 @@ Future<void> _excluirAnuncio() async {
                                           MainAxisAlignment.center,
                                       children: [
                                         // Editar Anúncio
-                                        FutureBuilder(
-                                            future: _criarConversa(
-                                                widget.ip,
-                                                snapshot_anuncio
-                                                    .data!["anunciante_id"],
-                                                widget.userId),
-                                            builder:
-                                                (context, snapshot_conversa) {
-                                              if (snapshot_conversa.hasData) {
-                                                return Container(
-                                                  height: 40,
-                                                  width:
-                                                      constraints.maxWidth / 2 -
-                                                          20,
-                                                  child: ElevatedButton(
-                                                    onPressed: () => {
-                                                      setState(() {
-                                                        Navigator.push(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                                builder:
-                                                                    (context) {
-                                                                  return const Chat();
-                                                                },
-                                                                settings:
-                                                                    RouteSettings(
-                                                                        arguments: {
-                                                                      'id_conversa':
-                                                                          snapshot_conversa
-                                                                              .data!,
-                                                                      'ip': widget
-                                                                          .ip,
-                                                                      'id': snapshot_anuncio.data!["anunciante_id"] ==
-                                                                              widget
-                                                                                  .userId
-                                                                          ? snapshot_anuncio.data![
-                                                                              "interessado_id"]
-                                                                          : snapshot_anuncio
-                                                                              .data!["anunciante_id"]
-                                                                    })));
-                                                      })
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 10.0),
+                                          child: Container(
+                                            height: 40,
+                                            width:
+                                                constraints.maxWidth / 2 - 20,
+                                            child: ElevatedButton(
+                                              onPressed: () {
+                                                Navigator.pushReplacement(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) {
+                                                      return EditarAnuncio(ip: ip, id: userId, anuncioId: anuncioId,);
                                                     },
-                                                    style: ElevatedButton
-                                                        .styleFrom(
-                                                            backgroundColor:
-                                                                Theme.of(
-                                                                        context)
-                                                                    .primaryColor
-                                                                    .withOpacity(
-                                                                        1)),
-                                                    child: Text(
-                                                        "Editar Anúncio",
-                                                        style: TextStyle(
-                                                            color: Theme.of(
-                                                                    context)
-                                                                .primaryColorLight)),
                                                   ),
                                                 );
-                                              } else {
-                                                return Center(
-                                                  child:
-                                                      CircularProgressIndicator(),
-                                                );
-                                              }
-                                            }),
+                                              },
+                                              style: ElevatedButton.styleFrom(
+                                                  backgroundColor:
+                                                      Theme.of(context)
+                                                          .primaryColor
+                                                          .withOpacity(1)),
+                                              child: Text("Editar Anúncio",
+                                                  style: TextStyle(
+                                                      color: Theme.of(context)
+                                                          .primaryColorLight)),
+                                            ),
+                                          ),
+                                        ),
                                         // Excluir Anúncio
                                         Padding(
                                           padding: const EdgeInsets.symmetric(
@@ -539,7 +501,7 @@ Future<void> _excluirAnuncio() async {
                                                 int retorno = await _excluir();
                                                 if (retorno == 1){
                                                   _excluirAnuncio();
-                                                  Navigator.push(
+                                                  Navigator.pushReplacement(
                                                     context,
                                                     MaterialPageRoute(
                                                       builder: (context) {

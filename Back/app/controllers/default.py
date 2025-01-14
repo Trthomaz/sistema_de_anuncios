@@ -270,6 +270,8 @@ def editar_anuncio():
     cep = dados.get("cep")
     imagem = dados.get("imagem")
 
+    print(categoria)
+
     anuncio = Anuncio.query.filter_by(id = id).first()
     anuncio.titulo = titulo
     anuncio.descricao = descricao
