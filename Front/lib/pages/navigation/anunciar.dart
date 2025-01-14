@@ -50,7 +50,7 @@ class _AnunciarState extends State<Anunciar> {
   String? categoria;
   String? tipo;
 
-  List<String> categorias = ["Opção 1", "Opção 2"];
+  List<String> categorias = ["Serviço", "Produto"];
   List<String> tipos = ["Venda", "Busca"];
 
   // Requisição de login
@@ -489,12 +489,10 @@ class _AnunciarState extends State<Anunciar> {
                         items: categorias
                             .map<DropdownMenuItem<String>>((String value) {
                           Color cor = Color(0xFFFFFFFF);
-                          if (value == "Opção 1") {
+                          if (value == "Serviço") {
                             cor = Color(0xFF134E6C);
-                          } else if (value == "Opção 2") {
+                          } else if (value == "Produto") {
                             cor = Color(0xFF38524A);
-                          } else if (value == "Opção 3") {
-                            cor = Color.fromARGB(255, 82, 56, 57);
                           }
                           return DropdownMenuItem<String>(
                               value: value,

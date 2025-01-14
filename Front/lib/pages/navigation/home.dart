@@ -117,10 +117,10 @@ class _HomeState extends State<Home> {
     int tip = -1;
 
     if (categoria != null) {
-      cat = categorias.indexOf(categoria!);
+      cat = categorias.indexOf(categoria!)+1;
     }
     if (tipo != null) {
-      tip = tipos.indexOf(tipo!);
+      tip = tipos.indexOf(tipo!)+1;
     }
     if (minPreco.text == "") {
       minPreco.text = "0";
@@ -163,8 +163,8 @@ class _HomeState extends State<Home> {
   }
 
   final List<String> categorias = [
-    'Opção 1',
-    'Opção 2',
+    'Serviço',
+    'Produto',
   ];
 
   final List<String> tipos = [

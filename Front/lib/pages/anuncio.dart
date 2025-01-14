@@ -92,56 +92,7 @@ Future<Map<String, dynamic>> _getAnunciobyID(String ip, int anuncio_id) async {
   }
 }
 
-void _editarAnuncio(String ip, int anuncio_id) {
-  // Implementar
-  // Redirecionar pra página de criar anuncio mas com os campos preenchidos podendo ser editados
-}
-
-void _excluirAnuncio(String ip, int anuncio_id) {
-  // Implementar
-  return;
-}
-
 class _AnuncioState extends State<Anuncio> {
-  void _showMultiSelectDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (context, setDialogState) {
-            return AlertDialog(
-              title: Text('Selecione as opções'),
-              content: SingleChildScrollView(
-                child: Column(
-                  children: options.map((String option) {
-                    return CheckboxListTile(
-                      title: Text(option),
-                      value: selectedOptions[option],
-                      onChanged: (bool? value) {
-                        setDialogState(() {
-                          selectedOptions[option] = value ?? false;
-                        });
-                      },
-                    );
-                  }).toList(),
-                ),
-              ),
-              actions: [
-                TextButton(
-                  child: Text('Fechar'),
-                  onPressed: () {
-                    setState(() {}); // Atualiza o estado principal
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            );
-          },
-        );
-      },
-    );
-  }
-
   Uint8List? decodificar(String base64Image) {
     // Verifica se a string Base64 começa com o prefixo 'data:image'
     if (base64Image.startsWith("data:image")) {
@@ -153,60 +104,63 @@ class _AnuncioState extends State<Anuncio> {
     return base64Decode(base64Image);
   }
 
-  void _filtroDialog() {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: SizedBox(
-              height: 50,
-              width: 150,
-              child: Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                color: Theme.of(context).primaryColor,
-                child: Center(
-                  child: Text("Filtro",
-                      style: TextStyle(
-                        fontSize: 24,
-                        color: Theme.of(context).primaryColorLight,
-                      )),
+  void _editarAnuncio(String ip, int anuncio_id) {
+  // Implementar
+  // Redirecionar pra página de criar anuncio mas com os campos preenchidos podendo ser editados
+}
+
+void _excluirAnuncio(String ip, int anuncio_id) {
+  showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return AlertDialog(
+              title: SizedBox(
+                height: 60,
+                width: 270,
+                child: Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  color: Theme.of(context).primaryColor,
+                  child: Center(
+                    child: Text("Excluir Anúncio",
+                        style: TextStyle(
+                          fontSize: 24,
+                          color: Theme.of(context).primaryColorLight,
+                        )),
+                  ),
                 ),
               ),
-            ),
-            content: FilledButton(
-                onPressed: () {
-                  _showMultiSelectDialog();
-                },
-                child: Text("Categorias")),
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-            actions: [
-              ElevatedButton(
-                child: Text("Ok",
-                    style:
-                        TextStyle(color: Theme.of(context).primaryColorLight)),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                        Theme.of(context).primaryColor.withOpacity(1)),
-              )
-            ],
-          );
-        });
-  }
-
-  // Categoria
-  List<String> categorias = [];
-  final List<String> lista_categorias = ['Opção 1', 'Opção 2', 'Opção 3'];
-
-  // Lista de opções
-  final List<String> options = ['Opção 1', 'Opção 2', 'Opção 3', 'Opção 4'];
-
-  // Estado de seleção para cada opção
-  late Map<String, bool> selectedOptions;
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+              content: Text(
+                "Tem certeza que deseja excluir o anúncio?",
+                style: TextStyle(
+                  color: Colors.red,
+                  fontSize: 20,
+                ),
+              ),
+              actions: [
+                ElevatedButton(
+                  child: Text("Ok",
+                      style: TextStyle(
+                          color: Theme.of(context).primaryColorLight)),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor:
+                          Theme.of(context).primaryColor.withOpacity(1)),
+                )
+              ],
+            );
+          },
+        );
+      },
+    );
+  return;
+}
 
   late int userId;
 
@@ -214,8 +168,6 @@ class _AnuncioState extends State<Anuncio> {
   void initState() {
     userId = widget.userId;
     super.initState();
-    // Inicializa o estado de seleção (todas como não selecionadas)
-    selectedOptions = {for (var option in options) option: false};
   }
 
   @override
@@ -245,41 +197,13 @@ class _AnuncioState extends State<Anuncio> {
                       ),
                     ),
                     title: Padding(
-                      padding: const EdgeInsets.all(1),
-                      child: TextField(
-                        autocorrect: false,
-                        style: TextStyle(
-                          color: Theme.of(context).primaryColorLight,
-                          fontSize: 16,
-                        ),
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide.none,
-                          ),
-                          filled: true,
-                          fillColor:
-                              Theme.of(context).cardColor.withOpacity(0.1),
-                          prefixIcon: Icon(
-                            Icons.search,
-                            size: 22,
+                      padding: const EdgeInsets.only(right: 50),
+                      child: Center(
+                        child: Text(
+                          "Anúncio",
+                          style: TextStyle(
                             color: Theme.of(context).primaryColorLight,
-                          ),
-                          contentPadding: EdgeInsets.symmetric(vertical: 14),
-                          hintText: "Pesquisar",
-                          hintStyle: TextStyle(
-                            color: Theme.of(context).primaryColorLight,
-                            fontSize: 16,
-                          ),
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              Icons.tune, // filter_list ou filter_alt ou tune
-                              size: 22,
-                              color: Theme.of(context).primaryColorLight,
-                            ),
-                            onPressed: () {
-                              _filtroDialog();
-                            },
+                            fontSize: 30,
                           ),
                         ),
                       ),
@@ -296,9 +220,11 @@ class _AnuncioState extends State<Anuncio> {
                         SizedBox(
                             height: containerHeight,
                             child: SingleChildScrollView(
+                              // (Imagem, Título, Preço, Descrição)
                               child: Column(
                                 children: [
                                   SizedBox(height: 10),
+                                  // Imagem
                                   Center(
                                       child: snapshot_anuncio.data!["imagem"] !=
                                               null
@@ -331,6 +257,7 @@ class _AnuncioState extends State<Anuncio> {
                                   ),
                                   Column(
                                     children: [
+                                      // Título
                                       Align(
                                         alignment: Alignment.centerLeft,
                                         child: Padding(
@@ -346,6 +273,7 @@ class _AnuncioState extends State<Anuncio> {
                                           ),
                                         ),
                                       ),
+                                      // Preço
                                       Align(
                                         alignment: Alignment.centerLeft,
                                         child: Padding(
@@ -367,6 +295,7 @@ class _AnuncioState extends State<Anuncio> {
                                         thickness: 1,
                                         height: 10,
                                       ),
+                                      // Descrição
                                       Align(
                                         alignment: Alignment.centerLeft,
                                         child: Padding(
@@ -421,6 +350,42 @@ class _AnuncioState extends State<Anuncio> {
                                                             ),
                                                           ),
                                                         )),
+                                              SizedBox(
+                                                  height: 30,
+                                                  width: 80,
+                                                  child: snapshot_anuncio
+                                                              .data!["categoria"] ==
+                                                          "serviço"
+                                                      ? Card(
+                                                          margin: EdgeInsets.only(
+                                                              left: 10),
+                                                          color: Color(0xFF134E6C),
+                                                          child: Center(
+                                                            child: Text(
+                                                              "Serviço",
+                                                              style: TextStyle(
+                                                                  fontSize: 15,
+                                                                  color: Theme.of(
+                                                                          context)
+                                                                      .primaryColorLight),
+                                                            ),
+                                                          ),
+                                                        )
+                                                      : Card(
+                                                          margin: EdgeInsets.only(
+                                                              left: 10),
+                                                          color: Color(0xFF38524A),
+                                                          child: Center(
+                                                            child: Text(
+                                                              "Produto",
+                                                              style: TextStyle(
+                                                                  fontSize: 15,
+                                                                  color: Theme.of(
+                                                                          context)
+                                                                      .primaryColorLight),
+                                                            ),
+                                                          ),
+                                                        )),
                                             ],
                                           ),
                                         ),
@@ -445,7 +410,9 @@ class _AnuncioState extends State<Anuncio> {
                                 ],
                               ),
                             )),
+                        // Anunciante
                         userId == snapshot_anuncio.data!["anunciante_id"]
+                            // Se o usuário for o anunciante
                             ? Column(
                                 children: [
                                   Divider(
@@ -460,6 +427,7 @@ class _AnuncioState extends State<Anuncio> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
+                                        // Editar Anúncio
                                         FutureBuilder(
                                             future: _criarConversa(
                                                 widget.ip,
@@ -525,6 +493,7 @@ class _AnuncioState extends State<Anuncio> {
                                                 );
                                               }
                                             }),
+                                        // Excluir Anúncio
                                         Padding(
                                           padding: const EdgeInsets.symmetric(
                                               horizontal: 10.0),
@@ -558,6 +527,7 @@ class _AnuncioState extends State<Anuncio> {
                                   ),
                                 ],
                               )
+                            // Se o usuário não for o anunciante
                             : Column(
                                 children: [
                                   Divider(

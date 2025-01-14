@@ -159,7 +159,7 @@ def fazer_busca():
     l = local == "-1"
     pi = preco_i == -1
     pf = preco_f == -1
-    print(categoria)
+    print(preco_i, preco_f)
     anuncios = Anuncio.query.filter((Anuncio.categoria == categoria) | (c),
                                     (Anuncio.tipo == tipo) | (t),#(Anuncio.tipo == tipo) if t else True
                                     (Anuncio.local == local) | (l),
