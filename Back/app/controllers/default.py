@@ -373,9 +373,7 @@ def sort_by_date(objs, type):
         for i in range (n):
             for j in range (n - 1):
                 if objs[j].date > objs[j + 1].date:
-                    aux = objs[j]
-                    objs[j] = objs[j+1]
-                    objs[j+1] = aux
+                    objs[j], objs[j+1] = objs[j+1], objs[j]
         return objs
     elif type == "quick":
         return quick_sort(objs)
