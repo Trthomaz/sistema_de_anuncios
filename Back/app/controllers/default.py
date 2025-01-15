@@ -342,7 +342,7 @@ def avaliar():
         return jsonify({"dados": {"msg": "Notas já foram dadas"}})
     transacao = Transacao.query.filter_by(anuncio = a_id).first()
     #perfil = Perfil.query.filter_by(id=id).first()
-    p_a = Perfil.query.filter_by(id=transacao.anunciante).first()
+    p_a = Perfil.query.filter_by(id=anuncio.anunciante).first()
     p_i = Perfil.query.filter_by(id=transacao.interessado).first()
     if id == transacao.interessado:
         transacao.add_nota_interessado(nota)
