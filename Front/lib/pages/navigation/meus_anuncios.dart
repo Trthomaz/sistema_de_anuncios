@@ -51,6 +51,8 @@ class _MeusAnunciosState extends State<MeusAnuncios> {
         return;
       }
       anuncios = anunciosBuscados;
+      print("ANUNCIO");
+      print(anuncios[0]);
       _isLoading = false;
     });
   }
@@ -79,6 +81,7 @@ class _MeusAnunciosState extends State<MeusAnuncios> {
         final anuncios = resposta['anuncios'].cast<
             Map<String,
                 dynamic>>(); // List<dynamic> -> List<Map<String, dynamic>>
+        print(anuncios[0]);
         return anuncios;
       } else {
         print("Erro na comunicação, tente novamente mais tarde");
@@ -252,44 +255,70 @@ class _MeusAnunciosState extends State<MeusAnuncios> {
                                               fontSize: 22,
                                             ),
                                           ),
-                                          SizedBox(
-                                              height: 15,
-                                              width: 40,
-                                              child: anuncios[index]
-                                                          ["tipo"] ==
-                                                      "venda"
-                                                  ? Card(
-                                                      margin:
-                                                          EdgeInsets.all(0),
-                                                      color:
-                                                          Color(0xFF134E6C),
-                                                      child: Center(
-                                                        child: Text(
-                                                          "Venda",
-                                                          style: TextStyle(
-                                                              fontSize: 8,
-                                                              color: Theme.of(
-                                                                      context)
-                                                                  .primaryColorLight),
-                                                        ),
-                                                      ),
-                                                    )
-                                                  : Card(
-                                                      margin:
-                                                          EdgeInsets.all(0),
-                                                      color:
-                                                          Color(0xFF38524A),
-                                                      child: Center(
-                                                        child: Text(
-                                                          "Busca",
-                                                          style: TextStyle(
-                                                              fontSize: 8,
-                                                              color: Theme.of(
-                                                                      context)
-                                                                  .primaryColorLight),
-                                                        ),
-                                                      ),
-                                                    )),
+                                          Row(
+                                            children: [
+                                              SizedBox(
+                                                  height: 15,
+                                                  width: 40,
+                                                  child: anuncios[index]
+                                                              ["tipo"] ==
+                                                          "venda"
+                                                      ? Card(
+                                                          margin:
+                                                              EdgeInsets.all(0),
+                                                          color:
+                                                              Color(0xFF134E6C),
+                                                          child: Center(
+                                                            child: Text(
+                                                              "Venda",
+                                                              style: TextStyle(
+                                                                  fontSize: 8,
+                                                                  color: Theme.of(
+                                                                          context)
+                                                                      .primaryColorLight),
+                                                            ),
+                                                          ),
+                                                        )
+                                                      : Card(
+                                                          margin:
+                                                              EdgeInsets.all(0),
+                                                          color:
+                                                              Color(0xFF38524A),
+                                                          child: Center(
+                                                            child: Text(
+                                                              "Busca",
+                                                              style: TextStyle(
+                                                                  fontSize: 8,
+                                                                  color: Theme.of(
+                                                                          context)
+                                                                      .primaryColorLight),
+                                                            ),
+                                                          ),
+                                                        )),
+                                              SizedBox(width: 4,),
+                                              anuncios[index]["anunciante_id"] != id ?
+                                              SizedBox(
+                                                  height: 15,
+                                                  width: 60,
+                                                  child: Card(
+                                                          margin:
+                                                              EdgeInsets.all(0),
+                                                          color:
+                                                              const Color.fromARGB(255, 107, 28, 23),
+                                                          child: Center(
+                                                            child: Text(
+                                                              "Interessado",
+                                                              style: TextStyle(
+                                                                  fontSize: 8,
+                                                                  color: Theme.of(
+                                                                          context)
+                                                                      .primaryColorLight),
+                                                            ),
+                                                          ),
+                                                        ))
+                                              : Container()
+                                            ],
+                                          ),
                                         ],
                                       ),
                                     ),
