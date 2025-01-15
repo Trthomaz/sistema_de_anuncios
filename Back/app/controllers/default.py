@@ -342,13 +342,15 @@ def avaliar():
         return jsonify({"dados": {"msg": "Notas já foram dadas"}})
     transacao = Transacao.query.filter_by(anuncio = a_id).first()
     perfil = Perfil.query.filter_by(id=id).first()
+    p_a = Perfil.query.filter_by(id=anuncio.anunciante).first()
     if id == transacao.interessado:
         transacao.add_nota_interessado(nota)
+        p_a.att_reputação()
     elif id == anuncio.anunciante:
         transacao.add_nota_anunciante(nota)
+        perfil.att_reputacao()
     else:
         return jsonify({"dados": {"msg": "vixe mano kkk de quem que é esse id aí vei...."}})
-    perfil.att_reputacao()
     if (transacao.nota_interessado is not None) and (transacao.nota_anunciante is not None):
         anuncio.nota = True
     #ver confusão com a nota do anuncio e dar um jeito de saber se a nota já foi dada
