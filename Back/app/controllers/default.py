@@ -397,7 +397,13 @@ def quick_sort(lista):
 
 @app.route("/mexer")
 def mexer():
-    db.session.add(Perfil("kenji@es.com", "1234", "Kenji", "Sistemas de Informação", 5))
+    lista = Mensagem.query.filter().all()
+    for v in lista:
+        db.session.delete(v)
+    lista = Conversa.query.filter().all()
+    for v in lista:
+        db.session.delete(v)
+    #db.session.add(Perfil("kenji@es.com", "1234", "Kenji", "Sistemas de Informação", 5))
     '''lista = Anuncio.query.filter().all()
     for v in lista:
         db.session.delete(v)
