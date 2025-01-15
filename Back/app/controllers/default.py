@@ -346,7 +346,7 @@ def avaliar():
     p_i = Perfil.query.filter_by(id=transacao.interessado).first()
     if id == transacao.interessado:
         transacao.add_nota_interessado(nota)
-        p_a.att_reputação()
+        p_a.att_reputacao()
     elif id == anuncio.anunciante:
         transacao.add_nota_anunciante(nota)
         p_i.att_reputacao()
