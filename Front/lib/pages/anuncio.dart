@@ -23,79 +23,8 @@ class Anuncio extends StatefulWidget {
   State<Anuncio> createState() => _AnuncioState();
 }
 
-Future<Map<String, dynamic>?> _getPerfil(String ip, int user_id) async {
-  final url = Uri.parse('http://$ip:5000/get_perfil');
-
-  // Dados enviados
-  final dados = {'user_id': user_id};
-
-  try {
-    final response = await http.post(
-      url,
-      headers: {
-        // Define o tipo de conteúdo como json
-        'Content-Type': 'application/json'
-      },
-      body: json.encode(dados),
-    );
-    Map<String, dynamic> resposta = json.decode(response.body);
-    return resposta["dados"];
-  } catch (e) {
-    print(e);
-    return null;
-  }
-}
-
-Future<int> _criarConversa(String ip, int user1_id, int user2_id) async {
-  final url = Uri.parse('http://$ip:5000/iniciar_conversa');
-
-  // Dados enviados
-  final dados = {'anunciante_id': user1_id, 'interessado_id': user2_id};
-
-  try {
-    final response = await http.post(
-      url,
-      headers: {
-        // Define o tipo de conteúdo como json
-        'Content-Type': 'application/json'
-      },
-      body: json.encode(dados),
-    );
-
-    Map<String, dynamic> resposta = json.decode(response.body);
-    return resposta["dados"]["conversa_id"];
-  } catch (e) {
-    print(e);
-    return -1;
-  }
-}
-
-Future<Map<String, dynamic>> _getAnunciobyID(String ip, int anuncio_id) async {
-  final url = Uri.parse('http://$ip:5000/get_anuncio');
-
-  // Dados enviados
-  final dados = {'anuncio_id': anuncio_id};
-
-  try {
-    final response = await http.post(
-      url,
-      headers: {
-        // Define o tipo de conteúdo como json
-        'Content-Type': 'application/json'
-      },
-      body: json.encode(dados),
-    );
-
-    Map<String, dynamic> resposta = json.decode(response.body);
-    print(resposta["dados"]);
-    return resposta["dados"];
-  } catch (e) {
-    print(e);
-    return {"erro": "erro"};
-  }
-}
-
 class _AnuncioState extends State<Anuncio> {
+
   Uint8List? decodificar(String base64Image) {
     // Verifica se a string Base64 começa com o prefixo 'data:image'
     if (base64Image.startsWith("data:image")) {
@@ -253,9 +182,110 @@ class _AnuncioState extends State<Anuncio> {
     }
   }
 
+  Future<Map<String, dynamic>?> _getPerfil(String ip, int user_id) async {
+  final url = Uri.parse('http://$ip:5000/get_perfil');
+
+  // Dados enviados
+  final dados = {'user_id': user_id};
+
+  try {
+    final response = await http.post(
+      url,
+      headers: {
+        // Define o tipo de conteúdo como json
+        'Content-Type': 'application/json'
+      },
+      body: json.encode(dados),
+    );
+    Map<String, dynamic> resposta = json.decode(response.body);
+    return resposta["dados"];
+  } catch (e) {
+    print(e);
+    return null;
+  }
+}
+
+  Future<int> _criarConversa(String ip, int user1_id, int user2_id) async {
+    final url = Uri.parse('http://$ip:5000/iniciar_conversa');
+
+    // Dados enviados
+    final dados = {'anunciante_id': user1_id, 'interessado_id': user2_id};
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          // Define o tipo de conteúdo como json
+          'Content-Type': 'application/json'
+        },
+        body: json.encode(dados),
+      );
+
+      Map<String, dynamic> resposta = json.decode(response.body);
+      return resposta["dados"]["conversa_id"];
+    } catch (e) {
+      print(e);
+      return -1;
+    }
+  }
+
+  Future<Map<String, dynamic>> _getAnunciobyID(String ip, int anuncio_id) async {
+    final url = Uri.parse('http://$ip:5000/get_anuncio');
+
+    // Dados enviados
+    final dados = {'anuncio_id': anuncio_id};
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          // Define o tipo de conteúdo como json
+          'Content-Type': 'application/json'
+        },
+        body: json.encode(dados),
+      );
+
+      Map<String, dynamic> resposta = json.decode(response.body);
+      print(resposta["dados"]);
+      return resposta["dados"];
+    } catch (e) {
+      print(e);
+      return {"erro": "erro"};
+    }
+  }
+
+  Future<void> _avaliar() async{
+    final url = Uri.parse('http://$ip:5000/avaliar');
+
+    // Dados enviados
+    final dados = {
+      'user_id': userId, 
+      'anuncio_id': anuncioId, 
+      'nota': _rating
+    };
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          // Define o tipo de conteúdo como json
+          'Content-Type': 'application/json'
+        },
+        body: json.encode(dados),
+      );
+
+      Map<String, dynamic> resposta = json.decode(response.body);
+      print(resposta["dados"]['msg']);
+    } catch (e) {
+      print(e);
+      return;
+    }
+  }
+
   late int userId;
   late String ip;
   late int anuncioId;
+  double _rating = 0.0;
 
   @override
   void initState() {
@@ -308,7 +338,18 @@ class _AnuncioState extends State<Anuncio> {
               body: snapshot_anuncio.hasData
                   ? LayoutBuilder(builder: (context, constraints) {
                       double containerWidth = constraints.maxWidth - 20;
-                      double containerHeight = constraints.maxHeight - 123;
+                      double containerHeight = constraints.maxHeight - 133;
+                      if (userId != snapshot_anuncio.data!["anunciante_id"]){
+                        containerHeight = constraints.maxHeight - 173;
+                        if (snapshot_anuncio.data!["ativo"] == false) {
+                          containerHeight = constraints.maxHeight - 233;
+                        }
+                      }
+                      if (userId == snapshot_anuncio.data!["anunciante_id"]){
+                        if (snapshot_anuncio.data!["ativo"] == false) {
+                        containerHeight = constraints.maxHeight - 193;
+                      }
+                      }
                       double imagem = constraints.maxHeight - 500;
                       return LayoutBuilder(builder: (context, constraints) {
                         return Column(
@@ -527,26 +568,6 @@ class _AnuncioState extends State<Anuncio> {
                                               ),
                                             ),
                                           ),
-                                          Container(
-                                            height: 40,
-                                            width:
-                                                constraints.maxWidth / 2 - 20,
-                                            child: ElevatedButton(
-                                              onPressed: () =>
-                                                  _realizarTransacao(
-                                                      widget.userId,
-                                                      widget.anuncioId),
-                                              style: ElevatedButton.styleFrom(
-                                                  backgroundColor:
-                                                      Theme.of(context)
-                                                          .primaryColor
-                                                          .withOpacity(1)),
-                                              child: Text("Finalizar Transação",
-                                                  style: TextStyle(
-                                                      color: Theme.of(context)
-                                                          .primaryColorLight)),
-                                            ),
-                                          ),
                                         ],
                                       ),
                                     ],
@@ -658,6 +679,77 @@ class _AnuncioState extends State<Anuncio> {
                                       SizedBox(
                                         height: 10,
                                       ),
+                                      snapshot_anuncio.data!["ativo"] == true 
+                                          // Finalizar Transação
+                                          ? Container(
+                                            height: 40,
+                                            width:
+                                                constraints.maxWidth / 2 - 20,
+                                            child: ElevatedButton(
+                                              onPressed: () =>
+                                                  _realizarTransacao(
+                                                      widget.userId,
+                                                      widget.anuncioId),
+                                              style: ElevatedButton.styleFrom(
+                                                  backgroundColor:
+                                                      Theme.of(context)
+                                                          .primaryColor
+                                                          .withOpacity(1)),
+                                              child: Text("Finalizar Transação",
+                                                  style: TextStyle(
+                                                      color: Theme.of(context)
+                                                          .primaryColorLight)),
+                                            ),
+                                          )
+                                          // Avaliar
+                                          : Column(
+                                            children: [
+                                              SizedBox(
+                                                height: 10,
+                                              ),
+                                              RatingBar.builder(
+                                                initialRating: 0,
+                                                minRating: 1,
+                                                direction: Axis.horizontal,
+                                                allowHalfRating: true,
+                                                itemCount: 5,
+                                                itemPadding: EdgeInsets.symmetric(horizontal: 2.0),
+                                                itemBuilder: (context, _) => Icon(
+                                                  Icons.star,
+                                                  color: Colors.yellow,
+                                                ),
+                                                onRatingUpdate: (rating) {
+                                                  setState(() {
+                                                    _rating = rating;
+                                                  });
+                                                },
+                                              ),
+                                              SizedBox(
+                                                height: 10,
+                                              ),
+                                              Container(
+                                                height: 40,
+                                                width:
+                                                    constraints.maxWidth / 2 - 20,
+                                                child: ElevatedButton(
+                                                  onPressed: () async {
+                                                    print("AVALIAR");
+                                                    await _avaliar();
+                                                    print("AVALIADO");
+                                                  },
+                                                  style: ElevatedButton.styleFrom(
+                                                      backgroundColor:
+                                                          Theme.of(context)
+                                                              .primaryColor
+                                                              .withOpacity(1)),
+                                                  child: Text("Avaliar",
+                                                      style: TextStyle(
+                                                          color: Theme.of(context)
+                                                              .primaryColorLight)),
+                                                ),
+                                              )
+                                            ],
+                                          ),
                                     ],
                                   )
                                 // Se o usuário não for o anunciante
@@ -852,6 +944,77 @@ class _AnuncioState extends State<Anuncio> {
                                       SizedBox(
                                         height: 10,
                                       ),
+                                      snapshot_anuncio.data!["ativo"] == true 
+                                          // Finalizar Transação
+                                          ? Container(
+                                            height: 40,
+                                            width:
+                                                constraints.maxWidth / 2 - 20,
+                                            child: ElevatedButton(
+                                              onPressed: () =>
+                                                  _realizarTransacao(
+                                                      widget.userId,
+                                                      widget.anuncioId),
+                                              style: ElevatedButton.styleFrom(
+                                                  backgroundColor:
+                                                      Theme.of(context)
+                                                          .primaryColor
+                                                          .withOpacity(1)),
+                                              child: Text("Finalizar Transação",
+                                                  style: TextStyle(
+                                                      color: Theme.of(context)
+                                                          .primaryColorLight)),
+                                            ),
+                                          )
+                                          // Avaliar
+                                          : Column(
+                                            children: [
+                                              SizedBox(
+                                                height: 10,
+                                              ),
+                                              RatingBar.builder(
+                                                initialRating: 0,
+                                                minRating: 1,
+                                                direction: Axis.horizontal,
+                                                allowHalfRating: true,
+                                                itemCount: 5,
+                                                itemPadding: EdgeInsets.symmetric(horizontal: 2.0),
+                                                itemBuilder: (context, _) => Icon(
+                                                  Icons.star,
+                                                  color: Colors.yellow,
+                                                ),
+                                                onRatingUpdate: (rating) {
+                                                  setState(() {
+                                                    _rating = rating;
+                                                  });
+                                                },
+                                              ),
+                                              SizedBox(
+                                                height: 10,
+                                              ),
+                                              Container(
+                                                height: 40,
+                                                width:
+                                                    constraints.maxWidth / 2 - 20,
+                                                child: ElevatedButton(
+                                                  onPressed: () async {
+                                                    print("AVALIAR");
+                                                    await _avaliar();
+                                                    print("AVALIADO");
+                                                  },
+                                                  style: ElevatedButton.styleFrom(
+                                                      backgroundColor:
+                                                          Theme.of(context)
+                                                              .primaryColor
+                                                              .withOpacity(1)),
+                                                  child: Text("Avaliar",
+                                                      style: TextStyle(
+                                                          color: Theme.of(context)
+                                                              .primaryColorLight)),
+                                                ),
+                                              )
+                                            ],
+                                          ),
                                     ],
                                   )
                           ],
