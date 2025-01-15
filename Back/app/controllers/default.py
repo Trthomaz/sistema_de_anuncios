@@ -395,6 +395,29 @@ def quick_sort(lista):
 
 # Testes e mexidas diretas no bd
 
+@app.route("/mexer")
+def mexer():
+    db.session.add(Perfil("kenji@es.com", "1234", "Kenji", "Sistemas de Informação", 5))
+    '''lista = Anuncio.query.filter().all()
+    for v in lista:
+        db.session.delete(v)
+    db.session.add(Perfil("jpoço@es.com", "1234", "João do Poço", "Ciência da Computação", 5))
+    p = Perfil.query.filter_by().first()
+    lista = Mensagem.query.filter().all()
+    for v in lista:
+        db.session.delete(v)
+    lista = Conversa.query.filter().all()
+    for v in lista:
+        db.session.delete(v)
+    a = Anuncio.query.filter_by(titulo="Mouse Gamer RGB")
+    a.anunciante = p.id
+    lista = Perfil.query.filter().all()
+    for v in lista:
+        if v.nome != "João do Poço":
+            db.session.delete(v)'''
+    db.session.commit()
+    return "ok"
+
 # @app.route("/inicializar1")
 # def inicializar1():
 #     db.session.add(Tipo("venda"))
