@@ -95,8 +95,7 @@ Future<Map<String, dynamic>> _getAnunciobyID(String ip, int anuncio_id) async {
 }
 
 class _AnuncioState extends State<Anuncio> {
-
-Uint8List? decodificar(String base64Image) {
+  Uint8List? decodificar(String base64Image) {
     // Verifica se a string Base64 começa com o prefixo 'data:image'
     if (base64Image.startsWith("data:image")) {
       // Remove o prefixo 'data:image/...;base64,' (se presente)
@@ -107,86 +106,85 @@ Uint8List? decodificar(String base64Image) {
     return base64Decode(base64Image);
   }
 
-Future<int> _excluir() async {
-  return await showDialog<int>(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: SizedBox(
-                height: 60,
-                width: 270,
-                child: Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  color: Theme.of(context).primaryColor,
-                  child: Center(
-                    child: Text("Excluir Anúncio",
-                        style: TextStyle(
-                          fontSize: 24,
-                          color: Theme.of(context).primaryColorLight,
-                        )),
-                  ),
-                ),
+  Future<int> _excluir() async {
+    return await showDialog<int>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: SizedBox(
+            height: 60,
+            width: 270,
+            child: Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
               ),
-        backgroundColor: Theme.of(context).cardColor,
-        content: Text("Tem certeza que deseja excluir o anúncio?", textAlign: TextAlign.center, style: TextStyle(color: const Color.fromARGB(255, 156, 43, 35)),),
-        actions: [
-          ElevatedButton(
-            onPressed: () {
-              Navigator.of(context).pop(1); // Retorna 1 para indicar "Sim"
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor:
-                  Theme.of(context).primaryColor.withOpacity(1)),
-            child: Text("Sim",
-                      style: TextStyle(
-                          color: Theme.of(context).primaryColorLight)),
+              color: Theme.of(context).primaryColor,
+              child: Center(
+                child: Text("Excluir Anúncio",
+                    style: TextStyle(
+                      fontSize: 24,
+                      color: Theme.of(context).primaryColorLight,
+                    )),
+              ),
+            ),
           ),
-          SizedBox(width: 6),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.of(context).pop(0); // Retorna 0 para indicar "Não"
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor:
-                  Theme.of(context).primaryColor.withOpacity(1)),
-            child: Text("Não",
-                      style: TextStyle(
-                          color: Theme.of(context).primaryColorLight)),
+          backgroundColor: Theme.of(context).cardColor,
+          content: Text(
+            "Tem certeza que deseja excluir o anúncio?",
+            textAlign: TextAlign.center,
+            style: TextStyle(color: const Color.fromARGB(255, 156, 43, 35)),
           ),
-          SizedBox(width: 46),
-        ],
-      );
-    },
-  ).then((value) => value ?? 0); // Garante que o valor nunca seja nulo
-}
-
-Future<void> _excluirAnuncio() async {
-  final url = Uri.parse('http://$ip:5000/excluir_anuncio');
-
-  // Dados enviados
-  final dados = {
-    'user_id': userId,
-    'anuncio_id': anuncioId
-    };
-
-  try {
-    final response = await http.post(
-      url,
-      headers: {
-        // Define o tipo de conteúdo como json
-        'Content-Type': 'application/json'
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop(1); // Retorna 1 para indicar "Sim"
+              },
+              style: ElevatedButton.styleFrom(
+                  backgroundColor:
+                      Theme.of(context).primaryColor.withOpacity(1)),
+              child: Text("Sim",
+                  style: TextStyle(color: Theme.of(context).primaryColorLight)),
+            ),
+            SizedBox(width: 6),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop(0); // Retorna 0 para indicar "Não"
+              },
+              style: ElevatedButton.styleFrom(
+                  backgroundColor:
+                      Theme.of(context).primaryColor.withOpacity(1)),
+              child: Text("Não",
+                  style: TextStyle(color: Theme.of(context).primaryColorLight)),
+            ),
+            SizedBox(width: 46),
+          ],
+        );
       },
-      body: json.encode(dados),
-    );
-
-    Map<String, dynamic> resposta = json.decode(response.body);
-    print(resposta["dados"]['msg']);
-  } catch (e) {
-    return;
+    ).then((value) => value ?? 0); // Garante que o valor nunca seja nulo
   }
-}
+
+  Future<void> _excluirAnuncio() async {
+    final url = Uri.parse('http://$ip:5000/excluir_anuncio');
+
+    // Dados enviados
+    final dados = {'user_id': userId, 'anuncio_id': anuncioId};
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          // Define o tipo de conteúdo como json
+          'Content-Type': 'application/json'
+        },
+        body: json.encode(dados),
+      );
+
+      Map<String, dynamic> resposta = json.decode(response.body);
+      print(resposta["dados"]['msg']);
+    } catch (e) {
+      return;
+    }
+  }
 
   late int userId;
   late String ip;
@@ -205,519 +203,577 @@ Future<void> _excluirAnuncio() async {
     return FutureBuilder(
         future: _getAnunciobyID(widget.ip, widget.anuncioId),
         builder: (context, snapshot_anuncio) {
-            return Scaffold(
-                appBar: PreferredSize(
-                  // Tamanho do AppBar
-                  preferredSize: Size.fromHeight(60.0),
-                  child: AppBar(
-                    backgroundColor: Theme.of(context).primaryColor,
-                    leading: Padding(
-                      // Leading é o ícone à esquerda do AppBar
-                      padding: const EdgeInsets.only(
-                          left: 4, top: 2, bottom: 2, right: 2),
-                      child: IconButton(
-                        icon: Icon(
-                          Icons.arrow_back,
-                          size: 30,
-                          color: Theme.of(context).primaryColorLight,
-                        ),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
+          return Scaffold(
+              appBar: PreferredSize(
+                // Tamanho do AppBar
+                preferredSize: Size.fromHeight(60.0),
+                child: AppBar(
+                  backgroundColor: Theme.of(context).primaryColor,
+                  leading: Padding(
+                    // Leading é o ícone à esquerda do AppBar
+                    padding: const EdgeInsets.only(
+                        left: 4, top: 2, bottom: 2, right: 2),
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.arrow_back,
+                        size: 30,
+                        color: Theme.of(context).primaryColorLight,
                       ),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
                     ),
-                    title: Padding(
-                      padding: const EdgeInsets.only(right: 50),
-                      child: Center(
-                        child: Text(
-                          "Anúncio",
-                          style: TextStyle(
-                            color: Theme.of(context).primaryColorLight,
-                            fontSize: 30,
-                          ),
+                  ),
+                  title: Padding(
+                    padding: const EdgeInsets.only(right: 50),
+                    child: Center(
+                      child: Text(
+                        "Anúncio",
+                        style: TextStyle(
+                          color: Theme.of(context).primaryColorLight,
+                          fontSize: 30,
                         ),
                       ),
                     ),
                   ),
                 ),
-                body: snapshot_anuncio.hasData ? LayoutBuilder(builder: (context, constraints) {
-                  double containerWidth = constraints.maxWidth - 20;
-                  double containerHeight = constraints.maxHeight - 123;
-                  double imagem = constraints.maxHeight - 500;
-                  return LayoutBuilder(builder: (context, constraints) {
-                    return Column(
-                      children: [
-                        SizedBox(
-                            height: containerHeight,
-                            child: SingleChildScrollView(
-                              // (Imagem, Título, Preço, Descrição)
-                              child: Column(
-                                children: [
-                                  SizedBox(height: 10),
-                                  // Imagem
-                                  Center(
-                                      child: snapshot_anuncio.data!["imagem"] !=
-                                              null
-                                          ? ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              child: Image.memory(
-                                                decodificar(snapshot_anuncio
-                                                    .data!["imagem"])!,
-                                                fit: BoxFit.contain,
-                                                height: imagem,
-                                                width: imagem,
-                                              ))
-                                          : Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: Image.asset(
-                                                'assets/images/image.png',
-                                                fit: BoxFit.contain,
-                                                height: imagem - 50,
-                                                width: imagem - 50,
-                                              ),
-                                            )),
-                                  Divider(
-                                    color: Theme.of(context).primaryColorLight,
-                                    thickness: 1,
-                                    height: 10,
-                                    indent: 10,
-                                    endIndent: 10,
-                                  ),
-                                  Column(
+              ),
+              body: snapshot_anuncio.hasData
+                  ? LayoutBuilder(builder: (context, constraints) {
+                      double containerWidth = constraints.maxWidth - 20;
+                      double containerHeight = constraints.maxHeight - 123;
+                      double imagem = constraints.maxHeight - 500;
+                      return LayoutBuilder(builder: (context, constraints) {
+                        return Column(
+                          children: [
+                            SizedBox(
+                                height: containerHeight,
+                                child: SingleChildScrollView(
+                                  // (Imagem, Título, Preço, Descrição)
+                                  child: Column(
                                     children: [
-                                      // Título
-                                      Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 4, horizontal: 10),
-                                          child: Text(
-                                            snapshot_anuncio.data!["titulo"],
-                                            style: TextStyle(
-                                              color: Theme.of(context)
-                                                  .primaryColorLight,
-                                              fontSize: 30,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      // Preço
-                                      Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 4, horizontal: 10),
-                                          child: Text(
-                                            "R\$ ${snapshot_anuncio.data!["preco"].toStringAsFixed(2)}",
-                                            style: TextStyle(
-                                              color: Theme.of(context)
-                                                  .primaryColorLight,
-                                              fontSize: 30,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
+                                      SizedBox(height: 10),
+                                      // Imagem
+                                      Center(
+                                          child: snapshot_anuncio
+                                                      .data!["imagem"] !=
+                                                  null
+                                              ? ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  child: Image.memory(
+                                                    decodificar(snapshot_anuncio
+                                                        .data!["imagem"])!,
+                                                    fit: BoxFit.contain,
+                                                    height: imagem,
+                                                    width: imagem,
+                                                  ))
+                                              : Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
+                                                  child: Image.asset(
+                                                    'assets/images/image.png',
+                                                    fit: BoxFit.contain,
+                                                    height: imagem - 50,
+                                                    width: imagem - 50,
+                                                  ),
+                                                )),
                                       Divider(
                                         color:
                                             Theme.of(context).primaryColorLight,
                                         thickness: 1,
                                         height: 10,
+                                        indent: 10,
+                                        endIndent: 10,
                                       ),
-                                      // Descrição
-                                      Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 4, horizontal: 10),
-                                          child: Row(
-                                            children: [
-                                              Text(
-                                                "Descrição",
+                                      Column(
+                                        children: [
+                                          // Título
+                                          Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 4,
+                                                      horizontal: 10),
+                                              child: Text(
+                                                snapshot_anuncio
+                                                    .data!["titulo"],
                                                 style: TextStyle(
                                                   color: Theme.of(context)
                                                       .primaryColorLight,
                                                   fontSize: 30,
                                                 ),
                                               ),
-                                              SizedBox(
-                                                width: 10,
-                                              ),
-                                              SizedBox(
-                                                  height: 30,
-                                                  width: 80,
-                                                  child: snapshot_anuncio
-                                                              .data!["tipo"] ==
-                                                          "venda"
-                                                      ? Card(
-                                                          margin: EdgeInsets.only(
-                                                              left: 10),
-                                                          color: Color(0xFF134E6C),
-                                                          child: Center(
-                                                            child: Text(
-                                                              "Venda",
-                                                              style: TextStyle(
-                                                                  fontSize: 15,
-                                                                  color: Theme.of(
-                                                                          context)
-                                                                      .primaryColorLight),
-                                                            ),
-                                                          ),
-                                                        )
-                                                      : Card(
-                                                          margin: EdgeInsets.only(
-                                                              left: 10),
-                                                          color: Color(0xFF38524A),
-                                                          child: Center(
-                                                            child: Text(
-                                                              "Busca",
-                                                              style: TextStyle(
-                                                                  fontSize: 15,
-                                                                  color: Theme.of(
-                                                                          context)
-                                                                      .primaryColorLight),
-                                                            ),
-                                                          ),
-                                                        )),
-                                              SizedBox(
-                                                  height: 30,
-                                                  width: 80,
-                                                  child: snapshot_anuncio
-                                                              .data!["categoria"] ==
-                                                          "serviço"
-                                                      ? Card(
-                                                          margin: EdgeInsets.only(
-                                                              left: 10),
-                                                          color: Color(0xFF134E6C),
-                                                          child: Center(
-                                                            child: Text(
-                                                              "Serviço",
-                                                              style: TextStyle(
-                                                                  fontSize: 15,
-                                                                  color: Theme.of(
-                                                                          context)
-                                                                      .primaryColorLight),
-                                                            ),
-                                                          ),
-                                                        )
-                                                      : Card(
-                                                          margin: EdgeInsets.only(
-                                                              left: 10),
-                                                          color: Color(0xFF38524A),
-                                                          child: Center(
-                                                            child: Text(
-                                                              "Produto",
-                                                              style: TextStyle(
-                                                                  fontSize: 15,
-                                                                  color: Theme.of(
-                                                                          context)
-                                                                      .primaryColorLight),
-                                                            ),
-                                                          ),
-                                                        )),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                      Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 4, horizontal: 10),
-                                          child: Text(
-                                            snapshot_anuncio.data!["descricao"],
-                                            style: TextStyle(
-                                              color: Theme.of(context)
-                                                  .primaryColorLight,
-                                              fontSize: 20,
                                             ),
                                           ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            )),
-                        // Anunciante
-                        userId == snapshot_anuncio.data!["anunciante_id"]
-                            // Se o usuário for o anunciante
-                            ? Column(
-                                children: [
-                                  Divider(
-                                    color: Theme.of(context).primaryColorLight,
-                                    thickness: 1,
-                                    height: 1,
-                                  ),
-                                  SizedBox(
-                                    height: 20,
-                                  ),
-                                  Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        // Editar Anúncio
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 10.0),
-                                          child: Container(
-                                            height: 40,
-                                            width:
-                                                constraints.maxWidth / 2 - 20,
-                                            child: ElevatedButton(
-                                              onPressed: () {
-                                                Navigator.pushReplacement(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) {
-                                                      return EditarAnuncio(ip: ip, id: userId, anuncioId: anuncioId,);
-                                                    },
-                                                  ),
-                                                );
-                                              },
-                                              style: ElevatedButton.styleFrom(
-                                                  backgroundColor:
-                                                      Theme.of(context)
-                                                          .primaryColor
-                                                          .withOpacity(1)),
-                                              child: Text("Editar Anúncio",
-                                                  style: TextStyle(
-                                                      color: Theme.of(context)
-                                                          .primaryColorLight)),
-                                            ),
-                                          ),
-                                        ),
-                                        // Excluir Anúncio
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 10.0),
-                                          child: Container(
-                                            height: 40,
-                                            width:
-                                                constraints.maxWidth / 2 - 20,
-                                            child: ElevatedButton(
-                                              onPressed: () async {
-                                                int retorno = await _excluir();
-                                                if (retorno == 1){
-                                                  _excluirAnuncio();
-                                                  Navigator.pushReplacement(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                      builder: (context) {
-                                                        return Navigation(ip: ip, id: userId);
-                                                      },
-                                                    ),
-                                                  );
-                                                }
-                                              },
-                                              style: ElevatedButton.styleFrom(
-                                                  backgroundColor:
-                                                      Theme.of(context)
-                                                          .primaryColor
-                                                          .withOpacity(1)),
-                                              child: Text("Excluir Anúncio",
-                                                  style: TextStyle(
-                                                      color: Theme.of(context)
-                                                          .primaryColorLight)),
-                                            ),
-                                          ),
-                                        )
-                                      ]),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                ],
-                              )
-                            // Se o usuário não for o anunciante
-                            : Column(
-                                children: [
-                                  Divider(
-                                    color: Theme.of(context).primaryColorLight,
-                                    thickness: 1,
-                                    height: 1,
-                                  ),
-                                  FutureBuilder(
-                                      future: _getPerfil(
-                                          widget.ip,
-                                          snapshot_anuncio
-                                              .data!["anunciante_id"]),
-                                      builder: (context, snapshot3) {
-                                        if (snapshot3.hasData) {
-                                          return Align(
-                                            alignment: Alignment.center,
+                                          // Preço
+                                          Align(
+                                            alignment: Alignment.centerLeft,
                                             child: Padding(
-                                              padding: const EdgeInsets.only(
-                                                  top: 4, left: 10, right: 10),
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 4,
+                                                      horizontal: 10),
                                               child: Text(
-                                                "${snapshot3.data!["nome"]}",
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
+                                                "R\$ ${snapshot_anuncio.data!["preco"].toStringAsFixed(2)}",
                                                 style: TextStyle(
                                                   color: Theme.of(context)
                                                       .primaryColorLight,
-                                                  fontSize: 23,
+                                                  fontSize: 30,
                                                 ),
                                               ),
                                             ),
-                                          );
-                                        } else {
-                                          return Center(
-                                            child: CircularProgressIndicator(),
-                                          );
-                                        }
-                                      }),
-                                  FutureBuilder(
-                                      future: _getPerfil(
-                                          widget.ip,
-                                          snapshot_anuncio
-                                              .data!["anunciante_id"]),
-                                      builder: (context, snapshot3) {
-                                        if (snapshot3.hasData) {
-                                          return Align(
-                                            alignment: Alignment.center,
+                                          ),
+                                          Divider(
+                                            color: Theme.of(context)
+                                                .primaryColorLight,
+                                            thickness: 1,
+                                            height: 10,
+                                          ),
+                                          // Descrição
+                                          Align(
+                                            alignment: Alignment.centerLeft,
                                             child: Padding(
-                                              padding: const EdgeInsets.only(
-                                                  bottom: 8,
-                                                  left: 10,
-                                                  right: 10),
-                                              child: RatingBarIndicator(
-                                                rating: snapshot3
-                                                    .data!["reputacao"],
-                                                itemBuilder: (context, index) =>
-                                                    Icon(
-                                                  Icons.star,
-                                                  color: Colors.yellow,
-                                                ),
-                                                itemCount: 5,
-                                                itemSize: 24,
-                                                direction: Axis.horizontal,
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 4,
+                                                      horizontal: 10),
+                                              child: Row(
+                                                children: [
+                                                  Text(
+                                                    "Descrição",
+                                                    style: TextStyle(
+                                                      color: Theme.of(context)
+                                                          .primaryColorLight,
+                                                      fontSize: 30,
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  SizedBox(
+                                                      height: 30,
+                                                      width: 80,
+                                                      child: snapshot_anuncio
+                                                                      .data![
+                                                                  "tipo"] ==
+                                                              "venda"
+                                                          ? Card(
+                                                              margin: EdgeInsets
+                                                                  .only(
+                                                                      left: 10),
+                                                              color: Color(
+                                                                  0xFF134E6C),
+                                                              child: Center(
+                                                                child: Text(
+                                                                  "Venda",
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          15,
+                                                                      color: Theme.of(
+                                                                              context)
+                                                                          .primaryColorLight),
+                                                                ),
+                                                              ),
+                                                            )
+                                                          : Card(
+                                                              margin: EdgeInsets
+                                                                  .only(
+                                                                      left: 10),
+                                                              color: Color(
+                                                                  0xFF38524A),
+                                                              child: Center(
+                                                                child: Text(
+                                                                  "Busca",
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          15,
+                                                                      color: Theme.of(
+                                                                              context)
+                                                                          .primaryColorLight),
+                                                                ),
+                                                              ),
+                                                            )),
+                                                  SizedBox(
+                                                      height: 30,
+                                                      width: 80,
+                                                      child: snapshot_anuncio
+                                                                      .data![
+                                                                  "categoria"] ==
+                                                              "serviço"
+                                                          ? Card(
+                                                              margin: EdgeInsets
+                                                                  .only(
+                                                                      left: 10),
+                                                              color: Color(
+                                                                  0xFF134E6C),
+                                                              child: Center(
+                                                                child: Text(
+                                                                  "Serviço",
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          15,
+                                                                      color: Theme.of(
+                                                                              context)
+                                                                          .primaryColorLight),
+                                                                ),
+                                                              ),
+                                                            )
+                                                          : Card(
+                                                              margin: EdgeInsets
+                                                                  .only(
+                                                                      left: 10),
+                                                              color: Color(
+                                                                  0xFF38524A),
+                                                              child: Center(
+                                                                child: Text(
+                                                                  "Produto",
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          15,
+                                                                      color: Theme.of(
+                                                                              context)
+                                                                          .primaryColorLight),
+                                                                ),
+                                                              ),
+                                                            )),
+                                                ],
                                               ),
                                             ),
-                                          );
-                                        } else {
-                                          return Center(
-                                            child: CircularProgressIndicator(),
-                                          );
-                                        }
-                                      }),
-                                  Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        FutureBuilder(
-                                            future: _criarConversa(
-                                                widget.ip,
+                                          ),
+                                          Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 4,
+                                                      horizontal: 10),
+                                              child: Text(
                                                 snapshot_anuncio
-                                                    .data!["anunciante_id"],
-                                                widget.userId),
-                                            builder:
-                                                (context, snapshot_conversa) {
-                                              if (snapshot_conversa.hasData) {
-                                                return Container(
-                                                  height: 40,
-                                                  width:
-                                                      constraints.maxWidth / 2 -
-                                                          20,
-                                                  child: ElevatedButton(
-                                                    onPressed: () => {
-                                                      setState(() {
-                                                        Navigator.push(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                                builder:
-                                                                    (context) {
-                                                                  return const Chat();
-                                                                },
-                                                                settings:
-                                                                    RouteSettings(
-                                                                        arguments: {
-                                                                      'id_conversa':
-                                                                          snapshot_conversa
-                                                                              .data!,
-                                                                      'ip': widget
-                                                                          .ip,
-                                                                      'id': snapshot_anuncio.data!["anunciante_id"] ==
-                                                                              widget
-                                                                                  .userId
-                                                                          ? snapshot_anuncio.data![
-                                                                              "interessado_id"]
-                                                                          : snapshot_anuncio
-                                                                              .data!["anunciante_id"]
-                                                                    })));
-                                                      })
-                                                    },
-                                                    style: ElevatedButton
-                                                        .styleFrom(
+                                                    .data!["descricao"],
+                                                style: TextStyle(
+                                                  color: Theme.of(context)
+                                                      .primaryColorLight,
+                                                  fontSize: 20,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                )),
+                            // Anunciante
+                            userId == snapshot_anuncio.data!["anunciante_id"]
+                                // Se o usuário for o anunciante
+                                ? Column(
+                                    children: [
+                                      Divider(
+                                        color:
+                                            Theme.of(context).primaryColorLight,
+                                        thickness: 1,
+                                        height: 1,
+                                      ),
+                                      SizedBox(
+                                        height: 20,
+                                      ),
+                                      Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            // Editar Anúncio
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 10.0),
+                                              child: Container(
+                                                height: 40,
+                                                width:
+                                                    constraints.maxWidth / 2 -
+                                                        20,
+                                                child: ElevatedButton(
+                                                  onPressed: () {
+                                                    Navigator.pushReplacement(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) {
+                                                          return EditarAnuncio(
+                                                            ip: ip,
+                                                            id: userId,
+                                                            anuncioId:
+                                                                anuncioId,
+                                                          );
+                                                        },
+                                                      ),
+                                                    );
+                                                  },
+                                                  style:
+                                                      ElevatedButton.styleFrom(
+                                                          backgroundColor:
+                                                              Theme.of(context)
+                                                                  .primaryColor
+                                                                  .withOpacity(
+                                                                      1)),
+                                                  child: Text("Editar Anúncio",
+                                                      style: TextStyle(
+                                                          color: Theme.of(
+                                                                  context)
+                                                              .primaryColorLight)),
+                                                ),
+                                              ),
+                                            ),
+                                            // Excluir Anúncio
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 10.0),
+                                              child: Container(
+                                                height: 40,
+                                                width:
+                                                    constraints.maxWidth / 2 -
+                                                        20,
+                                                child: ElevatedButton(
+                                                  onPressed: () async {
+                                                    int retorno =
+                                                        await _excluir();
+                                                    if (retorno == 1) {
+                                                      _excluirAnuncio();
+                                                      Navigator.pushReplacement(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) {
+                                                            return Navigation(
+                                                                ip: ip,
+                                                                id: userId);
+                                                          },
+                                                        ),
+                                                      );
+                                                    }
+                                                  },
+                                                  style:
+                                                      ElevatedButton.styleFrom(
+                                                          backgroundColor:
+                                                              Theme.of(context)
+                                                                  .primaryColor
+                                                                  .withOpacity(
+                                                                      1)),
+                                                  child: Text("Excluir Anúncio",
+                                                      style: TextStyle(
+                                                          color: Theme.of(
+                                                                  context)
+                                                              .primaryColorLight)),
+                                                ),
+                                              ),
+                                            )
+                                          ]),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                    ],
+                                  )
+                                // Se o usuário não for o anunciante
+                                : Column(
+                                    children: [
+                                      Divider(
+                                        color:
+                                            Theme.of(context).primaryColorLight,
+                                        thickness: 1,
+                                        height: 1,
+                                      ),
+                                      FutureBuilder(
+                                          future: _getPerfil(
+                                              widget.ip,
+                                              snapshot_anuncio
+                                                  .data!["anunciante_id"]),
+                                          builder: (context, snapshot3) {
+                                            if (snapshot3.hasData) {
+                                              return Align(
+                                                alignment: Alignment.center,
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          top: 4,
+                                                          left: 10,
+                                                          right: 10),
+                                                  child: Text(
+                                                    "${snapshot3.data!["nome"]}",
+                                                    maxLines: 1,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    style: TextStyle(
+                                                      color: Theme.of(context)
+                                                          .primaryColorLight,
+                                                      fontSize: 23,
+                                                    ),
+                                                  ),
+                                                ),
+                                              );
+                                            } else {
+                                              return Center(
+                                                child:
+                                                    CircularProgressIndicator(),
+                                              );
+                                            }
+                                          }),
+                                      FutureBuilder(
+                                          future: _getPerfil(
+                                              widget.ip,
+                                              snapshot_anuncio
+                                                  .data!["anunciante_id"]),
+                                          builder: (context, snapshot3) {
+                                            if (snapshot3.hasData) {
+                                              return Align(
+                                                alignment: Alignment.center,
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          bottom: 8,
+                                                          left: 10,
+                                                          right: 10),
+                                                  child: RatingBarIndicator(
+                                                    rating: snapshot3
+                                                        .data!["reputacao"],
+                                                    itemBuilder:
+                                                        (context, index) =>
+                                                            Icon(
+                                                      Icons.star,
+                                                      color: Colors.yellow,
+                                                    ),
+                                                    itemCount: 5,
+                                                    itemSize: 24,
+                                                    direction: Axis.horizontal,
+                                                  ),
+                                                ),
+                                              );
+                                            } else {
+                                              return Center(
+                                                child:
+                                                    CircularProgressIndicator(),
+                                              );
+                                            }
+                                          }),
+                                      Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            FutureBuilder(
+                                                future: _criarConversa(
+                                                    widget.ip,
+                                                    snapshot_anuncio
+                                                        .data!["anunciante_id"],
+                                                    widget.userId),
+                                                builder: (context,
+                                                    snapshot_conversa) {
+                                                  if (snapshot_conversa
+                                                      .hasData) {
+                                                    return Container(
+                                                      height: 40,
+                                                      width:
+                                                          constraints.maxWidth /
+                                                                  2 -
+                                                              20,
+                                                      child: ElevatedButton(
+                                                        onPressed: () => {
+                                                          setState(() {
+                                                            Navigator.push(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                    builder:
+                                                                        (context) {
+                                                                      return const Chat();
+                                                                    },
+                                                                    settings:
+                                                                        RouteSettings(
+                                                                            arguments: {
+                                                                          'id_conversa':
+                                                                              snapshot_conversa.data!,
+                                                                          'ip':
+                                                                              widget.ip,
+                                                                          'id': snapshot_anuncio.data!["anunciante_id"] == widget.userId
+                                                                              ? snapshot_anuncio.data!["interessado_id"]
+                                                                              : snapshot_anuncio.data!["anunciante_id"]
+                                                                        })));
+                                                          })
+                                                        },
+                                                        style: ElevatedButton.styleFrom(
                                                             backgroundColor:
                                                                 Theme.of(
                                                                         context)
                                                                     .primaryColor
                                                                     .withOpacity(
                                                                         1)),
-                                                    child: Text(
-                                                        "Enviar Mensagem",
-                                                        style: TextStyle(
-                                                            color: Theme.of(
-                                                                    context)
-                                                                .primaryColorLight)),
-                                                  ),
-                                                );
-                                              } else {
-                                                return Center(
-                                                  child:
-                                                      CircularProgressIndicator(),
-                                                );
-                                              }
-                                            }),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 10.0),
-                                          child: Container(
-                                            height: 40,
-                                            width:
-                                                constraints.maxWidth / 2 - 20,
-                                            child: ElevatedButton(
-                                              onPressed: () => {
-                                                setState(() {
-                                                  Navigator.push(context,
-                                                      MaterialPageRoute(
-                                                          builder: (context) {
-                                                    return Perfil(
-                                                      ip: widget.ip,
-                                                      id: userId,
-                                                      perfilId: snapshot_anuncio
-                                                              .data![
-                                                          "anunciante_id"],
+                                                        child: Text(
+                                                            "Enviar Mensagem",
+                                                            style: TextStyle(
+                                                                color: Theme.of(
+                                                                        context)
+                                                                    .primaryColorLight)),
+                                                      ),
                                                     );
-                                                  }));
-                                                })
-                                              },
-                                              style: ElevatedButton.styleFrom(
-                                                  backgroundColor:
-                                                      Theme.of(context)
-                                                          .primaryColor
-                                                          .withOpacity(1)),
-                                              child: Text("Visitar Perfil",
-                                                  style: TextStyle(
-                                                      color: Theme.of(context)
-                                                          .primaryColorLight)),
-                                            ),
-                                          ),
-                                        )
-                                      ]),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                ],
-                              )
-                      ],
-                    );
-                  });
-                })
-                : Center(
-                    child: CircularProgressIndicator(),
-                  ));
+                                                  } else {
+                                                    return Center(
+                                                      child:
+                                                          CircularProgressIndicator(),
+                                                    );
+                                                  }
+                                                }),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 10.0),
+                                              child: Container(
+                                                height: 40,
+                                                width:
+                                                    constraints.maxWidth / 2 -
+                                                        20,
+                                                child: ElevatedButton(
+                                                  onPressed: () => {
+                                                    setState(() {
+                                                      Navigator.push(context,
+                                                          MaterialPageRoute(
+                                                              builder:
+                                                                  (context) {
+                                                        return Perfil(
+                                                          ip: widget.ip,
+                                                          id: userId,
+                                                          perfilId:
+                                                              snapshot_anuncio
+                                                                      .data![
+                                                                  "anunciante_id"],
+                                                        );
+                                                      }));
+                                                    })
+                                                  },
+                                                  style:
+                                                      ElevatedButton.styleFrom(
+                                                          backgroundColor:
+                                                              Theme.of(context)
+                                                                  .primaryColor
+                                                                  .withOpacity(
+                                                                      1)),
+                                                  child: Text("Visitar Perfil",
+                                                      style: TextStyle(
+                                                          color: Theme.of(
+                                                                  context)
+                                                              .primaryColorLight)),
+                                                ),
+                                              ),
+                                            )
+                                          ]),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                    ],
+                                  )
+                          ],
+                        );
+                      });
+                    })
+                  : Center(
+                      child: CircularProgressIndicator(),
+                    ));
         });
   }
 }

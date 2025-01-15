@@ -74,8 +74,6 @@ class _MensagensState extends State<Mensagens> {
         Map<String, dynamic> resposta = json.decode(response.body);
         if (!resposta["dados"]["conversas"].isEmpty) {
           return resposta["dados"]["conversas"];
-        } else {
-          conversaErrorMessage("ID inválido");
         }
       } else {
         conversaErrorMessage("Erro na comunicação, tente novamente mais tarde");
