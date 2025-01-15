@@ -316,6 +316,7 @@ def finalizar_transação():
                 else:
                     anuncio.ativo = False
                     resposta = "Transação finalizada com sucesso!"
+                    db.session.commit()
             else:
                 db.session.delete(transacao)
                 if user_id != anuncio.anunciante:
