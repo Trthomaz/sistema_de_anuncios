@@ -87,6 +87,7 @@ Future<Map<String, dynamic>> _getAnunciobyID(String ip, int anuncio_id) async {
     );
 
     Map<String, dynamic> resposta = json.decode(response.body);
+    print(resposta["dados"]);
     return resposta["dados"];
   } catch (e) {
     print(e);
@@ -183,6 +184,75 @@ class _AnuncioState extends State<Anuncio> {
       print(resposta["dados"]['msg']);
     } catch (e) {
       return;
+    }
+  }
+
+  Future<void> _realizarTransacao(int user_id, int anuncio_id) async {
+    final url = Uri.parse('http://$ip:5000/finalizar_transação');
+    final now = DateTime.now().toLocal();
+    final data = now.toString().substring(0, 19);
+
+    // Dados enviados
+    final dados = {
+      'user_id': user_id,
+      'anuncio_id': anuncio_id,
+      'data': data,
+    };
+
+    // Mensagem
+    dynamic transacaoMessage(
+      String titleText,
+    ) {
+      return showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text(
+                titleText,
+                style: TextStyle(fontSize: 20),
+              ),
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+              content: Text("text",
+                  style:
+                      TextStyle(color: const Color.fromARGB(255, 192, 65, 55))),
+              actions: [
+                ElevatedButton(
+                  child: Text("Ok",
+                      style: TextStyle(
+                          color: Theme.of(context).primaryColorLight)),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor:
+                          Theme.of(context).primaryColor.withOpacity(1)),
+                )
+              ],
+            );
+          });
+    }
+
+    // Enviar requisição
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          // Define o tipo de conteúdo como json
+          'Content-Type': 'application/json'
+        },
+        body: json.encode(dados),
+      );
+      if (response.statusCode == 200) {
+        // Resposta da requisição
+        Map<String, dynamic> resposta = json.decode(response.body);
+        if (!resposta["dados"]["msg"].isEmpty) {
+          transacaoMessage(resposta["dados"]["msg"]);
+        }
+      } else {
+        transacaoMessage("Erro na comunicação, tente novamente mais tarde");
+      }
+    } catch (e) {
+      transacaoMessage("O IP oferecido está inválido");
     }
   }
 
@@ -458,6 +528,26 @@ class _AnuncioState extends State<Anuncio> {
                                                   fontSize: 20,
                                                 ),
                                               ),
+                                            ),
+                                          ),
+                                          Container(
+                                            height: 40,
+                                            width:
+                                                constraints.maxWidth / 2 - 20,
+                                            child: ElevatedButton(
+                                              onPressed: () =>
+                                                  _realizarTransacao(
+                                                      widget.userId,
+                                                      widget.anuncioId),
+                                              style: ElevatedButton.styleFrom(
+                                                  backgroundColor:
+                                                      Theme.of(context)
+                                                          .primaryColor
+                                                          .withOpacity(1)),
+                                              child: Text("Finalizar Transação",
+                                                  style: TextStyle(
+                                                      color: Theme.of(context)
+                                                          .primaryColorLight)),
                                             ),
                                           ),
                                         ],
