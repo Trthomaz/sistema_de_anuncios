@@ -212,9 +212,6 @@ class _AnuncioState extends State<Anuncio> {
                 style: TextStyle(fontSize: 20),
               ),
               backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-              content: Text("text",
-                  style:
-                      TextStyle(color: const Color.fromARGB(255, 192, 65, 55))),
               actions: [
                 ElevatedButton(
                   child: Text("Ok",
