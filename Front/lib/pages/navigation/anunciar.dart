@@ -630,23 +630,28 @@ class _AnunciarState extends State<Anunciar> {
                       height: 60,
                       child: ElevatedButton(
                         onPressed: () async {
-                          bool anunciar = await _anunciar();
-                          if (anunciar) {
+                          if (_tituloController.text.isEmpty ||
+                              _descricaoController.text.isEmpty ||
+                              _precoController.text.isEmpty ||
+                              _celularController.text.isEmpty ||
+                              _cepController.text.isEmpty ||
+                              categoria == null ||
+                              tipo == null) {
                             return showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
                                   return AlertDialog(
                                     title: Text(
-                                      "Anúncio Cadastrado com Sucesso",
+                                      "Erro ao criar anúncio",
                                       style: TextStyle(fontSize: 20),
                                     ),
                                     backgroundColor: Theme.of(context)
                                         .scaffoldBackgroundColor,
                                     content: Text(
-                                        "Seu anúncio de $tipo de ${_tituloController.text} foi cadastrado no sistema",
+                                        "Por favor, preencha todos os campos",
                                         style: TextStyle(
                                             color: const Color.fromARGB(
-                                                255, 0, 0, 0))),
+                                                255, 192, 65, 55))),
                                     actions: [
                                       ElevatedButton(
                                         child: Text("Ok",
@@ -655,11 +660,6 @@ class _AnunciarState extends State<Anunciar> {
                                                     .primaryColorLight)),
                                         onPressed: () {
                                           Navigator.of(context).pop();
-                                          Navigator.push(context,
-                                              MaterialPageRoute(
-                                                  builder: (context) {
-                                            return Navigation(ip: ip, id: id);
-                                          }));
                                         },
                                         style: ElevatedButton.styleFrom(
                                             backgroundColor: Theme.of(context)
@@ -669,6 +669,48 @@ class _AnunciarState extends State<Anunciar> {
                                     ],
                                   );
                                 });
+                          }
+                          else{
+                            bool anunciar = await _anunciar();
+                            if (anunciar) {
+                              return showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text(
+                                        "Anúncio Cadastrado com Sucesso",
+                                        style: TextStyle(fontSize: 20),
+                                      ),
+                                      backgroundColor: Theme.of(context)
+                                          .scaffoldBackgroundColor,
+                                      content: Text(
+                                          "Seu anúncio de $tipo de ${_tituloController.text} foi cadastrado no sistema",
+                                          style: TextStyle(
+                                              color: const Color.fromARGB(
+                                                  255, 0, 0, 0))),
+                                      actions: [
+                                        ElevatedButton(
+                                          child: Text("Ok",
+                                              style: TextStyle(
+                                                  color: Theme.of(context)
+                                                      .primaryColorLight)),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                            Navigator.push(context,
+                                                MaterialPageRoute(
+                                                    builder: (context) {
+                                              return Navigation(ip: ip, id: id);
+                                            }));
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                              backgroundColor: Theme.of(context)
+                                                  .primaryColor
+                                                  .withOpacity(1)),
+                                        )
+                                      ],
+                                    );
+                                  });
+                            }
                           }
                         },
                         style: ButtonStyle(
