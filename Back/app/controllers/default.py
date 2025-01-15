@@ -333,7 +333,7 @@ def avaliar():
     id = dados.get("user_id")
     a_id = dados.get("anuncio_id")
     nota = dados.get("nota")
-    if not (0 < nota < 5):
+    if not (0 <= nota <= 5):
         return jsonify({"dados": {"msg": "Nota fora do escopo."}})
     anuncio = Anuncio.query.filter_by(id = a_id).first()
     if anuncio.ativo:
