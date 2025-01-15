@@ -3,6 +3,7 @@ import 'package:sistema_de_anuncios/pages/navigation/meus_anuncios.dart';
 import 'package:sistema_de_anuncios/pages/navigation/navigation.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'dart:async';
 
 class Chat extends StatefulWidget {
   const Chat({super.key});
@@ -14,12 +15,20 @@ class Chat extends StatefulWidget {
 class _ChatState extends State<Chat> {
   TextEditingController _mensagemController = TextEditingController();
   ScrollController _listViewController = ScrollController();
+  int jaEntrou = 0;
+  int mensagemNova = 0;
+  bool saiuDaPagina = false;
+  late Timer _timer;
 
   void _scrollDown() {
-    if (_listViewController.hasClients) {
-      _listViewController.jumpTo(
-        _listViewController.position.maxScrollExtent,
-      );
+    if ((jaEntrou == 0) | (mensagemNova == 1)) {
+      if (_listViewController.hasClients) {
+        _listViewController.jumpTo(
+          _listViewController.position.maxScrollExtent,
+        );
+        jaEntrou = 1;
+        mensagemNova = 0;
+      }
     }
   }
 
@@ -80,6 +89,7 @@ class _ChatState extends State<Chat> {
         // Resposta da requisição
 
         Map<String, dynamic> resposta = json.decode(response.body);
+
         if (!resposta["dados"].isEmpty) {
           return resposta["dados"];
         }
@@ -157,6 +167,7 @@ class _ChatState extends State<Chat> {
       Map<String, dynamic> resposta = json.decode(response.body);
       if (response.statusCode == 200) {
         // Resposta da requisição
+        mensagemNova = 1;
         if (resposta["dados"]["msg"] == "ok") {
           print("Mensagem Adicionada com Sucesso!");
         } else {
@@ -196,16 +207,48 @@ class _ChatState extends State<Chat> {
   }
   //  -------------------------------------------------------------------------------------------------------------------------------------------
 
+/*   @override
+
+  void _initState(){
+    super.initState();
+
+    // Inicia o Timer para fazer uma requisição a cada 1 segundo
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      if (_counter < 5) { // Limita o número de requisições, altere conforme necessário
+        _makeRequest();
+      } else {
+        _timer.cancel(); // Cancela o Timer após 5 requisições
+      }
+      _counter++;
+    });
+  }
+ */
+
+  @override
+  void initState() {
+    super.initState();
+    const oneSec = Duration(seconds: 1);
+    _timer = Timer.periodic(oneSec, (timer) {
+      if (!mounted) return; // Verifica se o widget ainda está montado
+      setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel(); // Cancela o timer ao destruir o widget
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     var arguments =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+
     int id_conversa = arguments['id_conversa'] ?? -1;
     String ip = arguments['ip'] ?? -1;
     int id = arguments['id'] ?? -1;
-    print("ip $ip");
-    print("id $id");
-    print("id conversa $id_conversa");
+
     return FutureBuilder(
         future: _getNomebyID(ip, id),
         builder: (context, snapshot) {
@@ -251,7 +294,8 @@ class _ChatState extends State<Chat> {
                                 future: _getMensagens(ip, id_conversa),
                                 builder: (context, snapshot) {
                                   if (snapshot.hasData) {
-                                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                                    WidgetsBinding.instance
+                                        .addPostFrameCallback((_) {
                                       _scrollDown();
                                     });
                                     return Center(
@@ -396,8 +440,7 @@ class _ChatState extends State<Chat> {
                                     decoration: InputDecoration(
                                       border: OutlineInputBorder(
                                         borderSide: BorderSide.none,
-                                        borderRadius:
-                                            BorderRadius.circular(10),
+                                        borderRadius: BorderRadius.circular(10),
                                       ),
                                       filled: true,
                                       fillColor: Theme.of(context).cardColor,
@@ -405,8 +448,8 @@ class _ChatState extends State<Chat> {
                                           vertical: 14, horizontal: 14),
                                       hintText: "Mensagem",
                                       hintStyle: TextStyle(
-                                        color: Theme.of(context)
-                                            .primaryColorLight,
+                                        color:
+                                            Theme.of(context).primaryColorLight,
                                         fontSize: 14,
                                       ),
                                     ),
