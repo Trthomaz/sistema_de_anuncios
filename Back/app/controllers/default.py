@@ -130,8 +130,8 @@ def get_perfil():
 def get_feed():
     dados = request.get_json()
     id = dados.get("user_id")
-    anuncios_venda = Anuncio.query.filter(Anuncio.anunciante != id, Anuncio.tipo == 1).all()
-    anuncios_busca = Anuncio.query.filter(Anuncio.anunciante != id, Anuncio.tipo == 2).all()
+    anuncios_venda = Anuncio.query.filter(Anuncio.anunciante != id, Anuncio.tipo == 1, Anuncio.ativo == True).all()
+    anuncios_busca = Anuncio.query.filter(Anuncio.anunciante != id, Anuncio.tipo == 2, Anuncio.ativo == True).all()
     anuncios_venda = anuncios_venda[:5]
     anuncios_busca = anuncios_busca[:5]
     av = []
