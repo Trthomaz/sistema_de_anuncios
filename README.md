@@ -25,21 +25,21 @@ Leonardo Gresta Paulino Murta - leomurta@ic.uff.br
 # Softwares Básicos
 
 Para usar o sistema Andaime é necessário alguns requisitos de software instalados em sua máquina. Dentre as seguintes:
-<br><b>SQLite</b> - Banco de Dados padrão da aplicação presente no principal ramo <b>main</b>. [Download] (https://www.mysql.com/)
-<br><b>MySQL</b> - Banco de Dados que pode ser usado no framework Flask. (opcional) [Download] (https://www.sqlite.org/)
-<br><b>Python3</b> - Linguagem de Programação usada no Backend. [Download] (https://www.python.org/)
-<br><b>Flutter</b> - Linguagem de Programação usada no Frontend. [Download] (https://flutter.dev/)
+<br><b>SQLite</b> - Banco de Dados padrão da aplicação presente no principal ramo <b>main</b>. [Download](https://www.mysql.com/)
+<br><b>MySQL</b> - Banco de Dados que pode ser usado no framework Flask. (opcional) [Download](https://www.sqlite.org/)
+<br><b>Python3</b> - Linguagem de Programação usada no Backend. [Download](https://www.python.org/)
+<br><b>Flutter</b> - Linguagem de Programação usada no Frontend. [Download](https://flutter.dev/)
 
 # Bibliotecas e dependências
 
 **Recomendado** instalação de um environment virtual para o ambiente Python.
 Para as bibliotecas necessárias para a aplicação estão listadas em:
-<br>[Bibliotecas Python] (https://github.com/Trthomaz/sistema_de_anuncios/blob/main/Back/requirements.txt)
-<br>[Bibliotecas Flutter] (https://github.com/Trthomaz/sistema_de_anuncios/blob/main/Front/pubspec.yaml)
+<br>[Bibliotecas Python](https://github.com/Trthomaz/sistema_de_anuncios/blob/main/Back/requirements.txt)
+<br>[Bibliotecas Flutter](https://github.com/Trthomaz/sistema_de_anuncios/blob/main/Front/pubspec.yaml)
 
 
 # Command Line básicas
 
-<br><b>pytest</b> - Iniciar varredura de testes. ℹ️*[Ver mais detalhes] (https://docs.pytest.org/en/stable/)*
-<br><b>python3 run.py</b> - Iniciar o servidor Backend. ℹ️*[Ver mais detalhes] (https://flask.palletsprojects.com/en/stable/)*
+<br><b>pytest</b> - Iniciar varredura de testes. ℹ️*[Ver mais detalhes](https://docs.pytest.org/en/stable/)*
+<br><b>python3 run.py</b> - Iniciar o servidor Backend. ℹ️*[Ver mais detalhes](https://flask.palletsprojects.com/en/stable/)*
 </hr>
