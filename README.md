@@ -42,4 +42,18 @@ Para as bibliotecas necessárias para a aplicação estão listadas em:
 
 <br><b>pytest</b> - Iniciar varredura de testes. ℹ️*[Ver mais detalhes](https://docs.pytest.org/en/stable/)*
 <br><b>python3 run.py</b> - Iniciar o servidor Backend. ℹ️*[Ver mais detalhes](https://flask.palletsprojects.com/en/stable/)*
+
+# Usando o Aplicativo
+
+### Passo a Passo:
+1. Instalar o Andaime.apk em um celular android
+2. Rodar o backend e copiar o ip que aparece ao rodar o backend
+3. Colar o ip nas "Configurações de desenvolvedor" (engrenagem no canto superior direito da tela de login)
+4. Fazer o login com um usuário cadastrado
+
+### Usuários Cadastrados
+- jpoço@es.com
+- kenji@es.com
+- Ambos com a senha 1234
+
 </hr>
